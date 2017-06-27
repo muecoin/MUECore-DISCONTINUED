@@ -1,0 +1,6 @@
+usr/local/bin/mue-qt usr/bin
+share/pixmaps/mue32.xpm usr/share/pixmaps
+share/pixmaps/mue16.xpm usr/share/pixmaps
+share/pixmaps/mue128.png usr/share/pixmaps
+debian/mue-qt.desktop usr/share/applications
+debian/mue-qt.protocol usr/share/kde4/services/
