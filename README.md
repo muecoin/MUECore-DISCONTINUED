@@ -1,9 +1,9 @@
 MonetaryUnit Core staging tree 0.12.1
 ===============================
 
-`master:` [![Build Status](https://travis-ci.org/muepay/mue.svg?branch=master)](https://travis-ci.org/muepay/mue) `v0.12.0.x:` [![Build Status](https://travis-ci.org/muepay/mue.svg?branch=v0.12.0.x)](https://travis-ci.org/muepay/mue/branches) `v0.12.1.x:` [![Build Status](https://travis-ci.org/muepay/mue.svg?branch=v0.12.1.x)](https://travis-ci.org/muepay/mue/branches)
 
-https://www.mue.org
+
+https://www.monetaryunit.org
 
 
 What is MonetaryUnit?
@@ -16,7 +16,7 @@ are carried out collectively by the network. MonetaryUnit Core is the name of th
 source software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the MonetaryUnit Core software, see https://www.mue.org/get-mue/.
+the MonetaryUnit Core software.
 
 
 License
@@ -29,7 +29,7 @@ Development Process
 -------------------
 
 The `master` branch is meant to be stable. Development is normally done in separate branches.
-[Tags](https://github.com/muecoin/mue/tags) are created to indicate new official,
+[Tags](https://github.com/muecoin/MUECore/tags) are created to indicate new official,
 stable release versions of MonetaryUnit Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -74,4 +74,3 @@ Translations are periodically pulled from Transifex and merged into the git repo
 **Important**: We do not accept translation changes as GitHub pull requests because the next
 pull from Transifex would automatically overwrite them again.
 
-Translators should also follow the [forum](https://www.mue.org/forum/topic/mue-worldwide-collaboration.88/).
