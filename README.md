@@ -1,4 +1,4 @@
-MonetaryUnit Core staging tree 0.12.1
+MonetaryUnit Core staging tree 1.0.1
 ===============================
 
 
@@ -17,6 +17,9 @@ source software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
 the MonetaryUnit Core software.
+
+At this stage and while we conclude automated builds setup - precompiled binaries can be fetched from :
+     https://drive.google.com/drive/folders/0B7NWoqhWP7wGSWMyRW5xNUpDREE?usp=sharing
 
 
 License
