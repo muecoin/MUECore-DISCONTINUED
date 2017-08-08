@@ -15,6 +15,7 @@ src/qt/test/test_mue-qt
 src/bench/bench_mue
 CMakeLists.txt
 cmake-build-debug/
+.idea/
 
 # autoreconf
 Makefile.in
