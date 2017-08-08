@@ -46,7 +46,7 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *platformStyle, QWidget
     platformStyle(platformStyle)
 {
     ui->setupUi(this);
-    
+
     /* Open CSS when configured */
     this->setStyleSheet(GUIUtil::loadStyleSheet());
 
@@ -54,9 +54,9 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *platformStyle, QWidget
     QAction *copyAddressAction = new QAction(tr("Copy address"), this);
     QAction *copyLabelAction = new QAction(tr("Copy label"), this);
     QAction *copyAmountAction = new QAction(tr("Copy amount"), this);
-             copyTransactionHashAction = new QAction(tr("Copy transaction ID"), this);  // we need to enable/disable this
-             lockAction = new QAction(tr("Lock unspent"), this);                        // we need to enable/disable this
-             unlockAction = new QAction(tr("Unlock unspent"), this);                    // we need to enable/disable this
+    copyTransactionHashAction = new QAction(tr("Copy transaction ID"), this);  // we need to enable/disable this
+    lockAction = new QAction(tr("Lock unspent"), this);                        // we need to enable/disable this
+    unlockAction = new QAction(tr("Unlock unspent"), this);                    // we need to enable/disable this
 
     // context menu
     contextMenu = new QMenu();
@@ -210,8 +210,8 @@ void CoinControlDialog::buttonSelectAllClicked()
     }
     ui->treeWidget->setEnabled(false);
     for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++)
-            if (ui->treeWidget->topLevelItem(i)->checkState(COLUMN_CHECKBOX) != state)
-                ui->treeWidget->topLevelItem(i)->setCheckState(COLUMN_CHECKBOX, state);
+        if (ui->treeWidget->topLevelItem(i)->checkState(COLUMN_CHECKBOX) != state)
+            ui->treeWidget->topLevelItem(i)->setCheckState(COLUMN_CHECKBOX, state);
     ui->treeWidget->setEnabled(true);
     if (state == Qt::Unchecked)
         coinControl->UnSelectAll(); // just to be sure
@@ -224,17 +224,17 @@ void CoinControlDialog::buttonToggleLockClicked()
     QTreeWidgetItem *item;
     QString theme = GUIUtil::getThemeName();
     // Works in list-mode only
-    if(ui->radioListMode->isChecked()){
+    if(ui->radioListMode->isChecked()) {
         ui->treeWidget->setEnabled(false);
-        for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++){
+        for (int i = 0; i < ui->treeWidget->topLevelItemCount(); i++) {
             item = ui->treeWidget->topLevelItem(i);
             COutPoint outpt(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt());
-            if (model->isLockedCoin(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt())){
+            if (model->isLockedCoin(uint256S(item->text(COLUMN_TXHASH).toStdString()), item->text(COLUMN_VOUT_INDEX).toUInt())) {
                 model->unlockCoin(outpt);
                 item->setDisabled(false);
                 item->setIcon(COLUMN_CHECKBOX, QIcon());
             }
-            else{
+            else {
                 model->lockCoin(outpt);
                 item->setDisabled(true);
                 item->setIcon(COLUMN_CHECKBOX, QIcon(":/icons/" + theme + "/lock_closed"));
@@ -244,7 +244,7 @@ void CoinControlDialog::buttonToggleLockClicked()
         ui->treeWidget->setEnabled(true);
         CoinControlDialog::updateLabels(model, this);
     }
-    else{
+    else {
         QMessageBox msgBox;
         msgBox.setObjectName("lockMessageBox");
         msgBox.setStyleSheet(GUIUtil::loadStyleSheet());
@@ -453,8 +453,8 @@ void CoinControlDialog::viewItemChanged(QTreeWidgetItem* item, int column)
             int nRounds = pwalletMain->GetInputPrivateSendRounds(txin);
             if (coinControl->fUsePrivateSend && nRounds < nPrivateSendRounds) {
                 QMessageBox::warning(this, windowTitle(),
-                    tr("Non-anonymized input selected. <b>PrivateSend will be disabled.</b><br><br>If you still want to use PrivateSend, please deselect all non-nonymized inputs first and then check PrivateSend checkbox again."),
-                    QMessageBox::Ok, QMessageBox::Ok);
+                                     tr("Non-anonymized input selected. <b>PrivateSend will be disabled.</b><br><br>If you still want to use PrivateSend, please deselect all non-nonymized inputs first and then check PrivateSend checkbox again."),
+                                     QMessageBox::Ok, QMessageBox::Ok);
                 coinControl->fUsePrivateSend = false;
             }
         }
@@ -503,8 +503,8 @@ void CoinControlDialog::updateLabelLocked()
     model->listLockedCoins(vOutpts);
     if (vOutpts.size() > 0)
     {
-       ui->labelLocked->setText(tr("(%1 locked)").arg(vOutpts.size()));
-       ui->labelLocked->setVisible(true);
+        ui->labelLocked->setText(tr("(%1 locked)").arg(vOutpts.size()));
+        ui->labelLocked->setVisible(true);
     }
     else ui->labelLocked->setVisible(false);
 }
@@ -527,7 +527,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
             CTxOut txout(amount, (CScript)std::vector<unsigned char>(24, 0));
             txDummy.vout.push_back(txout);
             if (txout.IsDust(::minRelayTxFee))
-               fDust = true;
+                fDust = true;
         }
     }
 
@@ -749,7 +749,7 @@ void CoinControlDialog::updateView()
 
     bool treeMode = ui->radioTreeMode->isChecked();
     QString theme = GUIUtil::getThemeName();
-    
+
     ui->treeWidget->clear();
     ui->treeWidget->setEnabled(false); // performance, otherwise updateLabels would be called for every checked checkbox
     ui->treeWidget->setAlternatingRowColors(!treeMode);
@@ -814,7 +814,7 @@ void CoinControlDialog::updateView()
                     itemOutput->setText(COLUMN_ADDRESS, sAddress);
 
                 itemOutput->setToolTip(COLUMN_ADDRESS, sAddress);
-                
+
                 CPubKey pubkey;
                 CKeyID *keyid = boost::get<CKeyID>(&outputAddress);
                 if (keyid && model->getPubKey(*keyid, pubkey) && !pubkey.IsCompressed())
@@ -872,7 +872,7 @@ void CoinControlDialog::updateView()
             // vout index
             itemOutput->setText(COLUMN_VOUT_INDEX, QString::number(out.i));
 
-             // disable locked coins
+            // disable locked coins
             if (model->isLockedCoin(txhash, out.i))
             {
                 COutPoint outpt(txhash, out.i);

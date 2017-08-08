@@ -48,7 +48,7 @@ bool IsBlockValueValid(const CBlock& block, int nBlockHeight, CAmount blockRewar
     if(nBlockHeight < consensusParams.nSuperblockStartBlock) {
         int nOffset = nBlockHeight % consensusParams.nBudgetPaymentsCycleBlocks;
         if(nBlockHeight >= consensusParams.nBudgetPaymentsStartBlock &&
-            nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
+                nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
             // NOTE: make sure SPORK_13_OLD_SUPERBLOCK_FLAG is disabled when 12.1 starts to go live
             if(masternodeSync.IsSynced() && !sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
                 // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
@@ -151,7 +151,7 @@ bool IsBlockPayeeValid(const CTransaction& txNew, int nBlockHeight, CAmount bloc
 
         int nOffset = nBlockHeight % consensusParams.nBudgetPaymentsCycleBlocks;
         if(nBlockHeight >= consensusParams.nBudgetPaymentsStartBlock &&
-            nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
+                nOffset < consensusParams.nBudgetPaymentsWindowBlocks) {
             if(!sporkManager.IsSporkActive(SPORK_13_OLD_SUPERBLOCK_FLAG)) {
                 // no budget blocks should be accepted here, if SPORK_13_OLD_SUPERBLOCK_FLAG is disabled
                 LogPrint("gobject", "IsBlockPayeeValid -- ERROR: Client synced but budget spork is disabled and masternode payment is invalid\n");
@@ -213,16 +213,16 @@ void FillBlockPayments(CMutableTransaction& txNew, int nBlockHeight, CAmount blo
     // only create superblocks if spork is enabled AND if superblock is actually triggered
     // (height should be validated inside)
     if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED) &&
-        CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-            LogPrint("gobject", "FillBlockPayments -- triggered superblock creation at height %d\n", nBlockHeight);
-            CSuperblockManager::CreateSuperblock(txNew, nBlockHeight, voutSuperblockRet);
-            return;
+            CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
+        LogPrint("gobject", "FillBlockPayments -- triggered superblock creation at height %d\n", nBlockHeight);
+        CSuperblockManager::CreateSuperblock(txNew, nBlockHeight, voutSuperblockRet);
+        return;
     }
 
     // FILL BLOCK PAYEE WITH MASTERNODE PAYMENT OTHERWISE
     mnpayments.FillBlockPayee(txNew, nBlockHeight, blockReward, txoutMasternodeRet);
     LogPrint("mnpayments", "FillBlockPayments -- nBlockHeight %d blockReward %lld txoutMasternodeRet %s txNew %s",
-                            nBlockHeight, blockReward, txoutMasternodeRet.ToString(), txNew.ToString());
+             nBlockHeight, blockReward, txoutMasternodeRet.ToString(), txNew.ToString());
 }
 
 std::string GetRequiredPaymentsString(int nBlockHeight)
@@ -300,8 +300,8 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int nBlockH
 
 int CMasternodePayments::GetMinMasternodePaymentsProto() {
     return sporkManager.IsSporkActive(SPORK_10_MASTERNODE_PAY_UPDATED_NODES)
-            ? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2
-            : MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
+           ? MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2
+           : MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1;
 }
 
 void CMasternodePayments::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
@@ -408,7 +408,7 @@ void CMasternodePayments::ProcessMessage(CNode* pfrom, std::string& strCommand, 
 
         LogPrint("mnpayments", "MASTERNODEPAYMENTVOTE -- vote: address=%s, nBlockHeight=%d, nHeight=%d, prevout=%s\n", address2.ToString(), vote.nBlockHeight, pCurrentBlockIndex->nHeight, vote.vinMasternode.prevout.ToStringShort());
 
-        if(AddPaymentVote(vote)){
+        if(AddPaymentVote(vote)) {
             vote.Relay();
             masternodeSync.AddedPaymentVote();
         }
@@ -419,8 +419,8 @@ bool CMasternodePaymentVote::Sign()
 {
     std::string strError;
     std::string strMessage = vinMasternode.prevout.ToStringShort() +
-                boost::lexical_cast<std::string>(nBlockHeight) +
-                ScriptToAsmStr(payee);
+                             boost::lexical_cast<std::string>(nBlockHeight) +
+                             ScriptToAsmStr(payee);
 
     if(!darkSendSigner.SignMessage(strMessage, vchSig, activeMasternode.keyMasternode)) {
         LogPrintf("CMasternodePaymentVote::Sign -- SignMessage() failed\n");
@@ -437,7 +437,7 @@ bool CMasternodePaymentVote::Sign()
 
 bool CMasternodePayments::GetBlockPayee(int nBlockHeight, CScript& payee)
 {
-    if(mapMasternodeBlocks.count(nBlockHeight)){
+    if(mapMasternodeBlocks.count(nBlockHeight)) {
         return mapMasternodeBlocks[nBlockHeight].GetBestPayee(payee);
     }
 
@@ -456,7 +456,7 @@ bool CMasternodePayments::IsScheduled(CMasternode& mn, int nNotBlockHeight)
     mnpayee = GetScriptForDestination(mn.pubKeyCollateralAddress.GetID());
 
     CScript payee;
-    for(int64_t h = pCurrentBlockIndex->nHeight; h <= pCurrentBlockIndex->nHeight + 8; h++){
+    for(int64_t h = pCurrentBlockIndex->nHeight; h <= pCurrentBlockIndex->nHeight + 8; h++) {
         if(h == nNotBlockHeight) continue;
         if(mapMasternodeBlocks.count(h) && mapMasternodeBlocks[h].GetBestPayee(payee) && mnpayee == payee) {
             return true;
@@ -478,8 +478,8 @@ bool CMasternodePayments::AddPaymentVote(const CMasternodePaymentVote& vote)
     mapMasternodePaymentVotes[vote.GetHash()] = vote;
 
     if(!mapMasternodeBlocks.count(vote.nBlockHeight)) {
-       CMasternodeBlockPayees blockPayees(vote.nBlockHeight);
-       mapMasternodeBlocks[vote.nBlockHeight] = blockPayees;
+        CMasternodeBlockPayees blockPayees(vote.nBlockHeight);
+        mapMasternodeBlocks[vote.nBlockHeight] = blockPayees;
     }
 
     mapMasternodeBlocks[vote.nBlockHeight].AddPayee(vote);
@@ -613,7 +613,7 @@ std::string CMasternodePayments::GetRequiredPaymentsString(int nBlockHeight)
 {
     LOCK(cs_mapMasternodeBlocks);
 
-    if(mapMasternodeBlocks.count(nBlockHeight)){
+    if(mapMasternodeBlocks.count(nBlockHeight)) {
         return mapMasternodeBlocks[nBlockHeight].GetRequiredPaymentsString();
     }
 
@@ -624,7 +624,7 @@ bool CMasternodePayments::IsTransactionValid(const CTransaction& txNew, int nBlo
 {
     LOCK(cs_mapMasternodeBlocks);
 
-    if(mapMasternodeBlocks.count(nBlockHeight)){
+    if(mapMasternodeBlocks.count(nBlockHeight)) {
         return mapMasternodeBlocks[nBlockHeight].IsTransactionValid(txNew);
     }
 
@@ -690,7 +690,7 @@ bool CMasternodePaymentVote::IsValid(CNode* pnode, int nValidationHeight, std::s
 
     if(nRank == -1) {
         LogPrint("mnpayments", "CMasternodePaymentVote::IsValid -- Can't calculate rank for masternode %s\n",
-                    vinMasternode.prevout.ToStringShort());
+                 vinMasternode.prevout.ToStringShort());
         return false;
     }
 
@@ -790,8 +790,8 @@ bool CMasternodePaymentVote::CheckSignature(const CPubKey& pubKeyMasternode, int
     nDos = 0;
 
     std::string strMessage = vinMasternode.prevout.ToStringShort() +
-                boost::lexical_cast<std::string>(nBlockHeight) +
-                ScriptToAsmStr(payee);
+                             boost::lexical_cast<std::string>(nBlockHeight) +
+                             ScriptToAsmStr(payee);
 
     std::string strError = "";
     if (!darkSendSigner.VerifyMessage(pubKeyMasternode, vchSig, strMessage, strError)) {
@@ -812,9 +812,9 @@ std::string CMasternodePaymentVote::ToString() const
     std::ostringstream info;
 
     info << vinMasternode.prevout.ToStringShort() <<
-            ", " << nBlockHeight <<
-            ", " << ScriptToAsmStr(payee) <<
-            ", " << (int)vchSig.size();
+         ", " << nBlockHeight <<
+         ", " << ScriptToAsmStr(payee) <<
+         ", " << (int)vchSig.size();
 
     return info.str();
 }
@@ -895,13 +895,13 @@ void CMasternodePayments::RequestLowDataPaymentBlocks(CNode* pnode)
         // DEBUG
         DBG (
             // Let's see why this failed
-            BOOST_FOREACH(CMasternodePayee& payee, it->second.vecPayees) {
-                CTxDestination address1;
-                ExtractDestination(payee.GetPayee(), address1);
-                CBitcoinAddress address2(address1);
-                printf("payee %s votes %d\n", address2.ToString().c_str(), payee.GetVoteCount());
-            }
-            printf("block %d votes total %d\n", it->first, nTotalVotes);
+        BOOST_FOREACH(CMasternodePayee& payee, it->second.vecPayees) {
+            CTxDestination address1;
+            ExtractDestination(payee.GetPayee(), address1);
+            CBitcoinAddress address2(address1);
+            printf("payee %s votes %d\n", address2.ToString().c_str(), payee.GetVoteCount());
+        }
+        printf("block %d votes total %d\n", it->first, nTotalVotes);
         )
         // END DEBUG
         // Low data block found, let's try to sync it
@@ -930,7 +930,7 @@ std::string CMasternodePayments::ToString() const
     std::ostringstream info;
 
     info << "Votes: " << (int)mapMasternodePaymentVotes.size() <<
-            ", Blocks: " << (int)mapMasternodeBlocks.size();
+         ", Blocks: " << (int)mapMasternodeBlocks.size();
 
     return info.str();
 }

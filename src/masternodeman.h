@@ -103,7 +103,7 @@ private:
     static const int MIN_POSE_PROTO_VERSION     = 70699;
     static const int MAX_POSE_CONNECTIONS       = 10;
     static const int MAX_POSE_RANK              = 10;
-    static const int MAX_POSE_BLOCKS            = 38;
+    static const int MAX_POSE_BLOCKS            = 38; //BBoBB CFRM
 
     static const int MNB_RECOVERY_QUORUM_TOTAL      = 10;
     static const int MNB_RECOVERY_QUORUM_REQUIRED   = 6;
@@ -176,7 +176,7 @@ public:
             READWRITE(strVersion);
         }
         else {
-            strVersion = SERIALIZATION_VERSION_STRING; 
+            strVersion = SERIALIZATION_VERSION_STRING;
             READWRITE(strVersion);
         }
 
@@ -293,7 +293,9 @@ public:
     /// Find a random entry
     CMasternode* FindRandomNotInVec(const std::vector<CTxIn> &vecToExclude, int nProtocolVersion = -1);
 
-    std::vector<CMasternode> GetFullMasternodeVector() { return vMasternodes; }
+    std::vector<CMasternode> GetFullMasternodeVector() {
+        return vMasternodes;
+    }
 
     std::vector<std::pair<int, CMasternode> > GetMasternodeRanks(int nBlockHeight = -1, int nMinProtocol=0);
     int GetMasternodeRank(const CTxIn &vin, int nBlockHeight, int nMinProtocol=0, bool fOnlyActive=true);
@@ -312,7 +314,9 @@ public:
     void ProcessVerifyBroadcast(CNode* pnode, const CMasternodeVerification& mnv);
 
     /// Return the number of (unique) Masternodes
-    int size() { return vMasternodes.size(); }
+    int size() {
+        return vMasternodes.size();
+    }
 
     std::string ToString() const;
 
@@ -320,7 +324,9 @@ public:
     void UpdateMasternodeList(CMasternodeBroadcast mnb);
     /// Perform complete check and only then update list and maps
     bool CheckMnbAndUpdateMasternodeList(CNode* pfrom, CMasternodeBroadcast mnb, int& nDos);
-    bool IsMnbRecoveryRequested(const uint256& hash) { return mMnbRecoveryRequests.count(hash); }
+    bool IsMnbRecoveryRequested(const uint256& hash) {
+        return mMnbRecoveryRequests.count(hash);
+    }
 
     void UpdateLastPaid();
 

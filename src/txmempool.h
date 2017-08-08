@@ -107,21 +107,41 @@ public:
                     unsigned int nSigOps, LockPoints lp);
     CTxMemPoolEntry(const CTxMemPoolEntry& other);
 
-    const CTransaction& GetTx() const { return this->tx; }
+    const CTransaction& GetTx() const {
+        return this->tx;
+    }
     /**
      * Fast calculation of lower bound of current priority as update
      * from entry priority. Only inputs that were originally in-chain will age.
      */
     double GetPriority(unsigned int currentHeight) const;
-    const CAmount& GetFee() const { return nFee; }
-    size_t GetTxSize() const { return nTxSize; }
-    int64_t GetTime() const { return nTime; }
-    unsigned int GetHeight() const { return entryHeight; }
-    bool WasClearAtEntry() const { return hadNoDependencies; }
-    unsigned int GetSigOpCount() const { return sigOpCount; }
-    int64_t GetModifiedFee() const { return nFee + feeDelta; }
-    size_t DynamicMemoryUsage() const { return nUsageSize; }
-    const LockPoints& GetLockPoints() const { return lockPoints; }
+    const CAmount& GetFee() const {
+        return nFee;
+    }
+    size_t GetTxSize() const {
+        return nTxSize;
+    }
+    int64_t GetTime() const {
+        return nTime;
+    }
+    unsigned int GetHeight() const {
+        return entryHeight;
+    }
+    bool WasClearAtEntry() const {
+        return hadNoDependencies;
+    }
+    unsigned int GetSigOpCount() const {
+        return sigOpCount;
+    }
+    int64_t GetModifiedFee() const {
+        return nFee + feeDelta;
+    }
+    size_t DynamicMemoryUsage() const {
+        return nUsageSize;
+    }
+    const LockPoints& GetLockPoints() const {
+        return lockPoints;
+    }
 
     // Adjusts the descendant state, if this entry is not dirty.
     void UpdateState(int64_t modifySize, CAmount modifyFee, int64_t modifyCount);
@@ -136,13 +156,23 @@ public:
      *  when re-adding transactions from a block back to the mempool.
      */
     void SetDirty();
-    bool IsDirty() const { return nCountWithDescendants == 0; }
+    bool IsDirty() const {
+        return nCountWithDescendants == 0;
+    }
 
-    uint64_t GetCountWithDescendants() const { return nCountWithDescendants; }
-    uint64_t GetSizeWithDescendants() const { return nSizeWithDescendants; }
-    CAmount GetModFeesWithDescendants() const { return nModFeesWithDescendants; }
+    uint64_t GetCountWithDescendants() const {
+        return nCountWithDescendants;
+    }
+    uint64_t GetSizeWithDescendants() const {
+        return nSizeWithDescendants;
+    }
+    CAmount GetModFeesWithDescendants() const {
+        return nModFeesWithDescendants;
+    }
 
-    bool GetSpendsCoinbase() const { return spendsCoinbase; }
+    bool GetSpendsCoinbase() const {
+        return spendsCoinbase;
+    }
 };
 
 // Helpers for modifying CTxMemPool::mapTx, which is a boost multi_index.
@@ -153,25 +183,31 @@ struct update_descendant_state
     {}
 
     void operator() (CTxMemPoolEntry &e)
-        { e.UpdateState(modifySize, modifyFee, modifyCount); }
+    {
+        e.UpdateState(modifySize, modifyFee, modifyCount);
+    }
 
-    private:
-        int64_t modifySize;
-        CAmount modifyFee;
-        int64_t modifyCount;
+private:
+    int64_t modifySize;
+    CAmount modifyFee;
+    int64_t modifyCount;
 };
 
 struct set_dirty
 {
     void operator() (CTxMemPoolEntry &e)
-        { e.SetDirty(); }
+    {
+        e.SetDirty();
+    }
 };
 
 struct update_fee_delta
 {
     update_fee_delta(int64_t _feeDelta) : feeDelta(_feeDelta) { }
 
-    void operator() (CTxMemPoolEntry &e) { e.UpdateFeeDelta(feeDelta); }
+    void operator() (CTxMemPoolEntry &e) {
+        e.UpdateFeeDelta(feeDelta);
+    }
 
 private:
     int64_t feeDelta;
@@ -181,7 +217,9 @@ struct update_lock_points
 {
     update_lock_points(const LockPoints& _lp) : lp(_lp) { }
 
-    void operator() (CTxMemPoolEntry &e) { e.UpdateLockPoints(lp); }
+    void operator() (CTxMemPoolEntry &e) {
+        e.UpdateLockPoints(lp);
+    }
 
 private:
     const LockPoints& lp;
@@ -270,11 +308,23 @@ public:
     const CTransaction* ptx;
     uint32_t n;
 
-    CInPoint() { SetNull(); }
-    CInPoint(const CTransaction* ptxIn, uint32_t nIn) { ptx = ptxIn; n = nIn; }
-    void SetNull() { ptx = NULL; n = (uint32_t) -1; }
-    bool IsNull() const { return (ptx == NULL && n == (uint32_t) -1); }
-    size_t DynamicMemoryUsage() const { return 0; }
+    CInPoint() {
+        SetNull();
+    }
+    CInPoint(const CTransaction* ptxIn, uint32_t nIn) {
+        ptx = ptxIn;
+        n = nIn;
+    }
+    void SetNull() {
+        ptx = NULL;
+        n = (uint32_t) -1;
+    }
+    bool IsNull() const {
+        return (ptx == NULL && n == (uint32_t) -1);
+    }
+    size_t DynamicMemoryUsage() const {
+        return 0;
+    }
 };
 
 /**
@@ -377,26 +427,26 @@ public:
     static const int ROLLING_FEE_HALFLIFE = 60 * 60 * 12; // public only for testing
 
     typedef boost::multi_index_container<
-        CTxMemPoolEntry,
-        boost::multi_index::indexed_by<
-            // sorted by txid
-            boost::multi_index::ordered_unique<mempoolentry_txid>,
-            // sorted by fee rate
-            boost::multi_index::ordered_non_unique<
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByDescendantScore
-            >,
-            // sorted by entry time
-            boost::multi_index::ordered_non_unique<
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByEntryTime
-                >,
-            // sorted by score (for mining prioritization)
-            boost::multi_index::ordered_unique<
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByScore
-            >
-        >
+    CTxMemPoolEntry,
+    boost::multi_index::indexed_by<
+    // sorted by txid
+    boost::multi_index::ordered_unique<mempoolentry_txid>,
+    // sorted by fee rate
+    boost::multi_index::ordered_non_unique<
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByDescendantScore
+    >,
+    // sorted by entry time
+    boost::multi_index::ordered_non_unique<
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByEntryTime
+    >,
+    // sorted by score (for mining prioritization)
+    boost::multi_index::ordered_unique<
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByScore
+    >
+    >
     > indexed_transaction_set;
 
     mutable CCriticalSection cs;
@@ -456,7 +506,9 @@ public:
      * check does nothing.
      */
     void check(const CCoinsViewCache *pcoins) const;
-    void setSanityCheck(double dFrequency = 1.0) { nCheckFrequency = dFrequency * 4294967295.0; }
+    void setSanityCheck(double dFrequency = 1.0) {
+        nCheckFrequency = dFrequency * 4294967295.0;
+    }
 
     // addUnchecked must updated state for all ancestors of a given transaction,
     // to track size/count of descendant transactions.  First version of
@@ -584,7 +636,7 @@ public:
 
     /** Estimate priority needed to get into the next nBlocks */
     double estimatePriority(int nBlocks) const;
-    
+
     /** Write/Read estimates to disk */
     bool WriteFeeEstimates(CAutoFile& fileout) const;
     bool ReadFeeEstimates(CAutoFile& filein);
@@ -609,9 +661,9 @@ private:
      *  same transaction again, if encountered in another transaction chain.
      */
     bool UpdateForDescendants(txiter updateIt,
-            int maxDescendantsToVisit,
-            cacheMap &cachedDescendants,
-            const std::set<uint256> &setExclude);
+                              int maxDescendantsToVisit,
+                              cacheMap &cachedDescendants,
+                              const std::set<uint256> &setExclude);
     /** Update ancestors of hash to add/remove it as a descendant transaction. */
     void UpdateAncestorsOf(bool add, txiter hash, setEntries &setAncestors);
     /** For each transaction being removed, update ancestors and any direct children. */
@@ -630,7 +682,7 @@ private:
     void removeUnchecked(txiter entry);
 };
 
-/** 
+/**
  * CCoinsView that brings transactions from a memorypool into view.
  * It does not check for spendings by memory pool transactions.
  */

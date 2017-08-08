@@ -86,7 +86,7 @@ bool AppInit(int argc, char* argv[])
         else
         {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  mued [options]                     " + _("Start MonetaryUnit Core Daemon") + "\n";
+                        "  mued [options]                     " + _("Start MonetaryUnit Core Daemon") + "\n";
 
             strUsage += "\n" + HelpMessage(HMM_BITCOIND);
         }

@@ -105,21 +105,37 @@ public:
     CGovernanceVote();
     CGovernanceVote(CTxIn vinMasternodeIn, uint256 nParentHashIn, vote_signal_enum_t eVoteSignalIn, vote_outcome_enum_t eVoteOutcomeIn);
 
-    bool IsValid() const { return fValid; }
+    bool IsValid() const {
+        return fValid;
+    }
 
-    bool IsSynced() const { return fSynced; }
+    bool IsSynced() const {
+        return fSynced;
+    }
 
-    int64_t GetTimestamp() const { return nTime; }
+    int64_t GetTimestamp() const {
+        return nTime;
+    }
 
-    vote_signal_enum_t GetSignal() const  { return vote_signal_enum_t(nVoteSignal); }
+    vote_signal_enum_t GetSignal() const  {
+        return vote_signal_enum_t(nVoteSignal);
+    }
 
-    vote_outcome_enum_t GetOutcome() const  { return vote_outcome_enum_t(nVoteOutcome); }
+    vote_outcome_enum_t GetOutcome() const  {
+        return vote_outcome_enum_t(nVoteOutcome);
+    }
 
-    const uint256& GetParentHash() const { return nParentHash; }
+    const uint256& GetParentHash() const {
+        return nParentHash;
+    }
 
-    void SetTime(int64_t nTimeIn) { nTime = nTimeIn; }
+    void SetTime(int64_t nTimeIn) {
+        nTime = nTimeIn;
+    }
 
-    void SetSignature(const std::vector<unsigned char>& vchSigIn) { vchSig = vchSigIn; }
+    void SetSignature(const std::vector<unsigned char>& vchSigIn) {
+        vchSig = vchSigIn;
+    }
 
     bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
     bool IsValid(bool fSignatureCheck) const;
@@ -129,9 +145,13 @@ public:
         return CGovernanceVoting::ConvertOutcomeToString(GetOutcome());
     }
 
-    CTxIn& GetVinMasternode() { return vinMasternode; }
+    CTxIn& GetVinMasternode() {
+        return vinMasternode;
+    }
 
-    const CTxIn& GetVinMasternode() const { return vinMasternode; }
+    const CTxIn& GetVinMasternode() const {
+        return vinMasternode;
+    }
 
     /**
     *   GetHash()

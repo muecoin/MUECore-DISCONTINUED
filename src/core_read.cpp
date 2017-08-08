@@ -57,7 +57,7 @@ CScript ParseScript(const std::string& s)
             // Empty string, ignore. (boost::split given '' will return one word)
         }
         else if (all(*w, boost::algorithm::is_digit()) ||
-            (boost::algorithm::starts_with(*w, "-") && all(string(w->begin()+1, w->end()), boost::algorithm::is_digit())))
+                 (boost::algorithm::starts_with(*w, "-") && all(string(w->begin()+1, w->end()), boost::algorithm::is_digit())))
         {
             // Number
             int64_t n = atoi64(*w);

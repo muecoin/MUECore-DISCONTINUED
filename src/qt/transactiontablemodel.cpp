@@ -30,13 +30,13 @@
 
 // Amount column is right-aligned it contains numbers
 static int column_alignments[] = {
-        Qt::AlignLeft|Qt::AlignVCenter, /* status */
-        Qt::AlignLeft|Qt::AlignVCenter, /* watchonly */
-        Qt::AlignLeft|Qt::AlignVCenter, /* date */
-        Qt::AlignLeft|Qt::AlignVCenter, /* type */
-        Qt::AlignLeft|Qt::AlignVCenter, /* address */
-        Qt::AlignRight|Qt::AlignVCenter /* amount */
-    };
+    Qt::AlignLeft|Qt::AlignVCenter, /* status */
+    Qt::AlignLeft|Qt::AlignVCenter, /* watchonly */
+    Qt::AlignLeft|Qt::AlignVCenter, /* date */
+    Qt::AlignLeft|Qt::AlignVCenter, /* type */
+    Qt::AlignLeft|Qt::AlignVCenter, /* address */
+    Qt::AlignRight|Qt::AlignVCenter /* amount */
+};
 
 // Comparison operator for sort/binary search of model tx list
 struct TxLessThan
@@ -101,9 +101,9 @@ public:
 
         // Find bounds of this transaction in model
         QList<TransactionRecord>::iterator lower = qLowerBound(
-            cachedWallet.begin(), cachedWallet.end(), hash, TxLessThan());
+                    cachedWallet.begin(), cachedWallet.end(), hash, TxLessThan());
         QList<TransactionRecord>::iterator upper = qUpperBound(
-            cachedWallet.begin(), cachedWallet.end(), hash, TxLessThan());
+                    cachedWallet.begin(), cachedWallet.end(), hash, TxLessThan());
         int lowerIndex = (lower - cachedWallet.begin());
         int upperIndex = (upper - cachedWallet.begin());
         bool inModel = (lower != upper);
@@ -117,8 +117,8 @@ public:
         }
 
         qDebug() << "    inModel=" + QString::number(inModel) +
-                    " Index=" + QString::number(lowerIndex) + "-" + QString::number(upperIndex) +
-                    " showTransaction=" + QString::number(showTransaction) + " derivedStatus=" + QString::number(status);
+                 " Index=" + QString::number(lowerIndex) + "-" + QString::number(upperIndex) +
+                 " showTransaction=" + QString::number(showTransaction) + " derivedStatus=" + QString::number(status);
 
         switch(status)
         {
@@ -140,7 +140,7 @@ public:
                 }
                 // Added -- insert at the right position
                 QList<TransactionRecord> toInsert =
-                        TransactionRecord::decomposeTransaction(wallet, mi->second);
+                    TransactionRecord::decomposeTransaction(wallet, mi->second);
                 if(!toInsert.isEmpty()) /* only if something to insert */
                 {
                     parent->beginInsertRows(QModelIndex(), lowerIndex, lowerIndex+toInsert.size()-1);
@@ -236,12 +236,12 @@ public:
 };
 
 TransactionTableModel::TransactionTableModel(const PlatformStyle *platformStyle, CWallet* wallet, WalletModel *parent):
-        QAbstractTableModel(parent),
-        wallet(wallet),
-        walletModel(parent),
-        priv(new TransactionTablePriv(wallet, this)),
-        fProcessingQueuedTransactions(false),
-        platformStyle(platformStyle)
+    QAbstractTableModel(parent),
+    wallet(wallet),
+    walletModel(parent),
+    priv(new TransactionTablePriv(wallet, this)),
+    fProcessingQueuedTransactions(false),
+    platformStyle(platformStyle)
 {
     columns << QString() << QString() << tr("Date") << tr("Type") << tr("Address / Label") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
     priv->refreshWallet();
@@ -451,11 +451,12 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     case TransactionRecord::Generated:
     case TransactionRecord::PrivateSend:
     case TransactionRecord::RecvWithPrivateSend:
-        {
+    {
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
         if(label.isEmpty())
             return COLOR_BAREADDRESS;
-        } break;
+    }
+    break;
     case TransactionRecord::SendToSelf:
     case TransactionRecord::PrivateSendCreateDenominations:
     case TransactionRecord::PrivateSendDenominate:
@@ -496,11 +497,16 @@ QVariant TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx)
     case TransactionStatus::Confirming:
         switch(wtx->status.depth)
         {
-        case 1: return QIcon(":/icons/" + theme + "/transaction_1");
-        case 2: return QIcon(":/icons/" + theme + "/transaction_2");
-        case 3: return QIcon(":/icons/" + theme + "/transaction_3");
-        case 4: return QIcon(":/icons/" + theme + "/transaction_4");
-        default: return QIcon(":/icons/" + theme + "/transaction_5");
+        case 1:
+            return QIcon(":/icons/" + theme + "/transaction_1");
+        case 2:
+            return QIcon(":/icons/" + theme + "/transaction_2");
+        case 3:
+            return QIcon(":/icons/" + theme + "/transaction_3");
+        case 4:
+            return QIcon(":/icons/" + theme + "/transaction_4");
+        default:
+            return QIcon(":/icons/" + theme + "/transaction_5");
         };
     case TransactionStatus::Confirmed:
         return QIcon(":/icons/" + theme + "/transaction_confirmed");
@@ -510,7 +516,7 @@ QVariant TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx)
         int total = wtx->status.depth + wtx->status.matures_in;
         int part = (wtx->status.depth * 4 / total) + 1;
         return QIcon(QString(":/icons/" + theme + "/transaction_%1").arg(part));
-        }
+    }
     case TransactionStatus::MaturesWarning:
     case TransactionStatus::NotAccepted:
         return QIcon(":/icons/" + theme + "/transaction_0");
@@ -532,7 +538,7 @@ QString TransactionTableModel::formatTooltip(const TransactionRecord *rec) const
 {
     QString tooltip = formatTxStatus(rec) + QString("\n") + formatTxType(rec);
     if(rec->type==TransactionRecord::RecvFromOther || rec->type==TransactionRecord::SendToOther ||
-       rec->type==TransactionRecord::SendToAddress || rec->type==TransactionRecord::RecvWithAddress)
+            rec->type==TransactionRecord::SendToAddress || rec->type==TransactionRecord::RecvWithAddress)
     {
         tooltip += QString(" ") + formatTxToAddress(rec, true);
     }

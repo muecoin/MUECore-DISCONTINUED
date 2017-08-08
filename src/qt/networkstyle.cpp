@@ -27,12 +27,12 @@ void NetworkStyle::rotateColors(QImage& img, const int iconColorHueShift, const 
     int h,s,l,a;
 
     // traverse though lines
-    for(int y=0;y<img.height();y++)
+    for(int y=0; y<img.height(); y++)
     {
         QRgb *scL = reinterpret_cast< QRgb *>( img.scanLine( y ) );
 
         // loop through pixels
-        for(int x=0;x<img.width();x++)
+        for(int x=0; x<img.width(); x++)
         {
             // preserve alpha because QColor::getHsl doesen't return the alpha value
             a = qAlpha(scL[x]);
@@ -103,10 +103,10 @@ const NetworkStyle *NetworkStyle::instantiate(const QString &networkId)
         if (networkId == network_styles[x].networkId)
         {
             return new NetworkStyle(
-                    network_styles[x].appName,
-                    network_styles[x].iconColorHueShift,
-                    network_styles[x].iconColorSaturationReduction,
-                    network_styles[x].titleAddText);
+                       network_styles[x].appName,
+                       network_styles[x].iconColorHueShift,
+                       network_styles[x].iconColorSaturationReduction,
+                       network_styles[x].titleAddText);
         }
     }
     return 0;

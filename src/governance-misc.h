@@ -35,7 +35,7 @@ class CGovernanceVote;
 
 // /*
 
-	
+
 // */
 
 // class CGovernanceSettings

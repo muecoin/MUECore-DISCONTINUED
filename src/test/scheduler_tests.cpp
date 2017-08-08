@@ -36,7 +36,7 @@ static void MicroSleep(uint64_t n)
     boost::this_thread::sleep(boost::posix_time::microseconds(n));
 #else
     //should never get here
-    #error missing boost sleep implementation
+#error missing boost sleep implementation
 #endif
 }
 

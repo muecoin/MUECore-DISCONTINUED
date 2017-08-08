@@ -20,7 +20,7 @@ class PlatformStyle;
 class WalletModel;
 
 namespace Ui {
-    class ReceiveCoinsDialog;
+class ReceiveCoinsDialog;
 }
 
 QT_BEGIN_NAMESPACE

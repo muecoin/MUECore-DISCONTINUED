@@ -20,7 +20,7 @@ void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
 #endif /* DEBUG_LOCKCONTENTION */
 
 #ifdef DEBUG_LOCKORDER
-//
+
 // Early deadlock detection.
 // Problem being solved:
 //    Thread 1 locks  A, then B, then C
@@ -29,7 +29,6 @@ void PrintLockContention(const char* pszName, const char* pszFile, int nLine)
 // Solution implemented here:
 // Keep track of pairs of locks: (A before B), (A before C), etc.
 // Complain if any thread tries to lock in a different order.
-//
 
 struct CLockLocation {
     CLockLocation(const char* pszName, const char* pszFile, int nLine, bool fTryIn)
@@ -45,7 +44,9 @@ struct CLockLocation {
         return mutexName + "  " + sourceFile + ":" + itostr(sourceLine) + (fTry ? " (TRY)" : "");
     }
 
-    std::string MutexName() const { return mutexName; }
+    std::string MutexName() const {
+        return mutexName;
+    }
 
     bool fTry;
 private:
@@ -164,15 +165,15 @@ std::string LocksHeld()
 {
     std::string result;
     BOOST_FOREACH (const PAIRTYPE(void*, CLockLocation) & i, *lockstack)
-        result += i.second.ToString() + std::string("\n");
+    result += i.second.ToString() + std::string("\n");
     return result;
 }
 
 void AssertLockHeldInternal(const char* pszName, const char* pszFile, int nLine, void* cs)
 {
     BOOST_FOREACH (const PAIRTYPE(void*, CLockLocation) & i, *lockstack)
-        if (i.first == cs)
-            return;
+    if (i.first == cs)
+        return;
     fprintf(stderr, "Assertion failed: lock %s not held in %s:%i; locks held:\n%s", pszName, pszFile, nLine, LocksHeld().c_str());
     abort();
 }

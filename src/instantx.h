@@ -122,11 +122,11 @@ public:
     CTxLockRequest() :
         CTransaction(),
         nTimeCreated(GetTime())
-        {}
+    {}
     CTxLockRequest(const CTransaction& tx) :
         CTransaction(tx),
         nTimeCreated(GetTime())
-        {}
+    {}
 
     bool IsValid(bool fRequireUnspent = true) const;
     CAmount GetMinFee() const;
@@ -153,7 +153,7 @@ public:
         vchMasternodeSignature(),
         nConfirmedHeight(-1),
         nTimeCreated(GetTime())
-        {}
+    {}
 
     CTxLockVote(const uint256& txHashIn, const COutPoint& outpointIn, const COutPoint& outpointMasternodeIn) :
         txHash(txHashIn),
@@ -162,7 +162,7 @@ public:
         vchMasternodeSignature(),
         nConfirmedHeight(-1),
         nTimeCreated(GetTime())
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -176,13 +176,23 @@ public:
 
     uint256 GetHash() const;
 
-    uint256 GetTxHash() const { return txHash; }
-    COutPoint GetOutpoint() const { return outpoint; }
-    COutPoint GetMasternodeOutpoint() const { return outpointMasternode; }
-    int64_t GetTimeCreated() const { return nTimeCreated; }
+    uint256 GetTxHash() const {
+        return txHash;
+    }
+    COutPoint GetOutpoint() const {
+        return outpoint;
+    }
+    COutPoint GetMasternodeOutpoint() const {
+        return outpointMasternode;
+    }
+    int64_t GetTimeCreated() const {
+        return nTimeCreated;
+    }
 
     bool IsValid(CNode* pnode) const;
-    void SetConfirmedHeight(int nConfirmedHeightIn) { nConfirmedHeight = nConfirmedHeightIn; }
+    void SetConfirmedHeight(int nConfirmedHeightIn) {
+        nConfirmedHeight = nConfirmedHeightIn;
+    }
     bool IsExpired(int nHeight) const;
 
     bool Sign();
@@ -204,15 +214,21 @@ public:
     COutPointLock(const COutPoint& outpointIn) :
         outpoint(outpointIn),
         mapMasternodeVotes()
-        {}
+    {}
 
-    COutPoint GetOutpoint() const { return outpoint; }
+    COutPoint GetOutpoint() const {
+        return outpoint;
+    }
 
     bool AddVote(const CTxLockVote& vote);
     std::vector<CTxLockVote> GetVotes() const;
     bool HasMasternodeVoted(const COutPoint& outpointMasternodeIn) const;
-    int CountVotes() const { return mapMasternodeVotes.size(); }
-    bool IsReady() const { return CountVotes() >= SIGNATURES_REQUIRED; }
+    int CountVotes() const {
+        return mapMasternodeVotes.size();
+    }
+    bool IsReady() const {
+        return CountVotes() >= SIGNATURES_REQUIRED;
+    }
 
     void Relay() const;
 };
@@ -227,12 +243,14 @@ public:
         nConfirmedHeight(-1),
         txLockRequest(txLockRequestIn),
         mapOutPointLocks()
-        {}
+    {}
 
     CTxLockRequest txLockRequest;
     std::map<COutPoint, COutPointLock> mapOutPointLocks;
 
-    uint256 GetHash() const { return txLockRequest.GetHash(); }
+    uint256 GetHash() const {
+        return txLockRequest.GetHash();
+    }
 
     void AddOutPointLock(const COutPoint& outpoint);
     bool AddVote(const CTxLockVote& vote);
@@ -241,7 +259,9 @@ public:
     bool HasMasternodeVoted(const COutPoint& outpointIn, const COutPoint& outpointMasternodeIn);
     int CountVotes() const;
 
-    void SetConfirmedHeight(int nConfirmedHeightIn) { nConfirmedHeight = nConfirmedHeightIn; }
+    void SetConfirmedHeight(int nConfirmedHeightIn) {
+        nConfirmedHeight = nConfirmedHeightIn;
+    }
     bool IsExpired(int nHeight) const;
 
     void Relay() const;

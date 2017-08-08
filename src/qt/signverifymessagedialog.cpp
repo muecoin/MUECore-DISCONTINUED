@@ -50,10 +50,10 @@ SignVerifyMessageDialog::SignVerifyMessageDialog(const PlatformStyle *platformSt
     // These icons are needed on Mac also
     ui->addressBookButton_SM->setIcon(QIcon(":/icons/" + theme + "/address-book"));
     ui->pasteButton_SM->setIcon(QIcon(":/icons/" + theme + "/editpaste"));
-    ui->copySignatureButton_SM->setIcon(QIcon(":/icons/" + theme + "/editcopy"));   
+    ui->copySignatureButton_SM->setIcon(QIcon(":/icons/" + theme + "/editcopy"));
     ui->addressBookButton_VM->setIcon(QIcon(":/icons/" + theme + "/address-book"));
 
-      
+
     GUIUtil::setupAddressWidget(ui->addressIn_SM, this);
     GUIUtil::setupAddressWidget(ui->addressIn_VM, this);
 

@@ -29,9 +29,9 @@
  *   'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141'
  */
 static const secp256k1_fe secp256k1_ecdsa_const_order_as_fe = SECP256K1_FE_CONST(
-    0xFFFFFFFFUL, 0xFFFFFFFFUL, 0xFFFFFFFFUL, 0xFFFFFFFEUL,
-    0xBAAEDCE6UL, 0xAF48A03BUL, 0xBFD25E8CUL, 0xD0364141UL
-);
+            0xFFFFFFFFUL, 0xFFFFFFFFUL, 0xFFFFFFFFUL, 0xFFFFFFFEUL,
+            0xBAAEDCE6UL, 0xAF48A03BUL, 0xBFD25E8CUL, 0xD0364141UL
+        );
 
 /** Difference between field and order, values 'p' and 'n' values defined in
  *  "Standards for Efficient Cryptography" (SEC2) 2.7.1.
@@ -43,8 +43,8 @@ static const secp256k1_fe secp256k1_ecdsa_const_order_as_fe = SECP256K1_FE_CONST
  *   '14551231950b75fc4402da1722fc9baee'
  */
 static const secp256k1_fe secp256k1_ecdsa_const_p_minus_order = SECP256K1_FE_CONST(
-    0, 0, 0, 1, 0x45512319UL, 0x50B75FC4UL, 0x402DA172UL, 0x2FC9BAEEUL
-);
+            0, 0, 0, 1, 0x45512319UL, 0x50B75FC4UL, 0x402DA172UL, 0x2FC9BAEEUL
+        );
 
 static int secp256k1_der_read_len(const unsigned char **sigp, const unsigned char *sigend) {
     int lenleft, b1;
@@ -182,8 +182,14 @@ static int secp256k1_ecdsa_sig_serialize(unsigned char *sig, size_t *size, const
     size_t lenR = 33, lenS = 33;
     secp256k1_scalar_get_b32(&r[1], ar);
     secp256k1_scalar_get_b32(&s[1], as);
-    while (lenR > 1 && rp[0] == 0 && rp[1] < 0x80) { lenR--; rp++; }
-    while (lenS > 1 && sp[0] == 0 && sp[1] < 0x80) { lenS--; sp++; }
+    while (lenR > 1 && rp[0] == 0 && rp[1] < 0x80) {
+        lenR--;
+        rp++;
+    }
+    while (lenS > 1 && sp[0] == 0 && sp[1] < 0x80) {
+        lenS--;
+        sp++;
+    }
     if (*size < 6+lenS+lenR) {
         *size = 6 + lenS + lenR;
         return 0;
@@ -223,16 +229,16 @@ static int secp256k1_ecdsa_sig_verify(const secp256k1_ecmult_context *ctx, const
     }
 
 #if defined(EXHAUSTIVE_TEST_ORDER)
-{
-    secp256k1_scalar computed_r;
-    secp256k1_ge pr_ge;
-    secp256k1_ge_set_gej(&pr_ge, &pr);
-    secp256k1_fe_normalize(&pr_ge.x);
+    {
+        secp256k1_scalar computed_r;
+        secp256k1_ge pr_ge;
+        secp256k1_ge_set_gej(&pr_ge, &pr);
+        secp256k1_fe_normalize(&pr_ge.x);
 
-    secp256k1_fe_get_b32(c, &pr_ge.x);
-    secp256k1_scalar_set_b32(&computed_r, c, NULL);
-    return secp256k1_scalar_eq(sigr, &computed_r);
-}
+        secp256k1_fe_get_b32(c, &pr_ge.x);
+        secp256k1_scalar_set_b32(&computed_r, c, NULL);
+        return secp256k1_scalar_eq(sigr, &computed_r);
+    }
 #else
     secp256k1_scalar_get_b32(c, sigr);
     secp256k1_fe_set_b32(&xr, c);

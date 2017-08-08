@@ -27,12 +27,12 @@ std::string CDarkSendRelay::ToString()
     std::ostringstream info;
 
     info << "vin: " << vinMasternode.ToString() <<
-        " nBlockHeight: " << (int)nBlockHeight <<
-        " nRelayType: "  << (int)nRelayType <<
-        " in " << in.ToString() <<
-        " out " << out.ToString();
-        
-    return info.str();   
+         " nBlockHeight: " << (int)nBlockHeight <<
+         " nRelayType: "  << (int)nRelayType <<
+         " in " << in.ToString() <<
+         " out " << out.ToString();
+
+    return info.str();
 }
 
 bool CDarkSendRelay::Sign(std::string strSharedKey)
@@ -85,8 +85,8 @@ bool CDarkSendRelay::VerifyMessage(std::string strSharedKey)
 void CDarkSendRelay::Relay()
 {
     int nCount = std::min(mnodeman.CountEnabled(MIN_PRIVATESEND_PEER_PROTO_VERSION), 20);
-    int nRank1 = (rand() % nCount)+1; 
-    int nRank2 = (rand() % nCount)+1; 
+    int nRank1 = (rand() % nCount)+1;
+    int nRank2 = (rand() % nCount)+1;
 
     //keep picking another second number till we get one that doesn't match
     while(nRank1 == nRank2) nRank2 = (rand() % nCount)+1;
@@ -102,7 +102,7 @@ void CDarkSendRelay::RelayThroughNode(int nRank)
 {
     CMasternode* pmn = mnodeman.GetMasternodeByRank(nRank, nBlockHeight, MIN_PRIVATESEND_PEER_PROTO_VERSION);
 
-    if(pmn != NULL){
+    if(pmn != NULL) {
         //printf("RelayThroughNode %s\n", pmn->addr.ToString().c_str());
         CNode* pnode = ConnectNode((CAddress)pmn->addr, NULL);
         if(pnode) {

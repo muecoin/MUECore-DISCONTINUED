@@ -13,9 +13,9 @@
 #include "ecmult_impl.h"
 
 #ifdef USE_ENDOMORPHISM
-    #define WNAF_BITS 128
+#define WNAF_BITS 128
 #else
-    #define WNAF_BITS 256
+#define WNAF_BITS 256
 #endif
 #define WNAF_SIZE(w) ((WNAF_BITS + (w) - 1) / (w))
 

@@ -55,7 +55,7 @@ static void add_coin(const CAmount& nValue, int nAge = 6*24, bool fIsFromMe = fa
 static void empty_wallet(void)
 {
     BOOST_FOREACH(COutput output, vCoins)
-        delete output.tx;
+    delete output.tx;
     vCoins.clear();
 }
 
@@ -265,22 +265,22 @@ BOOST_AUTO_TEST_CASE(coin_selection_tests)
 
         // test with many inputs
         for (CAmount amt=1500; amt < COIN; amt*=10) {
-             empty_wallet();
-             // Create 676 inputs (= MAX_STANDARD_TX_SIZE / 148 bytes per input)
-             for (uint16_t j = 0; j < 676; j++)
-                 add_coin(amt);
-             BOOST_CHECK(wallet.SelectCoinsMinConf(2000, 1, 1, vCoins, setCoinsRet, nValueRet));
-             if (amt - 2000 < MIN_CHANGE) {
-                 // needs more than one input:
-                 uint16_t returnSize = std::ceil((2000.0 + MIN_CHANGE)/amt);
-                 CAmount returnValue = amt * returnSize;
-                 BOOST_CHECK_EQUAL(nValueRet, returnValue);
-                 BOOST_CHECK_EQUAL(setCoinsRet.size(), returnSize);
-             } else {
-                 // one input is sufficient:
-                 BOOST_CHECK_EQUAL(nValueRet, amt);
-                 BOOST_CHECK_EQUAL(setCoinsRet.size(), 1U);
-             }
+            empty_wallet();
+            // Create 676 inputs (= MAX_STANDARD_TX_SIZE / 148 bytes per input)
+            for (uint16_t j = 0; j < 676; j++)
+                add_coin(amt);
+            BOOST_CHECK(wallet.SelectCoinsMinConf(2000, 1, 1, vCoins, setCoinsRet, nValueRet));
+            if (amt - 2000 < MIN_CHANGE) {
+                // needs more than one input:
+                uint16_t returnSize = std::ceil((2000.0 + MIN_CHANGE)/amt);
+                CAmount returnValue = amt * returnSize;
+                BOOST_CHECK_EQUAL(nValueRet, returnValue);
+                BOOST_CHECK_EQUAL(setCoinsRet.size(), returnSize);
+            } else {
+                // one input is sufficient:
+                BOOST_CHECK_EQUAL(nValueRet, amt);
+                BOOST_CHECK_EQUAL(setCoinsRet.size(), 1U);
+            }
         }
 
         // test randomness
@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(coin_selection_tests)
 
             // picking 50 from 100 coins doesn't depend on the shuffle,
             // but does depend on randomness in the stochastic approximation code
-            BOOST_CHECK(wallet.SelectCoinsMinConf(50 * COIN, 1, 6, vCoins, setCoinsRet , nValueRet));
+            BOOST_CHECK(wallet.SelectCoinsMinConf(50 * COIN, 1, 6, vCoins, setCoinsRet, nValueRet));
             BOOST_CHECK(wallet.SelectCoinsMinConf(50 * COIN, 1, 6, vCoins, setCoinsRet2, nValueRet));
             BOOST_CHECK(!equal_sets(setCoinsRet, setCoinsRet2));
 
@@ -300,7 +300,7 @@ BOOST_AUTO_TEST_CASE(coin_selection_tests)
             {
                 // selecting 1 from 100 identical coins depends on the shuffle; this test will fail 1% of the time
                 // run the test RANDOM_REPEATS times and only complain if all of them fail
-                BOOST_CHECK(wallet.SelectCoinsMinConf(COIN, 1, 6, vCoins, setCoinsRet , nValueRet));
+                BOOST_CHECK(wallet.SelectCoinsMinConf(COIN, 1, 6, vCoins, setCoinsRet, nValueRet));
                 BOOST_CHECK(wallet.SelectCoinsMinConf(COIN, 1, 6, vCoins, setCoinsRet2, nValueRet));
                 if (equal_sets(setCoinsRet, setCoinsRet2))
                     fails++;
@@ -310,14 +310,18 @@ BOOST_AUTO_TEST_CASE(coin_selection_tests)
             // add 75 cents in small change.  not enough to make 90 cents,
             // then try making 90 cents.  there are multiple competing "smallest bigger" coins,
             // one of which should be picked at random
-            add_coin( 5*CENT); add_coin(10*CENT); add_coin(15*CENT); add_coin(20*CENT); add_coin(25*CENT);
+            add_coin( 5*CENT);
+            add_coin(10*CENT);
+            add_coin(15*CENT);
+            add_coin(20*CENT);
+            add_coin(25*CENT);
 
             fails = 0;
             for (int i = 0; i < RANDOM_REPEATS; i++)
             {
                 // selecting 1 from 100 identical coins depends on the shuffle; this test will fail 1% of the time
                 // run the test RANDOM_REPEATS times and only complain if all of them fail
-                BOOST_CHECK(wallet.SelectCoinsMinConf(90*CENT, 1, 6, vCoins, setCoinsRet , nValueRet));
+                BOOST_CHECK(wallet.SelectCoinsMinConf(90*CENT, 1, 6, vCoins, setCoinsRet, nValueRet));
                 BOOST_CHECK(wallet.SelectCoinsMinConf(90*CENT, 1, 6, vCoins, setCoinsRet2, nValueRet));
                 if (equal_sets(setCoinsRet, setCoinsRet2))
                     fails++;

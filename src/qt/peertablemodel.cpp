@@ -80,7 +80,7 @@ public:
             if (lockMain)
             {
                 BOOST_FOREACH(CNodeCombinedStats &stats, cachedNodeStats)
-                    stats.fNodeStateStatsAvailable = GetNodeStateStats(stats.nodeStats.nodeid, stats.nodeStateStats);
+                stats.fNodeStateStatsAvailable = GetNodeStateStats(stats.nodeStats.nodeid, stats.nodeStateStats);
             }
         }
 

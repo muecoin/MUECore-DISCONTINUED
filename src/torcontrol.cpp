@@ -50,7 +50,9 @@ static const int MAX_LINE_LENGTH = 100000;
 class TorControlReply
 {
 public:
-    TorControlReply() { Clear(); }
+    TorControlReply() {
+        Clear();
+    }
 
     int code;
     std::vector<std::string> lines;
@@ -197,7 +199,7 @@ bool TorControlConnection::Connect(const std::string &target, const ConnectionCB
     struct sockaddr_storage connect_to_addr;
     int connect_to_addrlen = sizeof(connect_to_addr);
     if (evutil_parse_sockaddr_port(target.c_str(),
-        (struct sockaddr*)&connect_to_addr, &connect_to_addrlen)<0) {
+                                   (struct sockaddr*)&connect_to_addr, &connect_to_addrlen)<0) {
         LogPrintf("tor: Error parsing socket address %s\n", target);
         return false;
     }
@@ -399,7 +401,7 @@ TorController::TorController(struct event_base* base, const std::string& target)
         LogPrintf("tor: Failed to create event for reconnection: out of memory?\n");
     // Start connection attempts immediately
     if (!conn.Connect(target, boost::bind(&TorController::connected_cb, this, _1),
-         boost::bind(&TorController::disconnected_cb, this, _1) )) {
+                      boost::bind(&TorController::disconnected_cb, this, _1) )) {
         LogPrintf("tor: Initiating connection to Tor control port %s failed\n", target);
     }
     // Read service private key if cached
@@ -470,7 +472,7 @@ void TorController::auth_cb(TorControlConnection& conn, const TorControlReply& r
         // Note that the 'virtual' port doesn't have to be the same as our internal port, but this is just a convenient
         // choice.  TODO; refactor the shutdown sequence some day.
         conn.Command(strprintf("ADD_ONION %s Port=%i,127.0.0.1:%i", private_key, GetListenPort(), GetListenPort()),
-            boost::bind(&TorController::add_onion_cb, this, _1, _2));
+                     boost::bind(&TorController::add_onion_cb, this, _1, _2));
     } else {
         LogPrintf("tor: Authentication failed\n");
     }
@@ -638,7 +640,7 @@ void TorController::Reconnect()
      * may be restarting.
      */
     if (!conn.Connect(target, boost::bind(&TorController::connected_cb, this, _1),
-         boost::bind(&TorController::disconnected_cb, this, _1) )) {
+                      boost::bind(&TorController::disconnected_cb, this, _1) )) {
         LogPrintf("tor: Re-initiating connection to Tor control port %s failed\n", target);
     }
 }

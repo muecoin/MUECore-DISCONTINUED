@@ -48,10 +48,18 @@ void TestVector(const Hasher &h, const In &in, const Out &out) {
     }
 }
 
-void TestSHA1(const std::string &in, const std::string &hexout) { TestVector(CSHA1(), in, ParseHex(hexout));}
-void TestSHA256(const std::string &in, const std::string &hexout) { TestVector(CSHA256(), in, ParseHex(hexout));}
-void TestSHA512(const std::string &in, const std::string &hexout) { TestVector(CSHA512(), in, ParseHex(hexout));}
-void TestRIPEMD160(const std::string &in, const std::string &hexout) { TestVector(CRIPEMD160(), in, ParseHex(hexout));}
+void TestSHA1(const std::string &in, const std::string &hexout) {
+    TestVector(CSHA1(), in, ParseHex(hexout));
+}
+void TestSHA256(const std::string &in, const std::string &hexout) {
+    TestVector(CSHA256(), in, ParseHex(hexout));
+}
+void TestSHA512(const std::string &in, const std::string &hexout) {
+    TestVector(CSHA512(), in, ParseHex(hexout));
+}
+void TestRIPEMD160(const std::string &in, const std::string &hexout) {
+    TestVector(CRIPEMD160(), in, ParseHex(hexout));
+}
 
 void TestHMACSHA256(const std::string &hexkey, const std::string &hexin, const std::string &hexout) {
     std::vector<unsigned char> key = ParseHex(hexkey);

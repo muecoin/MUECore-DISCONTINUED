@@ -20,7 +20,9 @@ class UniValue {
 public:
     enum VType { VNULL, VOBJ, VARR, VSTR, VNUM, VBOOL, };
 
-    UniValue() { typ = VNULL; }
+    UniValue() {
+        typ = VNULL;
+    }
     UniValue(UniValue::VType initialType, const std::string& initialStr = "") {
         typ = initialType;
         val = initialStr;
@@ -56,32 +58,62 @@ public:
     bool setNumStr(const std::string& val);
     bool setInt(uint64_t val);
     bool setInt(int64_t val);
-    bool setInt(int val) { return setInt((int64_t)val); }
+    bool setInt(int val) {
+        return setInt((int64_t)val);
+    }
     bool setFloat(double val);
     bool setStr(const std::string& val);
     bool setArray();
     bool setObject();
 
-    enum VType getType() const { return typ; }
-    const std::string& getValStr() const { return val; }
-    bool empty() const { return (values.size() == 0); }
+    enum VType getType() const {
+        return typ;
+    }
+    const std::string& getValStr() const {
+        return val;
+    }
+    bool empty() const {
+        return (values.size() == 0);
+    }
 
-    size_t size() const { return values.size(); }
+    size_t size() const {
+        return values.size();
+    }
 
-    bool getBool() const { return isTrue(); }
+    bool getBool() const {
+        return isTrue();
+    }
     bool checkObject(const std::map<std::string,UniValue::VType>& memberTypes);
     const UniValue& operator[](const std::string& key) const;
     const UniValue& operator[](unsigned int index) const;
-    bool exists(const std::string& key) const { return (findKey(key) >= 0); }
+    bool exists(const std::string& key) const {
+        return (findKey(key) >= 0);
+    }
 
-    bool isNull() const { return (typ == VNULL); }
-    bool isTrue() const { return (typ == VBOOL) && (val == "1"); }
-    bool isFalse() const { return (typ == VBOOL) && (val != "1"); }
-    bool isBool() const { return (typ == VBOOL); }
-    bool isStr() const { return (typ == VSTR); }
-    bool isNum() const { return (typ == VNUM); }
-    bool isArray() const { return (typ == VARR); }
-    bool isObject() const { return (typ == VOBJ); }
+    bool isNull() const {
+        return (typ == VNULL);
+    }
+    bool isTrue() const {
+        return (typ == VBOOL) && (val == "1");
+    }
+    bool isFalse() const {
+        return (typ == VBOOL) && (val != "1");
+    }
+    bool isBool() const {
+        return (typ == VBOOL);
+    }
+    bool isStr() const {
+        return (typ == VSTR);
+    }
+    bool isNum() const {
+        return (typ == VNUM);
+    }
+    bool isArray() const {
+        return (typ == VARR);
+    }
+    bool isObject() const {
+        return (typ == VOBJ);
+    }
 
     bool push_back(const UniValue& val);
     bool push_back(const std::string& val_) {
@@ -152,7 +184,9 @@ public:
     const UniValue& get_obj() const;
     const UniValue& get_array() const;
 
-    enum VType type() const { return getType(); }
+    enum VType type() const {
+        return getType();
+    }
     bool push_back(std::pair<std::string,UniValue> pear) {
         return pushKV(pear.first, pear.second);
     }

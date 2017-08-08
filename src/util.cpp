@@ -95,9 +95,9 @@
 //           http://clang.debian.net/status.php?version=3.0&key=CANNOT_FIND_FUNCTION
 namespace boost {
 
-    namespace program_options {
-        std::string to_internal(const std::string&);
-    }
+namespace program_options {
+std::string to_internal(const std::string&);
+}
 
 } // namespace boost
 
@@ -285,8 +285,8 @@ bool LogAcceptCategory(const char* category)
 
         // if not debugging everything and not debugging specific category, LogPrint does nothing.
         if (setCategories.count(string("")) == 0 &&
-            setCategories.count(string("1")) == 0 &&
-            setCategories.count(string(category)) == 0)
+                setCategories.count(string("1")) == 0 &&
+                setCategories.count(string(category)) == 0)
             return false;
     }
     return true;
@@ -499,10 +499,10 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
 #endif
     if (pex)
         return strprintf(
-            "EXCEPTION: %s       \n%s       \n%s in %s       \n", typeid(*pex).name(), pex->what(), pszModule, pszThread);
+                   "EXCEPTION: %s       \n%s       \n%s in %s       \n", typeid(*pex).name(), pex->what(), pszModule, pszThread);
     else
         return strprintf(
-            "UNKNOWN EXCEPTION       \n%s in %s       \n", pszModule, pszThread);
+                   "UNKNOWN EXCEPTION       \n%s in %s       \n", pszModule, pszThread);
 }
 
 void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
@@ -627,7 +627,7 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
                     map<string, vector<string> >& mapMultiSettingsRet)
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile());
-    if (!streamConfig.good()){
+    if (!streamConfig.good()) {
         // Create empty mue.conf if it does not excist
         FILE* configFile = fopen(GetConfigFile().string().c_str(), "a");
         if (configFile != NULL)
@@ -708,13 +708,13 @@ void FileCommit(FILE *fileout)
     HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(fileout));
     FlushFileBuffers(hFile);
 #else
-    #if defined(__linux__) || defined(__NetBSD__)
+#if defined(__linux__) || defined(__NetBSD__)
     fdatasync(fileno(fileout));
-    #elif defined(__APPLE__) && defined(F_FULLFSYNC)
+#elif defined(__APPLE__) && defined(F_FULLFSYNC)
     fcntl(fileno(fileout), F_FULLFSYNC, 0);
-    #else
+#else
     fsync(fileno(fileout));
-    #endif
+#endif
 #endif
 }
 

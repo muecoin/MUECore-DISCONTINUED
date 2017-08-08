@@ -42,7 +42,9 @@ public:
         return GetCoins(txid, coins);
     }
 
-    uint256 GetBestBlock() const { return hashBestBlock_; }
+    uint256 GetBestBlock() const {
+        return hashBestBlock_;
+    }
 
     bool BatchWrite(CCoinsMap& mapCoins, const uint256& hashBlock)
     {
@@ -62,7 +64,9 @@ public:
         return true;
     }
 
-    bool GetStats(CCoinsStats& stats) const { return false; }
+    bool GetStats(CCoinsStats& stats) const {
+        return false;
+    }
 };
 
 class CCoinsViewCacheTest : public CCoinsViewCache
@@ -307,9 +311,9 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
                 const CCoins* coins = stack.back()->AccessCoins(it->first);
                 if (coins) {
                     BOOST_CHECK(*coins == it->second);
-                 } else {
+                } else {
                     BOOST_CHECK(it->second.IsPruned());
-                 }
+                }
             }
         }
 
@@ -333,7 +337,7 @@ BOOST_AUTO_TEST_CASE(updatecoins_simulation_test)
                     tip = stack.back();
                 }
                 stack.push_back(new CCoinsViewCacheTest(tip));
-           }
+            }
         }
     }
 

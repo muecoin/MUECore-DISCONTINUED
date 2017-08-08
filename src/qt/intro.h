@@ -14,7 +14,7 @@ static const bool DEFAULT_CHOOSE_DATADIR = false;
 class FreespaceChecker;
 
 namespace Ui {
-    class Intro;
+class Intro;
 }
 
 /** Introduction screen (pre-GUI startup).

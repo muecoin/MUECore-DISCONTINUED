@@ -15,84 +15,84 @@
 #include <univalue.h>
 
 CGovernanceObject::CGovernanceObject()
-: cs(),
-  nObjectType(GOVERNANCE_OBJECT_UNKNOWN),
-  nHashParent(),
-  nRevision(0),
-  nTime(0),
-  nDeletionTime(0),
-  nCollateralHash(),
-  strData(),
-  vinMasternode(),
-  vchSig(),
-  fCachedLocalValidity(false),
-  strLocalValidityError(),
-  fCachedFunding(false),
-  fCachedValid(true),
-  fCachedDelete(false),
-  fCachedEndorsed(false),
-  fDirtyCache(true),
-  fExpired(false),
-  fUnparsable(false),
-  mapCurrentMNVotes(),
-  mapOrphanVotes(),
-  fileVotes()
+    : cs(),
+      nObjectType(GOVERNANCE_OBJECT_UNKNOWN),
+      nHashParent(),
+      nRevision(0),
+      nTime(0),
+      nDeletionTime(0),
+      nCollateralHash(),
+      strData(),
+      vinMasternode(),
+      vchSig(),
+      fCachedLocalValidity(false),
+      strLocalValidityError(),
+      fCachedFunding(false),
+      fCachedValid(true),
+      fCachedDelete(false),
+      fCachedEndorsed(false),
+      fDirtyCache(true),
+      fExpired(false),
+      fUnparsable(false),
+      mapCurrentMNVotes(),
+      mapOrphanVotes(),
+      fileVotes()
 {
     // PARSE JSON DATA STORAGE (STRDATA)
     LoadData();
 }
 
 CGovernanceObject::CGovernanceObject(uint256 nHashParentIn, int nRevisionIn, int64_t nTimeIn, uint256 nCollateralHashIn, std::string strDataIn)
-: cs(),
-  nObjectType(GOVERNANCE_OBJECT_UNKNOWN),
-  nHashParent(nHashParentIn),
-  nRevision(nRevisionIn),
-  nTime(nTimeIn),
-  nDeletionTime(0),
-  nCollateralHash(nCollateralHashIn),
-  strData(strDataIn),
-  vinMasternode(),
-  vchSig(),
-  fCachedLocalValidity(false),
-  strLocalValidityError(),
-  fCachedFunding(false),
-  fCachedValid(true),
-  fCachedDelete(false),
-  fCachedEndorsed(false),
-  fDirtyCache(true),
-  fExpired(false),
-  fUnparsable(false),
-  mapCurrentMNVotes(),
-  mapOrphanVotes(),
-  fileVotes()
+    : cs(),
+      nObjectType(GOVERNANCE_OBJECT_UNKNOWN),
+      nHashParent(nHashParentIn),
+      nRevision(nRevisionIn),
+      nTime(nTimeIn),
+      nDeletionTime(0),
+      nCollateralHash(nCollateralHashIn),
+      strData(strDataIn),
+      vinMasternode(),
+      vchSig(),
+      fCachedLocalValidity(false),
+      strLocalValidityError(),
+      fCachedFunding(false),
+      fCachedValid(true),
+      fCachedDelete(false),
+      fCachedEndorsed(false),
+      fDirtyCache(true),
+      fExpired(false),
+      fUnparsable(false),
+      mapCurrentMNVotes(),
+      mapOrphanVotes(),
+      fileVotes()
 {
     // PARSE JSON DATA STORAGE (STRDATA)
     LoadData();
 }
 
 CGovernanceObject::CGovernanceObject(const CGovernanceObject& other)
-: cs(),
-  nObjectType(other.nObjectType),
-  nHashParent(other.nHashParent),
-  nRevision(other.nRevision),
-  nTime(other.nTime),
-  nDeletionTime(other.nDeletionTime),
-  nCollateralHash(other.nCollateralHash),
-  strData(other.strData),
-  vinMasternode(other.vinMasternode),
-  vchSig(other.vchSig),
-  fCachedLocalValidity(other.fCachedLocalValidity),
-  strLocalValidityError(other.strLocalValidityError),
-  fCachedFunding(other.fCachedFunding),
-  fCachedValid(other.fCachedValid),
-  fCachedDelete(other.fCachedDelete),
-  fCachedEndorsed(other.fCachedEndorsed),
-  fDirtyCache(other.fDirtyCache),
-  fExpired(other.fExpired),
-  fUnparsable(other.fUnparsable),
-  mapCurrentMNVotes(other.mapCurrentMNVotes),
-  mapOrphanVotes(other.mapOrphanVotes),
-  fileVotes(other.fileVotes)
+    : cs(),
+      nObjectType(other.nObjectType),
+      nHashParent(other.nHashParent),
+      nRevision(other.nRevision),
+      nTime(other.nTime),
+      nDeletionTime(other.nDeletionTime),
+      nCollateralHash(other.nCollateralHash),
+      strData(other.strData),
+      vinMasternode(other.vinMasternode),
+      vchSig(other.vchSig),
+      fCachedLocalValidity(other.fCachedLocalValidity),
+      strLocalValidityError(other.strLocalValidityError),
+      fCachedFunding(other.fCachedFunding),
+      fCachedValid(other.fCachedValid),
+      fCachedDelete(other.fCachedDelete),
+      fCachedEndorsed(other.fCachedEndorsed),
+      fDirtyCache(other.fDirtyCache),
+      fExpired(other.fExpired),
+      fUnparsable(other.fUnparsable),
+      mapCurrentMNVotes(other.mapCurrentMNVotes),
+      mapOrphanVotes(other.mapOrphanVotes),
+      fileVotes(other.fileVotes)
 {}
 
 bool CGovernanceObject::ProcessVote(CNode* pfrom,
@@ -171,9 +171,9 @@ bool CGovernanceObject::ProcessVote(CNode* pfrom,
     if(!vote.IsValid(true)) {
         std::ostringstream ostr;
         ostr << "CGovernanceObject::ProcessVote -- Invalid vote "
-                << ", MN outpoint = " << vote.GetVinMasternode().prevout.ToStringShort()
-                << ", governance object hash = " << GetHash().ToString()
-                << ", vote hash = " << vote.GetHash().ToString() << "\n";
+             << ", MN outpoint = " << vote.GetVinMasternode().prevout.ToStringShort()
+             << ", governance object hash = " << GetHash().ToString()
+             << ", vote hash = " << vote.GetHash().ToString() << "\n";
         LogPrintf(ostr.str().c_str());
         exception = CGovernanceException(ostr.str(), GOVERNANCE_EXCEPTION_PERMANENT_ERROR, 20);
         governance.AddInvalidVote(vote);
@@ -240,11 +240,11 @@ std::string CGovernanceObject::GetSignatureMessage() const
 {
     LOCK(cs);
     std::string strMessage = nHashParent.ToString() + "|" +
-        boost::lexical_cast<std::string>(nRevision) + "|" +
-        boost::lexical_cast<std::string>(nTime) + "|" +
-        strData + "|" +
-        vinMasternode.prevout.ToStringShort() + "|" +
-        nCollateralHash.ToString();
+                             boost::lexical_cast<std::string>(nRevision) + "|" +
+                             boost::lexical_cast<std::string>(nTime) + "|" +
+                             strData + "|" +
+                             vinMasternode.prevout.ToStringShort() + "|" +
+                             nCollateralHash.ToString();
 
     return strMessage;
 }
@@ -450,20 +450,20 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
     }
 
     switch(nObjectType) {
-        case GOVERNANCE_OBJECT_PROPOSAL:
-        case GOVERNANCE_OBJECT_TRIGGER:
-        case GOVERNANCE_OBJECT_WATCHDOG:
-            break;
-        default:
-            strError = strprintf("Invalid object type %d", nObjectType);
-            return false;
+    case GOVERNANCE_OBJECT_PROPOSAL:
+    case GOVERNANCE_OBJECT_TRIGGER:
+    case GOVERNANCE_OBJECT_WATCHDOG:
+        break;
+    default:
+        strError = strprintf("Invalid object type %d", nObjectType);
+        return false;
     }
 
     // IF ABSOLUTE NO COUNT (NO-YES VALID VOTES) IS MORE THAN 10% OF THE NETWORK MASTERNODES, OBJ IS INVALID
 
     // CHECK COLLATERAL IF REQUIRED (HIGH CPU USAGE)
 
-    if(fCheckCollateral) { 
+    if(fCheckCollateral) {
         if((nObjectType == GOVERNANCE_OBJECT_TRIGGER) || (nObjectType == GOVERNANCE_OBJECT_WATCHDOG)) {
             std::string strOutpoint = vinMasternode.prevout.ToStringShort();
             masternode_info_t infoMn = mnodeman.GetMasternodeInfo(vinMasternode);
@@ -509,10 +509,14 @@ CAmount CGovernanceObject::GetMinCollateralFee()
 {
     // Only 1 type has a fee for the moment but switch statement allows for future object types
     switch(nObjectType) {
-        case GOVERNANCE_OBJECT_PROPOSAL:    return GOVERNANCE_PROPOSAL_FEE_TX;
-        case GOVERNANCE_OBJECT_TRIGGER:     return 0;
-        case GOVERNANCE_OBJECT_WATCHDOG:    return 0;
-        default:                            return MAX_MONEY;
+    case GOVERNANCE_OBJECT_PROPOSAL:
+        return GOVERNANCE_PROPOSAL_FEE_TX;
+    case GOVERNANCE_OBJECT_TRIGGER:
+        return 0;
+    case GOVERNANCE_OBJECT_WATCHDOG:
+        return 0;
+    default:
+        return MAX_MONEY;
     }
 }
 
@@ -527,7 +531,7 @@ bool CGovernanceObject::IsCollateralValid(std::string& strError)
 
     // RETRIEVE TRANSACTION IN QUESTION
 
-    if(!GetTransaction(nCollateralHash, txCollateral, Params().GetConsensus(), nBlockHash, true)){
+    if(!GetTransaction(nCollateralHash, txCollateral, Params().GetConsensus(), nBlockHash, true)) {
         strError = strprintf("Can't find collateral tx %s", txCollateral.ToString());
         LogPrintf("CGovernanceObject::IsCollateralValid -- %s\n", strError);
         return false;
@@ -557,7 +561,7 @@ bool CGovernanceObject::IsCollateralValid(std::string& strError)
              << ", o.nValue = " << o.nValue
              << ", o.scriptPubKey = " << ScriptToAsmStr( o.scriptPubKey, false )
              << endl; );
-        if(!o.scriptPubKey.IsNormalPaymentScript() && !o.scriptPubKey.IsUnspendable()){
+        if(!o.scriptPubKey.IsNormalPaymentScript() && !o.scriptPubKey.IsUnspendable()) {
             strError = strprintf("Invalid Script %s", txCollateral.ToString());
             LogPrintf ("CGovernanceObject::IsCollateralValid -- %s\n", strError);
             return false;
@@ -572,7 +576,7 @@ bool CGovernanceObject::IsCollateralValid(std::string& strError)
 
     }
 
-    if(!foundOpReturn){
+    if(!foundOpReturn) {
         strError = strprintf("Couldn't find opReturn %s in %s", nExpectedHash.ToString(), txCollateral.ToString());
         LogPrintf ("CGovernanceObject::IsCollateralValid -- %s\n", strError);
         return false;

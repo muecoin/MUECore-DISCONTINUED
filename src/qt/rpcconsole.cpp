@@ -96,7 +96,9 @@ public:
     }
     ~QtRPCTimerBase() {}
 private Q_SLOTS:
-    void timeout() { func(); }
+    void timeout() {
+        func();
+    }
 private:
     QTimer timer;
     boost::function<void(void)> func;
@@ -106,7 +108,9 @@ class QtRPCTimerInterface: public RPCTimerInterface
 {
 public:
     ~QtRPCTimerInterface() {}
-    const char *Name() { return "Qt"; }
+    const char *Name() {
+        return "Qt";
+    }
     RPCTimerBase* NewTimer(boost::function<void(void)>& func, int64_t millis)
     {
         return new QtRPCTimerBase(func, millis);
@@ -150,10 +154,18 @@ bool parseCommandLine(std::vector<std::string> &args, const std::string &strComm
         case STATE_EATING_SPACES: // Handle runs of whitespace
             switch(ch)
             {
-            case '"': state = STATE_DOUBLEQUOTED; break;
-            case '\'': state = STATE_SINGLEQUOTED; break;
-            case '\\': state = STATE_ESCAPE_OUTER; break;
-            case ' ': case '\n': case '\t':
+            case '"':
+                state = STATE_DOUBLEQUOTED;
+                break;
+            case '\'':
+                state = STATE_SINGLEQUOTED;
+                break;
+            case '\\':
+                state = STATE_ESCAPE_OUTER;
+                break;
+            case ' ':
+            case '\n':
+            case '\t':
                 if(state == STATE_ARGUMENT) // Space ends argument
                 {
                     args.push_back(curarg);
@@ -161,30 +173,42 @@ bool parseCommandLine(std::vector<std::string> &args, const std::string &strComm
                 }
                 state = STATE_EATING_SPACES;
                 break;
-            default: curarg += ch; state = STATE_ARGUMENT;
+            default:
+                curarg += ch;
+                state = STATE_ARGUMENT;
             }
             break;
         case STATE_SINGLEQUOTED: // Single-quoted string
             switch(ch)
             {
-            case '\'': state = STATE_ARGUMENT; break;
-            default: curarg += ch;
+            case '\'':
+                state = STATE_ARGUMENT;
+                break;
+            default:
+                curarg += ch;
             }
             break;
         case STATE_DOUBLEQUOTED: // Double-quoted string
             switch(ch)
             {
-            case '"': state = STATE_ARGUMENT; break;
-            case '\\': state = STATE_ESCAPE_DOUBLEQUOTED; break;
-            default: curarg += ch;
+            case '"':
+                state = STATE_ARGUMENT;
+                break;
+            case '\\':
+                state = STATE_ESCAPE_DOUBLEQUOTED;
+                break;
+            default:
+                curarg += ch;
             }
             break;
         case STATE_ESCAPE_OUTER: // '\' outside quotes
-            curarg += ch; state = STATE_ARGUMENT;
+            curarg += ch;
+            state = STATE_ARGUMENT;
             break;
         case STATE_ESCAPE_DOUBLEQUOTED: // '\' in double-quoted text
             if(ch != '"' && ch != '\\') curarg += '\\'; // keep '\' for everything but the quote and '\' itself
-            curarg += ch; state = STATE_DOUBLEQUOTED;
+            curarg += ch;
+            state = STATE_DOUBLEQUOTED;
             break;
         }
     }
@@ -216,8 +240,8 @@ void RPCExecutor::request(const QString &command)
         // Convert argument list to JSON objects in method-dependent way,
         // and pass it along with the method name to the dispatcher.
         UniValue result = tableRPC.execute(
-            args[0],
-            RPCConvertValues(args[0], std::vector<std::string>(args.begin() + 1, args.end())));
+                              args[0],
+                              RPCConvertValues(args[0], std::vector<std::string>(args.begin() + 1, args.end())));
 
         // Format result reply
         if (result.isNull())
@@ -273,7 +297,7 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
 
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
-    
+
     // Wallet Repair Buttons
     // connect(ui->btn_salvagewallet, SIGNAL(clicked()), this, SLOT(walletSalvage()));
     // Disable salvage option in GUI, it's way too powerful and can lead to funds loss
@@ -324,8 +348,18 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
         Qt::KeyboardModifiers mod = keyevt->modifiers();
         switch(key)
         {
-        case Qt::Key_Up: if(obj == ui->lineEdit) { browseHistory(-1); return true; } break;
-        case Qt::Key_Down: if(obj == ui->lineEdit) { browseHistory(1); return true; } break;
+        case Qt::Key_Up:
+            if(obj == ui->lineEdit) {
+                browseHistory(-1);
+                return true;
+            }
+            break;
+        case Qt::Key_Down:
+            if(obj == ui->lineEdit) {
+                browseHistory(1);
+                return true;
+            }
+            break;
         case Qt::Key_PageUp: /* pass paging keys to messages widget */
         case Qt::Key_PageDown:
             if(obj == ui->lineEdit)
@@ -346,9 +380,9 @@ bool RPCConsole::eventFilter(QObject* obj, QEvent *event)
             // Typing in messages widget brings focus to line edit, and redirects key there
             // Exclude most combinations and keys that emit no text, except paste shortcuts
             if(obj == ui->messagesWidget && (
-                  (!mod && !keyevt->text().isEmpty() && key != Qt::Key_Tab) ||
-                  ((mod & Qt::ControlModifier) && key == Qt::Key_V) ||
-                  ((mod & Qt::ShiftModifier) && key == Qt::Key_Insert)))
+                        (!mod && !keyevt->text().isEmpty() && key != Qt::Key_Tab) ||
+                        ((mod & Qt::ControlModifier) && key == Qt::Key_V) ||
+                        ((mod & Qt::ShiftModifier) && key == Qt::Key_Insert)))
             {
                 ui->lineEdit->setFocus();
                 QApplication::postEvent(ui->lineEdit, new QKeyEvent(*keyevt));
@@ -426,7 +460,7 @@ void RPCConsole::setClientModel(ClientModel *model)
 
         // peer table signal handling - update peer details when selecting new node
         connect(ui->peerWidget->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(peerSelected(const QItemSelection &, const QItemSelection &)));
+                this, SLOT(peerSelected(const QItemSelection &, const QItemSelection &)));
         // peer table signal handling - update peer details when new nodes are added to the model
         connect(model->getPeerTableModel(), SIGNAL(layoutChanged()), this, SLOT(peerLayoutChanged()));
 
@@ -484,10 +518,17 @@ static QString categoryClass(int category)
 {
     switch(category)
     {
-    case RPCConsole::CMD_REQUEST:  return "cmd-request"; break;
-    case RPCConsole::CMD_REPLY:    return "cmd-reply"; break;
-    case RPCConsole::CMD_ERROR:    return "cmd-error"; break;
-    default:                       return "misc";
+    case RPCConsole::CMD_REQUEST:
+        return "cmd-request";
+        break;
+    case RPCConsole::CMD_REPLY:
+        return "cmd-reply";
+        break;
+    case RPCConsole::CMD_ERROR:
+        return "cmd-error";
+        break;
+    default:
+        return "misc";
     }
 }
 
@@ -541,7 +582,7 @@ void RPCConsole::buildParameterlist(QString arg)
     args.removeAll(ZAPTXES2);
     args.removeAll(UPGRADEWALLET);
     args.removeAll(REINDEX);
-   
+
     // Append repair parameter to command line.
     args.append(arg);
 
@@ -561,14 +602,14 @@ void RPCConsole::clear()
     // (when using width/height on an img, Qt uses nearest instead of linear interpolation)
     QString iconPath = ":/icons/" + GUIUtil::getThemeName() + "/";
     QString iconName = "";
-    
+
     for(int i=0; ICON_MAPPING[i].url; ++i)
     {
         iconName = ICON_MAPPING[i].source;
         ui->messagesWidget->document()->addResource(
-                    QTextDocument::ImageResource,
-                    QUrl(ICON_MAPPING[i].url),
-                    QImage(iconPath + iconName).scaled(ICON_SIZE, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+            QTextDocument::ImageResource,
+            QUrl(ICON_MAPPING[i].url),
+            QImage(iconPath + iconName).scaled(ICON_SIZE, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
 
     // Set default style sheet
@@ -581,14 +622,14 @@ void RPCConsole::clear()
 #endif
     ui->messagesWidget->document()->setDefaultStyleSheet(
         QString(
-                "table { }"
-                "td.time { color: #808080; padding-top: 3px; } "
-                "td.message { font-family: %1; font-size: %2; white-space:pre-wrap; } "
-                "td.cmd-request { color: #006060; } "
-                "td.cmd-error { color: red; } "
-                "b { color: #006060; } "
-            ).arg(fixedFontInfo.family(), ptSize)
-        );
+            "table { }"
+            "td.time { color: #808080; padding-top: 3px; } "
+            "td.message { font-family: %1; font-size: %2; white-space:pre-wrap; } "
+            "td.cmd-request { color: #006060; } "
+            "td.cmd-error { color: red; } "
+            "b { color: #006060; } "
+        ).arg(fixedFontInfo.family(), ptSize)
+    );
 
     message(CMD_REPLY, (tr("Welcome to the MonetaryUnit Core RPC console.") + "<br>" +
                         tr("Use up and down arrows to navigate history, and <b>Ctrl-L</b> to clear screen.") + "<br>" +

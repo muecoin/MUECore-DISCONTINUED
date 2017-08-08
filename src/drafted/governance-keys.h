@@ -8,9 +8,9 @@ vector<SecureString> vGovernanceKeys;
 CCriticalSection cs_vGovernanceKeys;
 
 /*
-	
+
 	Notes:
-	
+
 	- Users will configure their keys, something like this:
 
 	mue.conf:
@@ -18,7 +18,7 @@ CCriticalSection cs_vGovernanceKeys;
 		addgovkey=PrivKey1:name1 #comments
 		addgovkey=PrivKey2:name2 #comments
 
-	- Each of these will be securely secured in memory, then parsed and the secret will be used temporarily while 
+	- Each of these will be securely secured in memory, then parsed and the secret will be used temporarily while
 		creating a new goverance object which requires a signature
 */
 
@@ -28,24 +28,27 @@ CCriticalSection cs_vGovernanceKeys;
 class CGovernanceKey
 {
 private:
-	SecureString strName;
-	SecureString strKey;
+    SecureString strName;
+    SecureString strKey;
 
 public:
-	CGovernanceKey::CGovernanceKey(SecureString& strKeyIn, SecureString& strNameIn) {strName = strNameIn; strKey = strKeyIn;}
+    CGovernanceKey::CGovernanceKey(SecureString& strKeyIn, SecureString& strNameIn) {
+        strName = strNameIn;
+        strKey = strKeyIn;
+    }
 
-	bool GetKey(CBitcoinSecret& secret)
-	{
-	    return secret.SetString(vecTokenized[0]);
-	}
+    bool GetKey(CBitcoinSecret& secret)
+    {
+        return secret.SetString(vecTokenized[0]);
+    }
 
-	std::string GetName()
-	{
-		return strName;
-	}
+    std::string GetName()
+    {
+        return strName;
+    }
 };
 
 class CGovernanceKeyManager
 {
-	static bool CGovernanceKeyManager::InitGovernanceKeys(std::string strError);
+    static bool CGovernanceKeyManager::InitGovernanceKeys(std::string strError);
 };

@@ -205,12 +205,12 @@ BOOST_AUTO_TEST_CASE(AlertNotify)
     const std::vector<unsigned char>& alertKey = Params(CBaseChainParams::MAIN).AlertKey();
 
     boost::filesystem::path temp = GetTempPath() /
-        boost::filesystem::unique_path("alertnotify-%%%%.txt");
+                                   boost::filesystem::unique_path("alertnotify-%%%%.txt");
 
     mapArgs["-alertnotify"] = std::string("echo %s >> ") + temp.string();
 
     BOOST_FOREACH(CAlert alert, alerts)
-        alert.ProcessAlert(alertKey, false);
+    alert.ProcessAlert(alertKey, false);
 
     std::vector<std::string> r = read_lines(temp);
     BOOST_CHECK_EQUAL(r.size(), 4u);
@@ -234,7 +234,9 @@ BOOST_AUTO_TEST_CASE(AlertNotify)
     SetMockTime(0);
 }
 
-static bool falseFunc() { return false; }
+static bool falseFunc() {
+    return false;
+}
 
 BOOST_AUTO_TEST_CASE(PartitionAlert)
 {

@@ -81,20 +81,20 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     }
 
     /* Display elements init */
-    
+
     /* Number of displayed decimal digits selector */
     QString digits;
-    for(int index = 2; index <=8; index++){
+    for(int index = 2; index <=8; index++) {
         digits.setNum(index);
         ui->digits->addItem(digits, digits);
     }
-    
+
     /* Theme selector */
     ui->theme->addItem(QString("MUE-light"), QVariant("light"));
     ui->theme->addItem(QString("MUE-blue"), QVariant("drkblue"));
     ui->theme->addItem(QString("MUE-Crownium"), QVariant("crownium"));
     ui->theme->addItem(QString("MUE-traditional"), QVariant("trad"));
-    
+
     /* Language selector */
     QDir translations(":translations");
     ui->lang->addItem(QString("(") + tr("default") + QString(")"), QVariant(""));
@@ -245,8 +245,8 @@ void OptionsDialog::on_resetButton_clicked()
     {
         // confirmation dialog
         QMessageBox::StandardButton btnRetVal = QMessageBox::question(this, tr("Confirm options reset"),
-            tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be shut down. Do you want to proceed?"),
-            QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+                                                tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be shut down. Do you want to proceed?"),
+                                                QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 
         if(btnRetVal == QMessageBox::Cancel)
             return;
@@ -333,7 +333,7 @@ void OptionsDialog::updateDefaultProxyNets()
 }
 
 ProxyAddressValidator::ProxyAddressValidator(QObject *parent) :
-QValidator(parent)
+    QValidator(parent)
 {
 }
 

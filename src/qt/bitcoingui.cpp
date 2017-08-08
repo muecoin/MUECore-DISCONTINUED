@@ -64,13 +64,13 @@
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
-        "macosx"
+    "macosx"
 #elif defined(Q_OS_WIN)
-        "windows"
+    "windows"
 #else
-        "other"
+    "other"
 #endif
-        ;
+    ;
 
 const QString BitcoinGUI::DEFAULT_WALLET = "~Default";
 
@@ -89,6 +89,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     overviewAction(0),
     historyAction(0),
     masternodeAction(0),
+    muebankAction(0),
     quitAction(0),
     sendCoinsAction(0),
     sendCoinsMenuAction(0),
@@ -404,7 +405,7 @@ void BitcoinGUI::createActions()
     openConfEditorAction = new QAction(QIcon(":/icons/" + theme + "/edit"), tr("Open Wallet &Configuration File"), this);
     openConfEditorAction->setStatusTip(tr("Open configuration file"));
     openMNConfEditorAction = new QAction(QIcon(":/icons/" + theme + "/edit"), tr("Open &Masternode Configuration File"), this);
-    openMNConfEditorAction->setStatusTip(tr("Open Masternode configuration file"));    
+    openMNConfEditorAction->setStatusTip(tr("Open Masternode configuration file"));
     showBackupsAction = new QAction(QIcon(":/icons/" + theme + "/browse"), tr("Show Automatic &Backups"), this);
     showBackupsAction->setStatusTip(tr("Show automatically created wallet backups"));
     // initially disable the debug window menu items
@@ -452,7 +453,7 @@ void BitcoinGUI::createActions()
 
     // Get restart command-line parameters and handle restart
     connect(rpcConsole, SIGNAL(handleRestart(QStringList)), this, SLOT(handleRestart(QStringList)));
-    
+
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
@@ -552,6 +553,7 @@ void BitcoinGUI::createToolBars()
         {
             toolbar->addAction(masternodeAction);
         }
+        toolbar->addAction(muebankAction);
         toolbar->setMovable(false); // remove unused icon in upper left corner
         overviewAction->setChecked(true);
 
@@ -593,7 +595,7 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
             MacDockIconHandler *dockIconHandler = MacDockIconHandler::instance();
             dockIconHandler->setMainWindow((QMainWindow *)this);
             dockIconMenu = dockIconHandler->dockMenu();
- 
+
             createIconMenu(dockIconMenu);
 #endif
         }
@@ -880,11 +882,27 @@ void BitcoinGUI::setNumConnections(int count)
     QString theme = GUIUtil::getThemeName();
     switch(count)
     {
-    case 0: icon = ":/icons/" + theme + "/connect_0"; break;
-    case 1: case 2: case 3: icon = ":/icons/" + theme + "/connect_1"; break;
-    case 4: case 5: case 6: icon = ":/icons/" + theme + "/connect_2"; break;
-    case 7: case 8: case 9: icon = ":/icons/" + theme + "/connect_3"; break;
-    default: icon = ":/icons/" + theme + "/connect_4"; break;
+    case 0:
+        icon = ":/icons/" + theme + "/connect_0";
+        break;
+    case 1:
+    case 2:
+    case 3:
+        icon = ":/icons/" + theme + "/connect_1";
+        break;
+    case 4:
+    case 5:
+    case 6:
+        icon = ":/icons/" + theme + "/connect_2";
+        break;
+    case 7:
+    case 8:
+    case 9:
+        icon = ":/icons/" + theme + "/connect_3";
+        break;
+    default:
+        icon = ":/icons/" + theme + "/connect_4";
+        break;
     }
     QIcon connectionItem = QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE);
     labelConnectionsIcon->setIcon(connectionItem);
@@ -902,19 +920,19 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
     // Acquire current block source
     enum BlockSource blockSource = clientModel->getBlockSource();
     switch (blockSource) {
-        case BLOCK_SOURCE_NETWORK:
-            progressBarLabel->setText(tr("Synchronizing with network..."));
-            break;
-        case BLOCK_SOURCE_DISK:
-            progressBarLabel->setText(tr("Importing blocks from disk..."));
-            break;
-        case BLOCK_SOURCE_REINDEX:
-            progressBarLabel->setText(tr("Reindexing blocks on disk..."));
-            break;
-        case BLOCK_SOURCE_NONE:
-            // Case: not Importing, not Reindexing and no network connection
-            progressBarLabel->setText(tr("No block source available..."));
-            break;
+    case BLOCK_SOURCE_NETWORK:
+        progressBarLabel->setText(tr("Synchronizing with network..."));
+        break;
+    case BLOCK_SOURCE_DISK:
+        progressBarLabel->setText(tr("Importing blocks from disk..."));
+        break;
+    case BLOCK_SOURCE_REINDEX:
+        progressBarLabel->setText(tr("Reindexing blocks on disk..."));
+        break;
+    case BLOCK_SOURCE_NONE:
+        // Case: not Importing, not Reindexing and no network connection
+        progressBarLabel->setText(tr("No block source available..."));
+        break;
     }
 
     QString tooltip;
@@ -964,8 +982,8 @@ void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVer
         if(count != prevBlocks)
         {
             labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(QString(
-                ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
-                .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+                                           ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
+                                       .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
             spinnerFrame = (spinnerFrame + 1) % SPINNER_FRAMES;
         }
         prevBlocks = count;
@@ -1014,8 +1032,8 @@ void BitcoinGUI::setAdditionalDataSyncProgress(double nSyncProgress)
         } else {
 
             labelBlocksIcon->setPixmap(platformStyle->SingleColorIcon(QString(
-                ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
-                .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+                                           ":/movies/spinner-%1").arg(spinnerFrame, 3, 10, QChar('0')))
+                                       .pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
             spinnerFrame = (spinnerFrame + 1) % SPINNER_FRAMES;
 
 #ifdef ENABLE_WALLET
@@ -1160,7 +1178,7 @@ void BitcoinGUI::incomingTransaction(const QString& date, int unit, const CAmoun
     else if (!address.isEmpty())
         msg += tr("Address: %1\n").arg(address);
     message((amount)<0 ? tr("Sent transaction") : tr("Incoming transaction"),
-             msg, CClientUIInterface::MSG_INFORMATION);
+            msg, CClientUIInterface::MSG_INFORMATION);
 }
 #endif // ENABLE_WALLET
 
@@ -1327,11 +1345,11 @@ static bool ThreadSafeMessageBox(BitcoinGUI *gui, const std::string& message, co
     bool ret = false;
     // In case of modal message, use blocking connection to wait for user to click a button
     QMetaObject::invokeMethod(gui, "message",
-                               modal ? GUIUtil::blockingGUIThreadConnection() : Qt::QueuedConnection,
-                               Q_ARG(QString, QString::fromStdString(caption)),
-                               Q_ARG(QString, QString::fromStdString(message)),
-                               Q_ARG(unsigned int, style),
-                               Q_ARG(bool*, &ret));
+                              modal ? GUIUtil::blockingGUIThreadConnection() : Qt::QueuedConnection,
+                              Q_ARG(QString, QString::fromStdString(caption)),
+                              Q_ARG(QString, QString::fromStdString(message)),
+                              Q_ARG(unsigned int, style),
+                              Q_ARG(bool*, &ret));
     return ret;
 }
 

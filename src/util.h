@@ -39,7 +39,7 @@
 #ifdef ENABLE_MUE_DEBUG
 #define DBG( x ) x
 #else
-#define DBG( x ) 
+#define DBG( x )
 #endif
 
 //MonetaryUnit only features

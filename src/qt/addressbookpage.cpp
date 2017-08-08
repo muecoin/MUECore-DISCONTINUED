@@ -48,8 +48,12 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, 
     case ForSelection:
         switch(tab)
         {
-        case SendingTab: setWindowTitle(tr("Choose the address to send coins to")); break;
-        case ReceivingTab: setWindowTitle(tr("Choose the address to receive coins with")); break;
+        case SendingTab:
+            setWindowTitle(tr("Choose the address to send coins to"));
+            break;
+        case ReceivingTab:
+            setWindowTitle(tr("Choose the address to receive coins with"));
+            break;
         }
         connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
         ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -60,8 +64,12 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, 
     case ForEditing:
         switch(tab)
         {
-        case SendingTab: setWindowTitle(tr("Sending addresses")); break;
-        case ReceivingTab: setWindowTitle(tr("Receiving addresses")); break;
+        case SendingTab:
+            setWindowTitle(tr("Sending addresses"));
+            break;
+        case ReceivingTab:
+            setWindowTitle(tr("Receiving addresses"));
+            break;
         }
         break;
     }
@@ -145,7 +153,7 @@ void AddressBookPage::setModel(AddressTableModel *model)
 #endif
 
     connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-        this, SLOT(selectionChanged()));
+            this, SLOT(selectionChanged()));
 
     // Select row for newly created address
     connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectNewAddress(QModelIndex,int,int)));
@@ -273,8 +281,8 @@ void AddressBookPage::on_exportButton_clicked()
 {
     // CSV is currently the only supported format
     QString filename = GUIUtil::getSaveFileName(this,
-        tr("Export Address List"), QString(),
-        tr("Comma separated file (*.csv)"), NULL);
+                       tr("Export Address List"), QString(),
+                       tr("Comma separated file (*.csv)"), NULL);
 
     if (filename.isNull())
         return;
@@ -288,7 +296,7 @@ void AddressBookPage::on_exportButton_clicked()
 
     if(!writer.write()) {
         QMessageBox::critical(this, tr("Exporting Failed"),
-            tr("There was an error trying to save the address list to %1. Please try again.").arg(filename));
+                              tr("There was an error trying to save the address list to %1. Please try again.").arg(filename));
     }
 }
 

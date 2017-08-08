@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
     // so estimateFee(1) should return 10*baseRate.
     // Second highest feerate has 100% chance of being included by 2 blocks,
     // so estimateFee(2) should return 9*baseRate etc...
-    for (int i = 1; i < 10;i++) {
+    for (int i = 1; i < 10; i++) {
         origFeeEst.push_back(mpool.estimateFee(i).GetFeePerK());
         origPriEst.push_back(mpool.estimatePriority(i));
         if (i > 1) { // Fee estimates should be monotonically decreasing
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
     while (blocknum < 250)
         mpool.removeForBlock(block, ++blocknum, dummyConflicted);
 
-    for (int i = 1; i < 10;i++) {
+    for (int i = 1; i < 10; i++) {
         BOOST_CHECK(mpool.estimateFee(i).GetFeePerK() < origFeeEst[i-1] + deltaFee);
         BOOST_CHECK(mpool.estimateFee(i).GetFeePerK() > origFeeEst[i-1] - deltaFee);
         BOOST_CHECK(mpool.estimatePriority(i) < origPriEst[i-1] + deltaPri);
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
     }
 
     int answerFound;
-    for (int i = 1; i < 10;i++) {
+    for (int i = 1; i < 10; i++) {
         BOOST_CHECK(mpool.estimateFee(i) == CFeeRate(0) || mpool.estimateFee(i).GetFeePerK() > origFeeEst[i-1] - deltaFee);
         BOOST_CHECK(mpool.estimateSmartFee(i, &answerFound).GetFeePerK() > origFeeEst[answerFound-1] - deltaFee);
         BOOST_CHECK(mpool.estimatePriority(i) == -1 || mpool.estimatePriority(i) > origPriEst[i-1] - deltaPri);
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE(BlockPolicyEstimates)
     }
     mpool.removeForBlock(block, 265, dummyConflicted);
     block.clear();
-    for (int i = 1; i < 10;i++) {
+    for (int i = 1; i < 10; i++) {
         BOOST_CHECK(mpool.estimateFee(i).GetFeePerK() > origFeeEst[i-1] - deltaFee);
         BOOST_CHECK(mpool.estimatePriority(i) > origPriEst[i-1] - deltaPri);
     }

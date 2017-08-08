@@ -97,8 +97,8 @@ private:
 
 public:
     WorkQueue(size_t maxDepth) : running(true),
-                                 maxDepth(maxDepth),
-                                 numThreads(0)
+        maxDepth(maxDepth),
+        numThreads(0)
     {
     }
     /*( Precondition: worker threads have all stopped
@@ -152,7 +152,7 @@ public:
     void WaitExit()
     {
         boost::unique_lock<boost::mutex> lock(cs);
-        while (numThreads > 0){
+        while (numThreads > 0) {
             cond.wait(lock);
         }
     }
@@ -198,8 +198,8 @@ static bool ClientAllowed(const CNetAddr& netaddr)
     if (!netaddr.IsValid())
         return false;
     BOOST_FOREACH (const CSubNet& subnet, rpc_allow_subnets)
-        if (subnet.Match(netaddr))
-            return true;
+    if (subnet.Match(netaddr))
+        return true;
     return false;
 }
 
@@ -224,7 +224,7 @@ static bool InitHTTPAllowList()
     }
     std::string strAllowed;
     BOOST_FOREACH (const CSubNet& subnet, rpc_allow_subnets)
-        strAllowed += subnet.ToString() + " ";
+    strAllowed += subnet.ToString() + " ";
     LogPrint("http", "Allowing HTTP connections from: %s\n", strAllowed);
     return true;
 }
@@ -482,7 +482,7 @@ void StopHTTPServer()
         // closing during a repair-restart. It doesn't hurt, though, because threadHTTP.timed_join
         // below takes care of this and sends a loopbreak.
         workQueue->WaitExit();
-#endif        
+#endif
         delete workQueue;
     }
     if (eventBase) {
@@ -547,7 +547,7 @@ void HTTPEvent::trigger(struct timeval* tv)
         evtimer_add(ev, tv); // trigger after timeval passed
 }
 HTTPRequest::HTTPRequest(struct evhttp_request* req) : req(req),
-                                                       replySent(false)
+    replySent(false)
 {
 }
 HTTPRequest::~HTTPRequest()
@@ -611,7 +611,7 @@ void HTTPRequest::WriteReply(int nStatus, const std::string& strReply)
     assert(evb);
     evbuffer_add(evb, strReply.data(), strReply.size());
     HTTPEvent* ev = new HTTPEvent(eventBase, true,
-        boost::bind(evhttp_send_reply, req, nStatus, (const char*)NULL, (struct evbuffer *)NULL));
+                                  boost::bind(evhttp_send_reply, req, nStatus, (const char*)NULL, (struct evbuffer *)NULL));
     ev->trigger(0);
     replySent = true;
     req = 0; // transferred back to main thread

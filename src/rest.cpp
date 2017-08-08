@@ -36,10 +36,10 @@ static const struct {
     enum RetFormat rf;
     const char* name;
 } rf_names[] = {
-      {RF_UNDEF, ""},
-      {RF_BINARY, "bin"},
-      {RF_HEX, "hex"},
-      {RF_JSON, "json"},
+    {RF_UNDEF, ""},
+    {RF_BINARY, "bin"},
+    {RF_HEX, "hex"},
+    {RF_JSON, "json"},
 };
 
 struct CCoin {
@@ -122,7 +122,7 @@ static bool CheckWarmup(HTTPRequest* req)
 {
     std::string statusmessage;
     if (RPCIsInWarmup(&statusmessage))
-         return RESTERR(req, HTTP_SERVICE_UNAVAILABLE, "Service temporarily unavailable: " + statusmessage);
+        return RESTERR(req, HTTP_SERVICE_UNAVAILABLE, "Service temporarily unavailable: " + statusmessage);
     return true;
 }
 
@@ -600,14 +600,14 @@ static const struct {
     const char* prefix;
     bool (*handler)(HTTPRequest* req, const std::string& strReq);
 } uri_prefixes[] = {
-      {"/rest/tx/", rest_tx},
-      {"/rest/block/notxdetails/", rest_block_notxdetails},
-      {"/rest/block/", rest_block_extended},
-      {"/rest/chaininfo", rest_chaininfo},
-      {"/rest/mempool/info", rest_mempool_info},
-      {"/rest/mempool/contents", rest_mempool_contents},
-      {"/rest/headers/", rest_headers},
-      {"/rest/getutxos", rest_getutxos},
+    {"/rest/tx/", rest_tx},
+    {"/rest/block/notxdetails/", rest_block_notxdetails},
+    {"/rest/block/", rest_block_extended},
+    {"/rest/chaininfo", rest_chaininfo},
+    {"/rest/mempool/info", rest_mempool_info},
+    {"/rest/mempool/contents", rest_mempool_contents},
+    {"/rest/headers/", rest_headers},
+    {"/rest/getutxos", rest_getutxos},
 };
 
 bool StartREST()

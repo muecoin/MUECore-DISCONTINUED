@@ -76,8 +76,8 @@ void TxConfirmStats::UpdateMovingAverages()
 
 // returns -1 on error conditions
 double TxConfirmStats::EstimateMedianVal(int confTarget, double sufficientTxVal,
-                                         double successBreakPoint, bool requireGreater,
-                                         unsigned int nBlockHeight)
+        double successBreakPoint, bool requireGreater,
+        unsigned int nBlockHeight)
 {
     // Counters for a bucket (or range of buckets)
     double nConf = 0; // Number of tx's confirmed within the confTarget
@@ -326,7 +326,7 @@ CBlockPolicyEstimator::CBlockPolicyEstimator(const CFeeRate& _minRelayFee)
 bool CBlockPolicyEstimator::isFeeDataPoint(const CFeeRate &fee, double pri)
 {
     if ((pri < minTrackedPriority && fee >= minTrackedFee) ||
-        (pri < priUnlikely && fee > feeLikely)) {
+            (pri < priUnlikely && fee > feeLikely)) {
         return true;
     }
     return false;
@@ -335,7 +335,7 @@ bool CBlockPolicyEstimator::isFeeDataPoint(const CFeeRate &fee, double pri)
 bool CBlockPolicyEstimator::isPriDataPoint(const CFeeRate &fee, double pri)
 {
     if ((fee < minTrackedFee && pri >= minTrackedPriority) ||
-        (fee < feeUnlikely && pri > priLikely)) {
+            (fee < feeUnlikely && pri > priLikely)) {
         return true;
     }
     return false;
@@ -432,7 +432,7 @@ void CBlockPolicyEstimator::processBlockTx(unsigned int nBlockHeight, const CTxM
 }
 
 void CBlockPolicyEstimator::processBlock(unsigned int nBlockHeight,
-                                         std::vector<CTxMemPoolEntry>& entries, bool fCurrentEstimate)
+        std::vector<CTxMemPoolEntry>& entries, bool fCurrentEstimate)
 {
     if (nBlockHeight <= nBestSeenHeight) {
         // Ignore side chains and re-orgs; assuming they are random

@@ -12,7 +12,7 @@ class OptionsModel;
 class PlatformStyle;
 
 namespace Ui {
-    class AddressBookPage;
+class AddressBookPage;
 }
 
 QT_BEGIN_NAMESPACE
@@ -44,7 +44,9 @@ public:
     ~AddressBookPage();
 
     void setModel(AddressTableModel *model);
-    const QString &getReturnValue() const { return returnValue; }
+    const QString &getReturnValue() const {
+        return returnValue;
+    }
 
 public Q_SLOTS:
     void done(int retval);

@@ -202,7 +202,7 @@ SecureString CKeePassIntegrator::CKeePassResponse::decrypt(std::string strValueB
     SecureString sValue;
     if(!DecryptAES256(sKey, strValueEncrypted, strIV, sValue))
     {
-      throw std::runtime_error("Unable to decrypt value.");
+        throw std::runtime_error("Unable to decrypt value.");
     }
     return sValue;
 }
@@ -244,14 +244,14 @@ std::string CKeePassIntegrator::constructHTTPPost(const std::string& strMsg, con
 {
     std::ostringstream streamOut;
     streamOut << "POST / HTTP/1.1\r\n"
-      << "User-Agent: mue-json-rpc/" << FormatFullVersion() << "\r\n"
-      << "Host: localhost\r\n"
-      << "Content-Type: application/json\r\n"
-      << "Content-Length: " << strMsg.size() << "\r\n"
-      << "Connection: close\r\n"
-      << "Accept: application/json\r\n";
+              << "User-Agent: mue-json-rpc/" << FormatFullVersion() << "\r\n"
+              << "Host: localhost\r\n"
+              << "Content-Type: application/json\r\n"
+              << "Content-Length: " << strMsg.size() << "\r\n"
+              << "Connection: close\r\n"
+              << "Accept: application/json\r\n";
     BOOST_FOREACH(const PAIRTYPE(std::string, std::string)& item, mapRequestHeaders)
-        streamOut << item.first << ": " << item.second << "\r\n";
+    streamOut << item.first << ": " << item.second << "\r\n";
     streamOut << "\r\n" << strMsg;
 
     return streamOut.str();
@@ -417,7 +417,7 @@ void CKeePassIntegrator::doHTTPPost(const std::string& sRequest, int& nStatus, s
     // Parse reply
     UniValue valReply(UniValue::VSTR);
     if (!valReply.read(response.strBody))
-         throw std::runtime_error("couldn't parse reply from server");
+        throw std::runtime_error("couldn't parse reply from server");
     const UniValue& reply = valReply.get_obj();
     if (reply.empty())
         throw std::runtime_error("expected reply to have result, error and id properties");

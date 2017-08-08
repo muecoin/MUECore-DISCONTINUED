@@ -70,11 +70,14 @@ SECP256K1_INLINE static int secp256k1_scalar_reduce(secp256k1_scalar *r, unsigne
     uint128_t t;
     VERIFY_CHECK(overflow <= 1);
     t = (uint128_t)r->d[0] + overflow * SECP256K1_N_C_0;
-    r->d[0] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[0] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)r->d[1] + overflow * SECP256K1_N_C_1;
-    r->d[1] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[1] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)r->d[2] + overflow * SECP256K1_N_C_2;
-    r->d[2] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[2] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint64_t)r->d[3];
     r->d[3] = t & 0xFFFFFFFFFFFFFFFFULL;
     return overflow;
@@ -83,13 +86,17 @@ SECP256K1_INLINE static int secp256k1_scalar_reduce(secp256k1_scalar *r, unsigne
 static int secp256k1_scalar_add(secp256k1_scalar *r, const secp256k1_scalar *a, const secp256k1_scalar *b) {
     int overflow;
     uint128_t t = (uint128_t)a->d[0] + b->d[0];
-    r->d[0] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[0] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)a->d[1] + b->d[1];
-    r->d[1] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[1] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)a->d[2] + b->d[2];
-    r->d[2] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[2] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)a->d[3] + b->d[3];
-    r->d[3] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[3] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     overflow = t + secp256k1_scalar_check_overflow(r);
     VERIFY_CHECK(overflow == 0 || overflow == 1);
     secp256k1_scalar_reduce(r, overflow);
@@ -101,11 +108,14 @@ static void secp256k1_scalar_cadd_bit(secp256k1_scalar *r, unsigned int bit, int
     VERIFY_CHECK(bit < 256);
     bit += ((uint32_t) flag - 1) & 0x100;  /* forcing (bit >> 6) > 3 makes this a noop */
     t = (uint128_t)r->d[0] + (((uint64_t)((bit >> 6) == 0)) << (bit & 0x3F));
-    r->d[0] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[0] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)r->d[1] + (((uint64_t)((bit >> 6) == 1)) << (bit & 0x3F));
-    r->d[1] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[1] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)r->d[2] + (((uint64_t)((bit >> 6) == 2)) << (bit & 0x3F));
-    r->d[2] = t & 0xFFFFFFFFFFFFFFFFULL; t >>= 64;
+    r->d[2] = t & 0xFFFFFFFFFFFFFFFFULL;
+    t >>= 64;
     t += (uint128_t)r->d[3] + (((uint64_t)((bit >> 6) == 3)) << (bit & 0x3F));
     r->d[3] = t & 0xFFFFFFFFFFFFFFFFULL;
 #ifdef VERIFY
@@ -127,10 +137,38 @@ static void secp256k1_scalar_set_b32(secp256k1_scalar *r, const unsigned char *b
 }
 
 static void secp256k1_scalar_get_b32(unsigned char *bin, const secp256k1_scalar* a) {
-    bin[0] = a->d[3] >> 56; bin[1] = a->d[3] >> 48; bin[2] = a->d[3] >> 40; bin[3] = a->d[3] >> 32; bin[4] = a->d[3] >> 24; bin[5] = a->d[3] >> 16; bin[6] = a->d[3] >> 8; bin[7] = a->d[3];
-    bin[8] = a->d[2] >> 56; bin[9] = a->d[2] >> 48; bin[10] = a->d[2] >> 40; bin[11] = a->d[2] >> 32; bin[12] = a->d[2] >> 24; bin[13] = a->d[2] >> 16; bin[14] = a->d[2] >> 8; bin[15] = a->d[2];
-    bin[16] = a->d[1] >> 56; bin[17] = a->d[1] >> 48; bin[18] = a->d[1] >> 40; bin[19] = a->d[1] >> 32; bin[20] = a->d[1] >> 24; bin[21] = a->d[1] >> 16; bin[22] = a->d[1] >> 8; bin[23] = a->d[1];
-    bin[24] = a->d[0] >> 56; bin[25] = a->d[0] >> 48; bin[26] = a->d[0] >> 40; bin[27] = a->d[0] >> 32; bin[28] = a->d[0] >> 24; bin[29] = a->d[0] >> 16; bin[30] = a->d[0] >> 8; bin[31] = a->d[0];
+    bin[0] = a->d[3] >> 56;
+    bin[1] = a->d[3] >> 48;
+    bin[2] = a->d[3] >> 40;
+    bin[3] = a->d[3] >> 32;
+    bin[4] = a->d[3] >> 24;
+    bin[5] = a->d[3] >> 16;
+    bin[6] = a->d[3] >> 8;
+    bin[7] = a->d[3];
+    bin[8] = a->d[2] >> 56;
+    bin[9] = a->d[2] >> 48;
+    bin[10] = a->d[2] >> 40;
+    bin[11] = a->d[2] >> 32;
+    bin[12] = a->d[2] >> 24;
+    bin[13] = a->d[2] >> 16;
+    bin[14] = a->d[2] >> 8;
+    bin[15] = a->d[2];
+    bin[16] = a->d[1] >> 56;
+    bin[17] = a->d[1] >> 48;
+    bin[18] = a->d[1] >> 40;
+    bin[19] = a->d[1] >> 32;
+    bin[20] = a->d[1] >> 24;
+    bin[21] = a->d[1] >> 16;
+    bin[22] = a->d[1] >> 8;
+    bin[23] = a->d[1];
+    bin[24] = a->d[0] >> 56;
+    bin[25] = a->d[0] >> 48;
+    bin[26] = a->d[0] >> 40;
+    bin[27] = a->d[0] >> 32;
+    bin[28] = a->d[0] >> 24;
+    bin[29] = a->d[0] >> 16;
+    bin[30] = a->d[0] >> 8;
+    bin[31] = a->d[0];
 }
 
 SECP256K1_INLINE static int secp256k1_scalar_is_zero(const secp256k1_scalar *a) {
@@ -140,11 +178,14 @@ SECP256K1_INLINE static int secp256k1_scalar_is_zero(const secp256k1_scalar *a) 
 static void secp256k1_scalar_negate(secp256k1_scalar *r, const secp256k1_scalar *a) {
     uint64_t nonzero = 0xFFFFFFFFFFFFFFFFULL * (secp256k1_scalar_is_zero(a) == 0);
     uint128_t t = (uint128_t)(~a->d[0]) + SECP256K1_N_0 + 1;
-    r->d[0] = t & nonzero; t >>= 64;
+    r->d[0] = t & nonzero;
+    t >>= 64;
     t += (uint128_t)(~a->d[1]) + SECP256K1_N_1;
-    r->d[1] = t & nonzero; t >>= 64;
+    r->d[1] = t & nonzero;
+    t >>= 64;
     t += (uint128_t)(~a->d[2]) + SECP256K1_N_2;
-    r->d[2] = t & nonzero; t >>= 64;
+    r->d[2] = t & nonzero;
+    t >>= 64;
     t += (uint128_t)(~a->d[3]) + SECP256K1_N_3;
     r->d[3] = t & nonzero;
 }
@@ -171,11 +212,14 @@ static int secp256k1_scalar_cond_negate(secp256k1_scalar *r, int flag) {
     uint64_t mask = !flag - 1;
     uint64_t nonzero = (secp256k1_scalar_is_zero(r) != 0) - 1;
     uint128_t t = (uint128_t)(r->d[0] ^ mask) + ((SECP256K1_N_0 + 1) & mask);
-    r->d[0] = t & nonzero; t >>= 64;
+    r->d[0] = t & nonzero;
+    t >>= 64;
     t += (uint128_t)(r->d[1] ^ mask) + (SECP256K1_N_1 & mask);
-    r->d[1] = t & nonzero; t >>= 64;
+    r->d[1] = t & nonzero;
+    t >>= 64;
     t += (uint128_t)(r->d[2] ^ mask) + (SECP256K1_N_2 & mask);
-    r->d[2] = t & nonzero; t >>= 64;
+    r->d[2] = t & nonzero;
+    t >>= 64;
     t += (uint128_t)(r->d[3] ^ mask) + (SECP256K1_N_3 & mask);
     r->d[3] = t & nonzero;
     return 2 * (mask == 0) - 1;
@@ -275,234 +319,234 @@ static void secp256k1_scalar_reduce_512(secp256k1_scalar *r, const uint64_t *l) 
     uint64_t c;
 
     __asm__ __volatile__(
-    /* Preload. */
-    "movq 32(%%rsi), %%r11\n"
-    "movq 40(%%rsi), %%r12\n"
-    "movq 48(%%rsi), %%r13\n"
-    "movq 56(%%rsi), %%r14\n"
-    /* Initialize r8,r9,r10 */
-    "movq 0(%%rsi), %%r8\n"
-    "xorq %%r9, %%r9\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9) += n0 * c0 */
-    "movq %8, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    /* extract m0 */
-    "movq %%r8, %q0\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10) += l1 */
-    "addq 8(%%rsi), %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r9,r10,r8) += n1 * c0 */
-    "movq %8, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += n0 * c1 */
-    "movq %9, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* extract m1 */
-    "movq %%r9, %q1\n"
-    "xorq %%r9, %%r9\n"
-    /* (r10,r8,r9) += l2 */
-    "addq 16(%%rsi), %%r10\n"
-    "adcq $0, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += n2 * c0 */
-    "movq %8, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += n1 * c1 */
-    "movq %9, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += n0 */
-    "addq %%r11, %%r10\n"
-    "adcq $0, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* extract m2 */
-    "movq %%r10, %q2\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9,r10) += l3 */
-    "addq 24(%%rsi), %%r8\n"
-    "adcq $0, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += n3 * c0 */
-    "movq %8, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += n2 * c1 */
-    "movq %9, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += n1 */
-    "addq %%r12, %%r8\n"
-    "adcq $0, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* extract m3 */
-    "movq %%r8, %q3\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10,r8) += n3 * c1 */
-    "movq %9, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += n2 */
-    "addq %%r13, %%r9\n"
-    "adcq $0, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* extract m4 */
-    "movq %%r9, %q4\n"
-    /* (r10,r8) += n3 */
-    "addq %%r14, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* extract m5 */
-    "movq %%r10, %q5\n"
-    /* extract m6 */
-    "movq %%r8, %q6\n"
-    : "=g"(m0), "=g"(m1), "=g"(m2), "=g"(m3), "=g"(m4), "=g"(m5), "=g"(m6)
-    : "S"(l), "n"(SECP256K1_N_C_0), "n"(SECP256K1_N_C_1)
-    : "rax", "rdx", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "cc");
+        /* Preload. */
+        "movq 32(%%rsi), %%r11\n"
+        "movq 40(%%rsi), %%r12\n"
+        "movq 48(%%rsi), %%r13\n"
+        "movq 56(%%rsi), %%r14\n"
+        /* Initialize r8,r9,r10 */
+        "movq 0(%%rsi), %%r8\n"
+        "xorq %%r9, %%r9\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9) += n0 * c0 */
+        "movq %8, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        /* extract m0 */
+        "movq %%r8, %q0\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10) += l1 */
+        "addq 8(%%rsi), %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r9,r10,r8) += n1 * c0 */
+        "movq %8, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += n0 * c1 */
+        "movq %9, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* extract m1 */
+        "movq %%r9, %q1\n"
+        "xorq %%r9, %%r9\n"
+        /* (r10,r8,r9) += l2 */
+        "addq 16(%%rsi), %%r10\n"
+        "adcq $0, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += n2 * c0 */
+        "movq %8, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += n1 * c1 */
+        "movq %9, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += n0 */
+        "addq %%r11, %%r10\n"
+        "adcq $0, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* extract m2 */
+        "movq %%r10, %q2\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9,r10) += l3 */
+        "addq 24(%%rsi), %%r8\n"
+        "adcq $0, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += n3 * c0 */
+        "movq %8, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += n2 * c1 */
+        "movq %9, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += n1 */
+        "addq %%r12, %%r8\n"
+        "adcq $0, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* extract m3 */
+        "movq %%r8, %q3\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10,r8) += n3 * c1 */
+        "movq %9, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += n2 */
+        "addq %%r13, %%r9\n"
+        "adcq $0, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* extract m4 */
+        "movq %%r9, %q4\n"
+        /* (r10,r8) += n3 */
+        "addq %%r14, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* extract m5 */
+        "movq %%r10, %q5\n"
+        /* extract m6 */
+        "movq %%r8, %q6\n"
+        : "=g"(m0), "=g"(m1), "=g"(m2), "=g"(m3), "=g"(m4), "=g"(m5), "=g"(m6)
+        : "S"(l), "n"(SECP256K1_N_C_0), "n"(SECP256K1_N_C_1)
+        : "rax", "rdx", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "cc");
 
     /* Reduce 385 bits into 258. */
     __asm__ __volatile__(
-    /* Preload */
-    "movq %q9, %%r11\n"
-    "movq %q10, %%r12\n"
-    "movq %q11, %%r13\n"
-    /* Initialize (r8,r9,r10) */
-    "movq %q5, %%r8\n"
-    "xorq %%r9, %%r9\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9) += m4 * c0 */
-    "movq %12, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    /* extract p0 */
-    "movq %%r8, %q0\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10) += m1 */
-    "addq %q6, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r9,r10,r8) += m5 * c0 */
-    "movq %12, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += m4 * c1 */
-    "movq %13, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* extract p1 */
-    "movq %%r9, %q1\n"
-    "xorq %%r9, %%r9\n"
-    /* (r10,r8,r9) += m2 */
-    "addq %q7, %%r10\n"
-    "adcq $0, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += m6 * c0 */
-    "movq %12, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += m5 * c1 */
-    "movq %13, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += m4 */
-    "addq %%r11, %%r10\n"
-    "adcq $0, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* extract p2 */
-    "movq %%r10, %q2\n"
-    /* (r8,r9) += m3 */
-    "addq %q8, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r8,r9) += m6 * c1 */
-    "movq %13, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    /* (r8,r9) += m5 */
-    "addq %%r12, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* extract p3 */
-    "movq %%r8, %q3\n"
-    /* (r9) += m6 */
-    "addq %%r13, %%r9\n"
-    /* extract p4 */
-    "movq %%r9, %q4\n"
-    : "=&g"(p0), "=&g"(p1), "=&g"(p2), "=g"(p3), "=g"(p4)
-    : "g"(m0), "g"(m1), "g"(m2), "g"(m3), "g"(m4), "g"(m5), "g"(m6), "n"(SECP256K1_N_C_0), "n"(SECP256K1_N_C_1)
-    : "rax", "rdx", "r8", "r9", "r10", "r11", "r12", "r13", "cc");
+        /* Preload */
+        "movq %q9, %%r11\n"
+        "movq %q10, %%r12\n"
+        "movq %q11, %%r13\n"
+        /* Initialize (r8,r9,r10) */
+        "movq %q5, %%r8\n"
+        "xorq %%r9, %%r9\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9) += m4 * c0 */
+        "movq %12, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        /* extract p0 */
+        "movq %%r8, %q0\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10) += m1 */
+        "addq %q6, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r9,r10,r8) += m5 * c0 */
+        "movq %12, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += m4 * c1 */
+        "movq %13, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* extract p1 */
+        "movq %%r9, %q1\n"
+        "xorq %%r9, %%r9\n"
+        /* (r10,r8,r9) += m2 */
+        "addq %q7, %%r10\n"
+        "adcq $0, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += m6 * c0 */
+        "movq %12, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += m5 * c1 */
+        "movq %13, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += m4 */
+        "addq %%r11, %%r10\n"
+        "adcq $0, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* extract p2 */
+        "movq %%r10, %q2\n"
+        /* (r8,r9) += m3 */
+        "addq %q8, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r8,r9) += m6 * c1 */
+        "movq %13, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        /* (r8,r9) += m5 */
+        "addq %%r12, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* extract p3 */
+        "movq %%r8, %q3\n"
+        /* (r9) += m6 */
+        "addq %%r13, %%r9\n"
+        /* extract p4 */
+        "movq %%r9, %q4\n"
+        : "=&g"(p0), "=&g"(p1), "=&g"(p2), "=g"(p3), "=g"(p4)
+        : "g"(m0), "g"(m1), "g"(m2), "g"(m3), "g"(m4), "g"(m5), "g"(m6), "n"(SECP256K1_N_C_0), "n"(SECP256K1_N_C_1)
+        : "rax", "rdx", "r8", "r9", "r10", "r11", "r12", "r13", "cc");
 
     /* Reduce 258 bits into 256. */
     __asm__ __volatile__(
-    /* Preload */
-    "movq %q5, %%r10\n"
-    /* (rax,rdx) = p4 * c0 */
-    "movq %7, %%rax\n"
-    "mulq %%r10\n"
-    /* (rax,rdx) += p0 */
-    "addq %q1, %%rax\n"
-    "adcq $0, %%rdx\n"
-    /* extract r0 */
-    "movq %%rax, 0(%q6)\n"
-    /* Move to (r8,r9) */
-    "movq %%rdx, %%r8\n"
-    "xorq %%r9, %%r9\n"
-    /* (r8,r9) += p1 */
-    "addq %q2, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r8,r9) += p4 * c1 */
-    "movq %8, %%rax\n"
-    "mulq %%r10\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    /* Extract r1 */
-    "movq %%r8, 8(%q6)\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r8) += p4 */
-    "addq %%r10, %%r9\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r8) += p2 */
-    "addq %q3, %%r9\n"
-    "adcq $0, %%r8\n"
-    /* Extract r2 */
-    "movq %%r9, 16(%q6)\n"
-    "xorq %%r9, %%r9\n"
-    /* (r8,r9) += p3 */
-    "addq %q4, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* Extract r3 */
-    "movq %%r8, 24(%q6)\n"
-    /* Extract c */
-    "movq %%r9, %q0\n"
-    : "=g"(c)
-    : "g"(p0), "g"(p1), "g"(p2), "g"(p3), "g"(p4), "D"(r), "n"(SECP256K1_N_C_0), "n"(SECP256K1_N_C_1)
-    : "rax", "rdx", "r8", "r9", "r10", "cc", "memory");
+        /* Preload */
+        "movq %q5, %%r10\n"
+        /* (rax,rdx) = p4 * c0 */
+        "movq %7, %%rax\n"
+        "mulq %%r10\n"
+        /* (rax,rdx) += p0 */
+        "addq %q1, %%rax\n"
+        "adcq $0, %%rdx\n"
+        /* extract r0 */
+        "movq %%rax, 0(%q6)\n"
+        /* Move to (r8,r9) */
+        "movq %%rdx, %%r8\n"
+        "xorq %%r9, %%r9\n"
+        /* (r8,r9) += p1 */
+        "addq %q2, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r8,r9) += p4 * c1 */
+        "movq %8, %%rax\n"
+        "mulq %%r10\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        /* Extract r1 */
+        "movq %%r8, 8(%q6)\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r8) += p4 */
+        "addq %%r10, %%r9\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r8) += p2 */
+        "addq %q3, %%r9\n"
+        "adcq $0, %%r8\n"
+        /* Extract r2 */
+        "movq %%r9, 16(%q6)\n"
+        "xorq %%r9, %%r9\n"
+        /* (r8,r9) += p3 */
+        "addq %q4, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* Extract r3 */
+        "movq %%r8, 24(%q6)\n"
+        /* Extract c */
+        "movq %%r9, %q0\n"
+        : "=g"(c)
+        : "g"(p0), "g"(p1), "g"(p2), "g"(p3), "g"(p4), "D"(r), "n"(SECP256K1_N_C_0), "n"(SECP256K1_N_C_1)
+        : "rax", "rdx", "r8", "r9", "r10", "cc", "memory");
 #else
     uint128_t c;
     uint64_t c0, c1, c2;
@@ -514,7 +558,9 @@ static void secp256k1_scalar_reduce_512(secp256k1_scalar *r, const uint64_t *l) 
 
     /* Reduce 512 bits into 385. */
     /* m[0..6] = l[0..3] + n[0..3] * SECP256K1_N_C. */
-    c0 = l[0]; c1 = 0; c2 = 0;
+    c0 = l[0];
+    c1 = 0;
+    c2 = 0;
     muladd_fast(n0, SECP256K1_N_C_0);
     extract_fast(m0);
     sumadd_fast(l[1]);
@@ -541,7 +587,9 @@ static void secp256k1_scalar_reduce_512(secp256k1_scalar *r, const uint64_t *l) 
 
     /* Reduce 385 bits into 258. */
     /* p[0..4] = m[0..3] + m[4..6] * SECP256K1_N_C. */
-    c0 = m0; c1 = 0; c2 = 0;
+    c0 = m0;
+    c1 = 0;
+    c2 = 0;
     muladd_fast(m4, SECP256K1_N_C_0);
     extract_fast(p0);
     sumadd_fast(m1);
@@ -563,13 +611,17 @@ static void secp256k1_scalar_reduce_512(secp256k1_scalar *r, const uint64_t *l) 
     /* Reduce 258 bits into 256. */
     /* r[0..3] = p[0..3] + p[4] * SECP256K1_N_C. */
     c = p0 + (uint128_t)SECP256K1_N_C_0 * p4;
-    r->d[0] = c & 0xFFFFFFFFFFFFFFFFULL; c >>= 64;
+    r->d[0] = c & 0xFFFFFFFFFFFFFFFFULL;
+    c >>= 64;
     c += p1 + (uint128_t)SECP256K1_N_C_1 * p4;
-    r->d[1] = c & 0xFFFFFFFFFFFFFFFFULL; c >>= 64;
+    r->d[1] = c & 0xFFFFFFFFFFFFFFFFULL;
+    c >>= 64;
     c += p2 + (uint128_t)p4;
-    r->d[2] = c & 0xFFFFFFFFFFFFFFFFULL; c >>= 64;
+    r->d[2] = c & 0xFFFFFFFFFFFFFFFFULL;
+    c >>= 64;
     c += p3;
-    r->d[3] = c & 0xFFFFFFFFFFFFFFFFULL; c >>= 64;
+    r->d[3] = c & 0xFFFFFFFFFFFFFFFFULL;
+    c >>= 64;
 #endif
 
     /* Final reduction of r. */
@@ -580,135 +632,135 @@ static void secp256k1_scalar_mul_512(uint64_t l[8], const secp256k1_scalar *a, c
 #ifdef USE_ASM_X86_64
     const uint64_t *pb = b->d;
     __asm__ __volatile__(
-    /* Preload */
-    "movq 0(%%rdi), %%r15\n"
-    "movq 8(%%rdi), %%rbx\n"
-    "movq 16(%%rdi), %%rcx\n"
-    "movq 0(%%rdx), %%r11\n"
-    "movq 8(%%rdx), %%r12\n"
-    "movq 16(%%rdx), %%r13\n"
-    "movq 24(%%rdx), %%r14\n"
-    /* (rax,rdx) = a0 * b0 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r11\n"
-    /* Extract l0 */
-    "movq %%rax, 0(%%rsi)\n"
-    /* (r8,r9,r10) = (rdx) */
-    "movq %%rdx, %%r8\n"
-    "xorq %%r9, %%r9\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9,r10) += a0 * b1 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += a1 * b0 */
-    "movq %%rbx, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* Extract l1 */
-    "movq %%r8, 8(%%rsi)\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10,r8) += a0 * b2 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += a1 * b1 */
-    "movq %%rbx, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += a2 * b0 */
-    "movq %%rcx, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* Extract l2 */
-    "movq %%r9, 16(%%rsi)\n"
-    "xorq %%r9, %%r9\n"
-    /* (r10,r8,r9) += a0 * b3 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* Preload a3 */
-    "movq 24(%%rdi), %%r15\n"
-    /* (r10,r8,r9) += a1 * b2 */
-    "movq %%rbx, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += a2 * b1 */
-    "movq %%rcx, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += a3 * b0 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r11\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* Extract l3 */
-    "movq %%r10, 24(%%rsi)\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9,r10) += a1 * b3 */
-    "movq %%rbx, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += a2 * b2 */
-    "movq %%rcx, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += a3 * b1 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* Extract l4 */
-    "movq %%r8, 32(%%rsi)\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10,r8) += a2 * b3 */
-    "movq %%rcx, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += a3 * b2 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* Extract l5 */
-    "movq %%r9, 40(%%rsi)\n"
-    /* (r10,r8) += a3 * b3 */
-    "movq %%r15, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    /* Extract l6 */
-    "movq %%r10, 48(%%rsi)\n"
-    /* Extract l7 */
-    "movq %%r8, 56(%%rsi)\n"
-    : "+d"(pb)
-    : "S"(l), "D"(a->d)
-    : "rax", "rbx", "rcx", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "cc", "memory");
+        /* Preload */
+        "movq 0(%%rdi), %%r15\n"
+        "movq 8(%%rdi), %%rbx\n"
+        "movq 16(%%rdi), %%rcx\n"
+        "movq 0(%%rdx), %%r11\n"
+        "movq 8(%%rdx), %%r12\n"
+        "movq 16(%%rdx), %%r13\n"
+        "movq 24(%%rdx), %%r14\n"
+        /* (rax,rdx) = a0 * b0 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r11\n"
+        /* Extract l0 */
+        "movq %%rax, 0(%%rsi)\n"
+        /* (r8,r9,r10) = (rdx) */
+        "movq %%rdx, %%r8\n"
+        "xorq %%r9, %%r9\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9,r10) += a0 * b1 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += a1 * b0 */
+        "movq %%rbx, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* Extract l1 */
+        "movq %%r8, 8(%%rsi)\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10,r8) += a0 * b2 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += a1 * b1 */
+        "movq %%rbx, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += a2 * b0 */
+        "movq %%rcx, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* Extract l2 */
+        "movq %%r9, 16(%%rsi)\n"
+        "xorq %%r9, %%r9\n"
+        /* (r10,r8,r9) += a0 * b3 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* Preload a3 */
+        "movq 24(%%rdi), %%r15\n"
+        /* (r10,r8,r9) += a1 * b2 */
+        "movq %%rbx, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += a2 * b1 */
+        "movq %%rcx, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += a3 * b0 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r11\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* Extract l3 */
+        "movq %%r10, 24(%%rsi)\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9,r10) += a1 * b3 */
+        "movq %%rbx, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += a2 * b2 */
+        "movq %%rcx, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += a3 * b1 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* Extract l4 */
+        "movq %%r8, 32(%%rsi)\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10,r8) += a2 * b3 */
+        "movq %%rcx, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += a3 * b2 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* Extract l5 */
+        "movq %%r9, 40(%%rsi)\n"
+        /* (r10,r8) += a3 * b3 */
+        "movq %%r15, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        /* Extract l6 */
+        "movq %%r10, 48(%%rsi)\n"
+        /* Extract l7 */
+        "movq %%r8, 56(%%rsi)\n"
+        : "+d"(pb)
+        : "S"(l), "D"(a->d)
+        : "rax", "rbx", "rcx", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15", "cc", "memory");
 #else
     /* 160 bit accumulator. */
     uint64_t c0 = 0, c1 = 0;
@@ -746,112 +798,112 @@ static void secp256k1_scalar_mul_512(uint64_t l[8], const secp256k1_scalar *a, c
 static void secp256k1_scalar_sqr_512(uint64_t l[8], const secp256k1_scalar *a) {
 #ifdef USE_ASM_X86_64
     __asm__ __volatile__(
-    /* Preload */
-    "movq 0(%%rdi), %%r11\n"
-    "movq 8(%%rdi), %%r12\n"
-    "movq 16(%%rdi), %%r13\n"
-    "movq 24(%%rdi), %%r14\n"
-    /* (rax,rdx) = a0 * a0 */
-    "movq %%r11, %%rax\n"
-    "mulq %%r11\n"
-    /* Extract l0 */
-    "movq %%rax, 0(%%rsi)\n"
-    /* (r8,r9,r10) = (rdx,0) */
-    "movq %%rdx, %%r8\n"
-    "xorq %%r9, %%r9\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9,r10) += 2 * a0 * a1 */
-    "movq %%r11, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* Extract l1 */
-    "movq %%r8, 8(%%rsi)\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10,r8) += 2 * a0 * a2 */
-    "movq %%r11, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* (r9,r10,r8) += a1 * a1 */
-    "movq %%r12, %%rax\n"
-    "mulq %%r12\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* Extract l2 */
-    "movq %%r9, 16(%%rsi)\n"
-    "xorq %%r9, %%r9\n"
-    /* (r10,r8,r9) += 2 * a0 * a3 */
-    "movq %%r11, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* (r10,r8,r9) += 2 * a1 * a2 */
-    "movq %%r12, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    "adcq $0, %%r9\n"
-    /* Extract l3 */
-    "movq %%r10, 24(%%rsi)\n"
-    "xorq %%r10, %%r10\n"
-    /* (r8,r9,r10) += 2 * a1 * a3 */
-    "movq %%r12, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* (r8,r9,r10) += a2 * a2 */
-    "movq %%r13, %%rax\n"
-    "mulq %%r13\n"
-    "addq %%rax, %%r8\n"
-    "adcq %%rdx, %%r9\n"
-    "adcq $0, %%r10\n"
-    /* Extract l4 */
-    "movq %%r8, 32(%%rsi)\n"
-    "xorq %%r8, %%r8\n"
-    /* (r9,r10,r8) += 2 * a2 * a3 */
-    "movq %%r13, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    "addq %%rax, %%r9\n"
-    "adcq %%rdx, %%r10\n"
-    "adcq $0, %%r8\n"
-    /* Extract l5 */
-    "movq %%r9, 40(%%rsi)\n"
-    /* (r10,r8) += a3 * a3 */
-    "movq %%r14, %%rax\n"
-    "mulq %%r14\n"
-    "addq %%rax, %%r10\n"
-    "adcq %%rdx, %%r8\n"
-    /* Extract l6 */
-    "movq %%r10, 48(%%rsi)\n"
-    /* Extract l7 */
-    "movq %%r8, 56(%%rsi)\n"
-    :
-    : "S"(l), "D"(a->d)
-    : "rax", "rdx", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "cc", "memory");
+        /* Preload */
+        "movq 0(%%rdi), %%r11\n"
+        "movq 8(%%rdi), %%r12\n"
+        "movq 16(%%rdi), %%r13\n"
+        "movq 24(%%rdi), %%r14\n"
+        /* (rax,rdx) = a0 * a0 */
+        "movq %%r11, %%rax\n"
+        "mulq %%r11\n"
+        /* Extract l0 */
+        "movq %%rax, 0(%%rsi)\n"
+        /* (r8,r9,r10) = (rdx,0) */
+        "movq %%rdx, %%r8\n"
+        "xorq %%r9, %%r9\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9,r10) += 2 * a0 * a1 */
+        "movq %%r11, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* Extract l1 */
+        "movq %%r8, 8(%%rsi)\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10,r8) += 2 * a0 * a2 */
+        "movq %%r11, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* (r9,r10,r8) += a1 * a1 */
+        "movq %%r12, %%rax\n"
+        "mulq %%r12\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* Extract l2 */
+        "movq %%r9, 16(%%rsi)\n"
+        "xorq %%r9, %%r9\n"
+        /* (r10,r8,r9) += 2 * a0 * a3 */
+        "movq %%r11, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* (r10,r8,r9) += 2 * a1 * a2 */
+        "movq %%r12, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        "adcq $0, %%r9\n"
+        /* Extract l3 */
+        "movq %%r10, 24(%%rsi)\n"
+        "xorq %%r10, %%r10\n"
+        /* (r8,r9,r10) += 2 * a1 * a3 */
+        "movq %%r12, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* (r8,r9,r10) += a2 * a2 */
+        "movq %%r13, %%rax\n"
+        "mulq %%r13\n"
+        "addq %%rax, %%r8\n"
+        "adcq %%rdx, %%r9\n"
+        "adcq $0, %%r10\n"
+        /* Extract l4 */
+        "movq %%r8, 32(%%rsi)\n"
+        "xorq %%r8, %%r8\n"
+        /* (r9,r10,r8) += 2 * a2 * a3 */
+        "movq %%r13, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        "addq %%rax, %%r9\n"
+        "adcq %%rdx, %%r10\n"
+        "adcq $0, %%r8\n"
+        /* Extract l5 */
+        "movq %%r9, 40(%%rsi)\n"
+        /* (r10,r8) += a3 * a3 */
+        "movq %%r14, %%rax\n"
+        "mulq %%r14\n"
+        "addq %%rax, %%r10\n"
+        "adcq %%rdx, %%r8\n"
+        /* Extract l6 */
+        "movq %%r10, 48(%%rsi)\n"
+        /* Extract l7 */
+        "movq %%r8, 56(%%rsi)\n"
+        :
+        : "S"(l), "D"(a->d)
+        : "rax", "rdx", "r8", "r9", "r10", "r11", "r12", "r13", "r14", "cc", "memory");
 #else
     /* 160 bit accumulator. */
     uint64_t c0 = 0, c1 = 0;

@@ -281,19 +281,19 @@ void WalletView::encryptWallet(bool status)
 void WalletView::backupWallet()
 {
     QString filename = GUIUtil::getSaveFileName(this,
-        tr("Backup Wallet"), QString(),
-        tr("Wallet Data (*.dat)"), NULL);
+                       tr("Backup Wallet"), QString(),
+                       tr("Wallet Data (*.dat)"), NULL);
 
     if (filename.isEmpty())
         return;
 
     if (!walletModel->backupWallet(filename)) {
         Q_EMIT message(tr("Backup Failed"), tr("There was an error trying to save the wallet data to %1.").arg(filename),
-            CClientUIInterface::MSG_ERROR);
-        }
+                       CClientUIInterface::MSG_ERROR);
+    }
     else {
         Q_EMIT message(tr("Backup Successful"), tr("The wallet data was successfully saved to %1.").arg(filename),
-            CClientUIInterface::MSG_INFORMATION);
+                       CClientUIInterface::MSG_INFORMATION);
     }
 }
 

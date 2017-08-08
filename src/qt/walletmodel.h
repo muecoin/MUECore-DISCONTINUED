@@ -177,11 +177,18 @@ public:
         UnlockContext(WalletModel *wallet, bool valid, bool was_locked, bool was_mixing);
         ~UnlockContext();
 
-        bool isValid() const { return valid; }
+        bool isValid() const {
+            return valid;
+        }
 
         // Copy operator and constructor transfer the context
-        UnlockContext(const UnlockContext& obj) { CopyFrom(obj); }
-        UnlockContext& operator=(const UnlockContext& rhs) { CopyFrom(rhs); return *this; }
+        UnlockContext(const UnlockContext& obj) {
+            CopyFrom(obj);
+        }
+        UnlockContext& operator=(const UnlockContext& rhs) {
+            CopyFrom(rhs);
+            return *this;
+        }
     private:
         WalletModel *wallet;
         bool valid;

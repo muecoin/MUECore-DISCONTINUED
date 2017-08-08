@@ -183,8 +183,8 @@ void CMasternode::Check(bool fForce)
 
         CCoins coins;
         if(!pcoinsTip->GetCoins(vin.prevout.hash, coins) ||
-           (unsigned int)vin.prevout.n>=coins.vout.size() ||
-           coins.vout[vin.prevout.n].IsNull()) {
+                (unsigned int)vin.prevout.n>=coins.vout.size() ||
+                coins.vout[vin.prevout.n].IsNull()) {
             nActiveState = MASTERNODE_OUTPOINT_SPENT;
             LogPrint("masternode", "CMasternode::Check -- Failed to find Masternode UTXO, masternode=%s\n", vin.prevout.ToStringShort());
             return;
@@ -211,10 +211,10 @@ void CMasternode::Check(bool fForce)
     int nActiveStatePrev = nActiveState;
     bool fOurMasternode = fMasterNode && activeMasternode.pubKeyMasternode == pubKeyMasternode;
 
-                   // masternode doesn't meet payment protocol requirements ...
+    // masternode doesn't meet payment protocol requirements ...
     bool fRequireUpdate = nProtocolVersion < mnpayments.GetMinMasternodePaymentsProto() ||
-                   // or it's our own node and we just updated it to the new protocol but we are still waiting for activation ...
-                   (fOurMasternode && nProtocolVersion < PROTOCOL_VERSION);
+                          // or it's our own node and we just updated it to the new protocol but we are still waiting for activation ...
+                          (fOurMasternode && nProtocolVersion < PROTOCOL_VERSION);
 
     if(fRequireUpdate) {
         nActiveState = MASTERNODE_UPDATE_REQUIRED;
@@ -250,7 +250,7 @@ void CMasternode::Check(bool fForce)
         bool fWatchdogExpired = (fWatchdogActive && ((GetTime() - nTimeLastWatchdogVote) > MASTERNODE_WATCHDOG_MAX_SECONDS));
 
         LogPrint("masternode", "CMasternode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetTime()=%d, fWatchdogExpired=%d\n",
-                vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetTime(), fWatchdogExpired);
+                 vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetTime(), fWatchdogExpired);
 
         if(fWatchdogExpired) {
             nActiveState = MASTERNODE_WATCHDOG_EXPIRED;
@@ -293,7 +293,7 @@ bool CMasternode::IsValidNetAddr(CService addrIn)
     // TODO: regtest is fine with any addresses for now,
     // should probably be a bit smarter if one day we start to implement tests for this
     return Params().NetworkIDString() == CBaseChainParams::REGTEST ||
-            (addrIn.IsIPv4() && IsReachable(addrIn) && addrIn.IsRoutable());
+           (addrIn.IsIPv4() && IsReachable(addrIn) && addrIn.IsRoutable());
 }
 
 masternode_info_t CMasternode::GetInfo()
@@ -318,15 +318,24 @@ masternode_info_t CMasternode::GetInfo()
 std::string CMasternode::StateToString(int nStateIn)
 {
     switch(nStateIn) {
-        case MASTERNODE_PRE_ENABLED:            return "PRE_ENABLED";
-        case MASTERNODE_ENABLED:                return "ENABLED";
-        case MASTERNODE_EXPIRED:                return "EXPIRED";
-        case MASTERNODE_OUTPOINT_SPENT:         return "OUTPOINT_SPENT";
-        case MASTERNODE_UPDATE_REQUIRED:        return "UPDATE_REQUIRED";
-        case MASTERNODE_WATCHDOG_EXPIRED:       return "WATCHDOG_EXPIRED";
-        case MASTERNODE_NEW_START_REQUIRED:     return "NEW_START_REQUIRED";
-        case MASTERNODE_POSE_BAN:               return "POSE_BAN";
-        default:                                return "UNKNOWN";
+    case MASTERNODE_PRE_ENABLED:
+        return "PRE_ENABLED";
+    case MASTERNODE_ENABLED:
+        return "ENABLED";
+    case MASTERNODE_EXPIRED:
+        return "EXPIRED";
+    case MASTERNODE_OUTPOINT_SPENT:
+        return "OUTPOINT_SPENT";
+    case MASTERNODE_UPDATE_REQUIRED:
+        return "UPDATE_REQUIRED";
+    case MASTERNODE_WATCHDOG_EXPIRED:
+        return "WATCHDOG_EXPIRED";
+    case MASTERNODE_NEW_START_REQUIRED:
+        return "NEW_START_REQUIRED";
+    case MASTERNODE_POSE_BAN:
+        return "POSE_BAN";
+    default:
+        return "UNKNOWN";
     }
 }
 
@@ -375,7 +384,7 @@ void CMasternode::UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScan
 
     for (int i = 0; BlockReading && BlockReading->nHeight > nBlockLastPaid && i < nMaxBlocksToScanBack; i++) {
         if(mnpayments.mapMasternodeBlocks.count(BlockReading->nHeight) &&
-            mnpayments.mapMasternodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2))
+                mnpayments.mapMasternodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2))
         {
             CBlock block;
             if(!ReadBlockFromDisk(block, BlockReading, Params().GetConsensus())) // shouldn't really happen
@@ -384,15 +393,18 @@ void CMasternode::UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScan
             CAmount nMasternodePayment = GetMasternodePayment(BlockReading->nHeight, block.vtx[0].GetValueOut());
 
             BOOST_FOREACH(CTxOut txout, block.vtx[0].vout)
-                if(mnpayee == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
-                    nBlockLastPaid = BlockReading->nHeight;
-                    nTimeLastPaid = BlockReading->nTime;
-                    LogPrint("masternode", "CMasternode::UpdateLastPaidBlock -- searching for block with payment to %s -- found new %d\n", vin.prevout.ToStringShort(), nBlockLastPaid);
-                    return;
-                }
+            if(mnpayee == txout.scriptPubKey && nMasternodePayment == txout.nValue) {
+                nBlockLastPaid = BlockReading->nHeight;
+                nTimeLastPaid = BlockReading->nTime;
+                LogPrint("masternode", "CMasternode::UpdateLastPaidBlock -- searching for block with payment to %s -- found new %d\n", vin.prevout.ToStringShort(), nBlockLastPaid);
+                return;
+            }
         }
 
-        if (BlockReading->pprev == NULL) { assert(BlockReading); break; }
+        if (BlockReading->pprev == NULL) {
+            assert(BlockReading);
+            break;
+        }
         BlockReading = BlockReading->pprev;
     }
 
@@ -490,7 +502,7 @@ bool CMasternodeBroadcast::SimpleCheck(int& nDos)
     // make sure addr is valid
     if(!IsValidNetAddr()) {
         LogPrintf("CMasternodeBroadcast::SimpleCheck -- Invalid addr, rejected: masternode=%s  addr=%s\n",
-                    vin.prevout.ToStringShort(), addr.ToString());
+                  vin.prevout.ToStringShort(), addr.ToString());
         return false;
     }
 
@@ -558,7 +570,7 @@ bool CMasternodeBroadcast::Update(CMasternode* pmn, int& nDos)
     // unless someone is doing something fishy
     if(pmn->sigTime > sigTime) {
         LogPrintf("CMasternodeBroadcast::Update -- Bad sigTime %d (existing broadcast is at %d) for Masternode %s %s\n",
-                      sigTime, pmn->sigTime, vin.prevout.ToStringShort(), addr.ToString());
+                  sigTime, pmn->sigTime, vin.prevout.ToStringShort(), addr.ToString());
         return false;
     }
 
@@ -620,8 +632,8 @@ bool CMasternodeBroadcast::CheckOutpoint(int& nDos)
 
         CCoins coins;
         if(!pcoinsTip->GetCoins(vin.prevout.hash, coins) ||
-           (unsigned int)vin.prevout.n>=coins.vout.size() ||
-           coins.vout[vin.prevout.n].IsNull()) {
+                (unsigned int)vin.prevout.n>=coins.vout.size() ||
+                coins.vout[vin.prevout.n].IsNull()) {
             LogPrint("masternode", "CMasternodeBroadcast::CheckOutpoint -- Failed to find Masternode UTXO, masternode=%s\n", vin.prevout.ToStringShort());
             return false;
         }
@@ -631,7 +643,7 @@ bool CMasternodeBroadcast::CheckOutpoint(int& nDos)
         }
         if(chainActive.Height() - coins.nHeight + 1 < Params().GetConsensus().nMasternodeMinimumConfirmations) {
             LogPrintf("CMasternodeBroadcast::CheckOutpoint -- Masternode UTXO must have at least %d confirmations, masternode=%s\n",
-                    Params().GetConsensus().nMasternodeMinimumConfirmations, vin.prevout.ToStringShort());
+                      Params().GetConsensus().nMasternodeMinimumConfirmations, vin.prevout.ToStringShort());
             // maybe we miss few blocks, let this mnb to be checked again later
             mnodeman.mapSeenMasternodeBroadcast.erase(GetHash());
             return false;
@@ -678,8 +690,8 @@ bool CMasternodeBroadcast::Sign(CKey& keyCollateralAddress)
     sigTime = GetAdjustedTime();
 
     strMessage = addr.ToString(false) + boost::lexical_cast<std::string>(sigTime) +
-                    pubKeyCollateralAddress.GetID().ToString() + pubKeyMasternode.GetID().ToString() +
-                    boost::lexical_cast<std::string>(nProtocolVersion);
+                 pubKeyCollateralAddress.GetID().ToString() + pubKeyMasternode.GetID().ToString() +
+                 boost::lexical_cast<std::string>(nProtocolVersion);
 
     if(!darkSendSigner.SignMessage(strMessage, vchSig, keyCollateralAddress)) {
         LogPrintf("CMasternodeBroadcast::Sign -- SignMessage() failed\n");
@@ -701,12 +713,12 @@ bool CMasternodeBroadcast::CheckSignature(int& nDos)
     nDos = 0;
 
     strMessage = addr.ToString(false) + boost::lexical_cast<std::string>(sigTime) +
-                    pubKeyCollateralAddress.GetID().ToString() + pubKeyMasternode.GetID().ToString() +
-                    boost::lexical_cast<std::string>(nProtocolVersion);
+                 pubKeyCollateralAddress.GetID().ToString() + pubKeyMasternode.GetID().ToString() +
+                 boost::lexical_cast<std::string>(nProtocolVersion);
 
     LogPrint("masternode", "CMasternodeBroadcast::CheckSignature -- strMessage: %s  pubKeyCollateralAddress address: %s  sig: %s\n", strMessage, CBitcoinAddress(pubKeyCollateralAddress.GetID()).ToString(), EncodeBase64(&vchSig[0], vchSig.size()));
 
-    if(!darkSendSigner.VerifyMessage(pubKeyCollateralAddress, vchSig, strMessage, strError)){
+    if(!darkSendSigner.VerifyMessage(pubKeyCollateralAddress, vchSig, strMessage, strError)) {
         LogPrintf("CMasternodeBroadcast::CheckSignature -- Got bad Masternode announce signature, error: %s\n", strError);
         nDos = 100;
         return false;

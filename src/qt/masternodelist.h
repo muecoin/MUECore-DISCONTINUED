@@ -15,7 +15,7 @@
 #define MASTERNODELIST_FILTER_COOLDOWN_SECONDS            3
 
 namespace Ui {
-    class MasternodeList;
+class MasternodeList;
 }
 
 class ClientModel;

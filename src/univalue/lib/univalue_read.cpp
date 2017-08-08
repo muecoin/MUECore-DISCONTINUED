@@ -43,7 +43,7 @@ static const char *hatoui(const char *first, const char *last,
 }
 
 enum jtokentype getJsonToken(string& tokenVal, unsigned int& consumed,
-                            const char *raw)
+                             const char *raw)
 {
     tokenVal.clear();
     consumed = 0;
@@ -169,7 +169,7 @@ enum jtokentype getJsonToken(string& tokenVal, unsigned int& consumed,
         tokenVal = numStr;
         consumed = (raw - rawStart);
         return JTOK_NUMBER;
-        }
+    }
 
     case '"': {
         raw++;                                // skip "
@@ -185,24 +185,40 @@ enum jtokentype getJsonToken(string& tokenVal, unsigned int& consumed,
                 raw++;                        // skip backslash
 
                 switch (*raw) {
-                case '"':  writer.push_back('\"'); break;
-                case '\\': writer.push_back('\\'); break;
-                case '/':  writer.push_back('/'); break;
-                case 'b':  writer.push_back('\b'); break;
-                case 'f':  writer.push_back('\f'); break;
-                case 'n':  writer.push_back('\n'); break;
-                case 'r':  writer.push_back('\r'); break;
-                case 't':  writer.push_back('\t'); break;
+                case '"':
+                    writer.push_back('\"');
+                    break;
+                case '\\':
+                    writer.push_back('\\');
+                    break;
+                case '/':
+                    writer.push_back('/');
+                    break;
+                case 'b':
+                    writer.push_back('\b');
+                    break;
+                case 'f':
+                    writer.push_back('\f');
+                    break;
+                case 'n':
+                    writer.push_back('\n');
+                    break;
+                case 'r':
+                    writer.push_back('\r');
+                    break;
+                case 't':
+                    writer.push_back('\t');
+                    break;
 
                 case 'u': {
                     unsigned int codepoint;
                     if (hatoui(raw + 1, raw + 1 + 4, codepoint) !=
-                               raw + 1 + 4)
+                            raw + 1 + 4)
                         return JTOK_ERR;
                     writer.push_back_u(codepoint);
                     raw += 4;
                     break;
-                    }
+                }
                 default:
                     return JTOK_ERR;
 
@@ -227,7 +243,7 @@ enum jtokentype getJsonToken(string& tokenVal, unsigned int& consumed,
         tokenVal = valStr;
         consumed = (raw - rawStart);
         return JTOK_STRING;
-        }
+    }
 
     default:
         return JTOK_ERR;
@@ -266,7 +282,7 @@ bool UniValue::read(const char *raw)
         raw += consumed;
 
         bool isValueOpen = jsonTokenIsValue(tok) ||
-            tok == JTOK_OBJ_OPEN || tok == JTOK_ARR_OPEN;
+                           tok == JTOK_OBJ_OPEN || tok == JTOK_ARR_OPEN;
 
         if (expect(VALUE)) {
             if (!isValueOpen)
@@ -325,7 +341,7 @@ bool UniValue::read(const char *raw)
             else
                 setExpect(ARR_VALUE);
             break;
-            }
+        }
 
         case JTOK_OBJ_CLOSE:
         case JTOK_ARR_CLOSE: {
@@ -341,7 +357,7 @@ bool UniValue::read(const char *raw)
             clearExpect(OBJ_NAME);
             setExpect(NOT_VALUE);
             break;
-            }
+        }
 
         case JTOK_COLON: {
             if (!stack.size())
@@ -353,11 +369,11 @@ bool UniValue::read(const char *raw)
 
             setExpect(VALUE);
             break;
-            }
+        }
 
         case JTOK_COMMA: {
             if (!stack.size() ||
-                (last_tok == JTOK_COMMA) || (last_tok == JTOK_ARR_OPEN))
+                    (last_tok == JTOK_COMMA) || (last_tok == JTOK_ARR_OPEN))
                 return false;
 
             UniValue *top = stack.back();
@@ -366,7 +382,7 @@ bool UniValue::read(const char *raw)
             else
                 setExpect(ARR_VALUE);
             break;
-            }
+        }
 
         case JTOK_KW_NULL:
         case JTOK_KW_TRUE:
@@ -385,7 +401,8 @@ bool UniValue::read(const char *raw)
             case JTOK_KW_FALSE:
                 tmpVal.setBool(false);
                 break;
-            default: /* impossible */ break;
+            default: /* impossible */
+                break;
             }
 
             UniValue *top = stack.back();
@@ -393,7 +410,7 @@ bool UniValue::read(const char *raw)
 
             setExpect(NOT_VALUE);
             break;
-            }
+        }
 
         case JTOK_NUMBER: {
             if (!stack.size())
@@ -405,7 +422,7 @@ bool UniValue::read(const char *raw)
 
             setExpect(NOT_VALUE);
             break;
-            }
+        }
 
         case JTOK_STRING: {
             if (!stack.size())
@@ -424,7 +441,7 @@ bool UniValue::read(const char *raw)
 
             setExpect(NOT_VALUE);
             break;
-            }
+        }
 
         default:
             return false;

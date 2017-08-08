@@ -68,7 +68,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, HelpMode helpMode) :
     } else if (helpMode == cmdline) {
         setWindowTitle(tr("Command-line options"));
         QString header = tr("Usage:") + "\n" +
-            "  mue-qt [" + tr("command-line options") + "]                     " + "\n";
+                         "  mue-qt [" + tr("command-line options") + "]                     " + "\n";
         QTextCursor cursor(ui->helpMessage->document());
         cursor.insertText(version);
         cursor.insertBlock();
@@ -203,8 +203,8 @@ ShutdownWindow::ShutdownWindow(QWidget *parent, Qt::WindowFlags f):
 {
     QVBoxLayout *layout = new QVBoxLayout();
     layout->addWidget(new QLabel(
-        tr("MonetaryUnit Core is shutting down...") + "<br /><br />" +
-        tr("Do not shut down the computer until this window disappears.")));
+                          tr("MonetaryUnit Core is shutting down...") + "<br /><br />" +
+                          tr("Do not shut down the computer until this window disappears.")));
     setLayout(layout);
 }
 

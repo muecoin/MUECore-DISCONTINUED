@@ -13,7 +13,7 @@ class WalletModel;
 class PlatformStyle;
 
 namespace Ui {
-    class SendCoinsEntry;
+class SendCoinsEntry;
 }
 
 /**

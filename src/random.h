@@ -59,13 +59,13 @@ private:
 public:
     InsecureRand(bool _fDeterministic = false);
 
-   /**
-    * MWC RNG of George Marsaglia
-    * This is intended to be fast. It has a period of 2^59.3, though the
-    * least significant 16 bits only have a period of about 2^30.1.
-    *
-    * @return random value < nMax
-    */
+    /**
+     * MWC RNG of George Marsaglia
+     * This is intended to be fast. It has a period of 2^59.3, though the
+     * least significant 16 bits only have a period of about 2^30.1.
+     *
+     * @return random value < nMax
+     */
     int64_t operator()(int64_t nMax)
     {
         nRz = 36969 * (nRz & 65535) + (nRz >> 16);

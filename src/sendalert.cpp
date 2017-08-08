@@ -48,8 +48,8 @@ void ThreadSendAlert()
     alert.nCancel       = 0;   // cancels previous messages up to this ID number
 
     // These versions are protocol versions
-    alert.nMinVer       = 70698;
-    alert.nMaxVer       = 70699;
+    alert.nMinVer       = 70699;
+    alert.nMaxVer       = 70700;
 
     //
     //  1000 for Misc warnings like out of disk space and clock is wrong
@@ -60,7 +60,7 @@ void ThreadSendAlert()
     alert.strStatusBar  = "URGENT: Upgrade required: see https://www.MonetaryUnit.org";
 
     // Set specific client version/versions here. If setSubVer is empty, no filtering on subver is done:
-    // alert.setSubVer.insert(std::string("/MonetaryUnit Core:0.12.0.58/"));
+    // alert.setSubVer.insert(std::string("/MonetaryUnit Core:1.0.0.2/"));
 
     // Sign
     if(!alert.Sign())

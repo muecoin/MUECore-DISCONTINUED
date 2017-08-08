@@ -73,16 +73,37 @@ struct TestMemPoolEntryHelper
     TestMemPoolEntryHelper() :
         nFee(0), nTime(0), dPriority(0.0), nHeight(1),
         hadNoDependencies(false), spendsCoinbase(false), sigOpCount(1) { }
-    
+
     CTxMemPoolEntry FromTx(CMutableTransaction &tx, CTxMemPool *pool = NULL);
 
     // Change the default value
-    TestMemPoolEntryHelper &Fee(CAmount _fee) { nFee = _fee; return *this; }
-    TestMemPoolEntryHelper &Time(int64_t _time) { nTime = _time; return *this; }
-    TestMemPoolEntryHelper &Priority(double _priority) { dPriority = _priority; return *this; }
-    TestMemPoolEntryHelper &Height(unsigned int _height) { nHeight = _height; return *this; }
-    TestMemPoolEntryHelper &HadNoDependencies(bool _hnd) { hadNoDependencies = _hnd; return *this; }
-    TestMemPoolEntryHelper &SpendsCoinbase(bool _flag) { spendsCoinbase = _flag; return *this; }
-    TestMemPoolEntryHelper &SigOps(unsigned int _sigops) { sigOpCount = _sigops; return *this; }
+    TestMemPoolEntryHelper &Fee(CAmount _fee) {
+        nFee = _fee;
+        return *this;
+    }
+    TestMemPoolEntryHelper &Time(int64_t _time) {
+        nTime = _time;
+        return *this;
+    }
+    TestMemPoolEntryHelper &Priority(double _priority) {
+        dPriority = _priority;
+        return *this;
+    }
+    TestMemPoolEntryHelper &Height(unsigned int _height) {
+        nHeight = _height;
+        return *this;
+    }
+    TestMemPoolEntryHelper &HadNoDependencies(bool _hnd) {
+        hadNoDependencies = _hnd;
+        return *this;
+    }
+    TestMemPoolEntryHelper &SpendsCoinbase(bool _flag) {
+        spendsCoinbase = _flag;
+        return *this;
+    }
+    TestMemPoolEntryHelper &SigOps(unsigned int _sigops) {
+        sigOpCount = _sigops;
+        return *this;
+    }
 };
 #endif

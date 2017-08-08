@@ -92,7 +92,7 @@ bool CWalletDB::WriteCryptedKey(const CPubKey& vchPubKey,
     nWalletDBUpdated++;
 
     if (!Write(std::make_pair(std::string("keymeta"), vchPubKey),
-            keyMeta))
+               keyMeta))
         return false;
 
     if (!Write(std::make_pair(std::string("ckey"), vchPubKey), vchCryptedSecret, false))
@@ -204,7 +204,7 @@ CAmount CWalletDB::GetAccountCreditDebit(const string& strAccount)
 
     CAmount nCreditDebit = 0;
     BOOST_FOREACH (const CAccountingEntry& entry, entries)
-        nCreditDebit += entry.nCreditDebit;
+    nCreditDebit += entry.nCreditDebit;
 
     return nCreditDebit;
 }
@@ -294,9 +294,8 @@ DBErrors CWalletDB::ReorderTransactions(CWallet* pwallet)
                 if (!WriteTx(pwtx->GetHash(), *pwtx))
                     return DB_LOAD_FAIL;
             }
-            else
-                if (!WriteAccountingEntry(pacentry->nEntryNo, *pacentry))
-                    return DB_LOAD_FAIL;
+            else if (!WriteAccountingEntry(pacentry->nEntryNo, *pacentry))
+                return DB_LOAD_FAIL;
         }
         else
         {
@@ -318,9 +317,8 @@ DBErrors CWalletDB::ReorderTransactions(CWallet* pwallet)
                 if (!WriteTx(pwtx->GetHash(), *pwtx))
                     return DB_LOAD_FAIL;
             }
-            else
-                if (!WriteAccountingEntry(pacentry->nEntryNo, *pacentry))
-                    return DB_LOAD_FAIL;
+            else if (!WriteAccountingEntry(pacentry->nEntryNo, *pacentry))
+                return DB_LOAD_FAIL;
         }
     }
     WriteOrderPosNext(nOrderPosNext);
@@ -543,7 +541,7 @@ ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue,
 
             // find earliest key creation time, as wallet birthday
             if (!pwallet->nTimeFirstKey ||
-                (keyMeta.nCreateTime < pwallet->nTimeFirstKey))
+                    (keyMeta.nCreateTime < pwallet->nTimeFirstKey))
                 pwallet->nTimeFirstKey = keyMeta.nCreateTime;
         }
         else if (strType == "defaultkey")
@@ -695,14 +693,14 @@ DBErrors CWalletDB::LoadWallet(CWallet* pwallet)
     LogPrintf("nFileVersion = %d\n", wss.nFileVersion);
 
     LogPrintf("Keys: %u plaintext, %u encrypted, %u w/ metadata, %u total\n",
-           wss.nKeys, wss.nCKeys, wss.nKeyMeta, wss.nKeys + wss.nCKeys);
+              wss.nKeys, wss.nCKeys, wss.nKeyMeta, wss.nKeys + wss.nCKeys);
 
     // nTimeFirstKey is only reliable if all keys have metadata
     if ((wss.nKeys + wss.nCKeys) != wss.nKeyMeta)
         pwallet->nTimeFirstKey = 1; // 0 would be considered 'no value'
 
     BOOST_FOREACH(uint256 hash, wss.vWalletUpgrade)
-        WriteTx(hash, pwallet->mapWallet[hash]);
+    WriteTx(hash, pwallet->mapWallet[hash]);
 
     // Rewrite encrypted wallets of versions 0.4.0 and 0.5.0rc:
     if (wss.fIsEncrypted && (wss.nFileVersion == 40000 || wss.nFileVersion == 50000))
@@ -1089,7 +1087,7 @@ bool CWalletDB::Recover(CDBEnv& dbenv, const std::string& filename, bool fOnlyKe
                 // Required in LoadKeyMetadata():
                 LOCK(dummyWallet.cs_wallet);
                 fReadOK = ReadKeyValue(&dummyWallet, ssKey, ssValue,
-                                        wss, strType, strErr);
+                                       wss, strType, strErr);
             }
             if (!IsKeyType(strType))
                 continue;

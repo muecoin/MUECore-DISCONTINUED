@@ -48,14 +48,14 @@ void CScheduler::serviceQueue()
 // wait_until needs boost 1.50 or later; older versions have timed_wait:
 #if BOOST_VERSION < 105000
             while (!shouldStop() && !taskQueue.empty() &&
-                   newTaskScheduled.timed_wait(lock, toPosixTime(taskQueue.begin()->first))) {
+                    newTaskScheduled.timed_wait(lock, toPosixTime(taskQueue.begin()->first))) {
                 // Keep waiting until timeout
             }
 #else
             // Some boost versions have a conflicting overload of wait_until that returns void.
             // Explicitly use a template here to avoid hitting that overload.
             while (!shouldStop() && !taskQueue.empty() &&
-                   newTaskScheduled.wait_until<>(lock, taskQueue.begin()->first) != boost::cv_status::timeout) {
+                    newTaskScheduled.wait_until<>(lock, taskQueue.begin()->first) != boost::cv_status::timeout) {
                 // Keep waiting until timeout
             }
 #endif
@@ -120,7 +120,7 @@ void CScheduler::scheduleEvery(CScheduler::Function f, int64_t deltaSeconds)
 }
 
 size_t CScheduler::getQueueInfo(boost::chrono::system_clock::time_point &first,
-                             boost::chrono::system_clock::time_point &last) const
+                                boost::chrono::system_clock::time_point &last) const
 {
     boost::unique_lock<boost::mutex> lock(newTaskMutex);
     size_t result = taskQueue.size();

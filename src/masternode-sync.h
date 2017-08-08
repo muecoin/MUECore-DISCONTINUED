@@ -62,22 +62,42 @@ private:
     void ClearFulfilledRequests();
 
 public:
-    CMasternodeSync() { Reset(); }
+    CMasternodeSync() {
+        Reset();
+    }
 
-    void AddedMasternodeList() { nTimeLastMasternodeList = GetTime(); }
-    void AddedPaymentVote() { nTimeLastPaymentVote = GetTime(); }
-    void AddedGovernanceItem() { nTimeLastGovernanceItem = GetTime(); };
+    void AddedMasternodeList() {
+        nTimeLastMasternodeList = GetTime();
+    }
+    void AddedPaymentVote() {
+        nTimeLastPaymentVote = GetTime();
+    }
+    void AddedGovernanceItem() {
+        nTimeLastGovernanceItem = GetTime();
+    };
 
     void SendGovernanceSyncRequest(CNode* pnode);
 
-    bool IsFailed() { return nRequestedMasternodeAssets == MASTERNODE_SYNC_FAILED; }
+    bool IsFailed() {
+        return nRequestedMasternodeAssets == MASTERNODE_SYNC_FAILED;
+    }
     bool IsBlockchainSynced(bool fBlockAccepted = false);
-    bool IsMasternodeListSynced() { return nRequestedMasternodeAssets > MASTERNODE_SYNC_LIST; }
-    bool IsWinnersListSynced() { return nRequestedMasternodeAssets > MASTERNODE_SYNC_MNW; }
-    bool IsSynced() { return nRequestedMasternodeAssets == MASTERNODE_SYNC_FINISHED; }
+    bool IsMasternodeListSynced() {
+        return nRequestedMasternodeAssets > MASTERNODE_SYNC_LIST;
+    }
+    bool IsWinnersListSynced() {
+        return nRequestedMasternodeAssets > MASTERNODE_SYNC_MNW;
+    }
+    bool IsSynced() {
+        return nRequestedMasternodeAssets == MASTERNODE_SYNC_FINISHED;
+    }
 
-    int GetAssetID() { return nRequestedMasternodeAssets; }
-    int GetAttempt() { return nRequestedMasternodeAttempt; }
+    int GetAssetID() {
+        return nRequestedMasternodeAssets;
+    }
+    int GetAttempt() {
+        return nRequestedMasternodeAttempt;
+    }
     std::string GetAssetName();
     std::string GetSyncStatus();
 

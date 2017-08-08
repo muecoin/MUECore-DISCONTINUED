@@ -44,43 +44,43 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
         vToCompute.pop_back();
 
         switch (state) {
-            case THRESHOLD_DEFINED: {
-                if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
-                    stateNext = THRESHOLD_FAILED;
-                } else if (pindexPrev->GetMedianTimePast() >= nTimeStart) {
-                    stateNext = THRESHOLD_STARTED;
-                }
+        case THRESHOLD_DEFINED: {
+            if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
+                stateNext = THRESHOLD_FAILED;
+            } else if (pindexPrev->GetMedianTimePast() >= nTimeStart) {
+                stateNext = THRESHOLD_STARTED;
+            }
+            break;
+        }
+        case THRESHOLD_STARTED: {
+            if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
+                stateNext = THRESHOLD_FAILED;
                 break;
             }
-            case THRESHOLD_STARTED: {
-                if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
-                    stateNext = THRESHOLD_FAILED;
-                    break;
+            // We need to count
+            const CBlockIndex* pindexCount = pindexPrev;
+            int count = 0;
+            for (int i = 0; i < nPeriod; i++) {
+                if (Condition(pindexCount, params)) {
+                    count++;
                 }
-                // We need to count
-                const CBlockIndex* pindexCount = pindexPrev;
-                int count = 0;
-                for (int i = 0; i < nPeriod; i++) {
-                    if (Condition(pindexCount, params)) {
-                        count++;
-                    }
-                    pindexCount = pindexCount->pprev;
-                }
-                if (count >= nThreshold) {
-                    stateNext = THRESHOLD_LOCKED_IN;
-                }
-                break;
+                pindexCount = pindexCount->pprev;
             }
-            case THRESHOLD_LOCKED_IN: {
-                // Always progresses into ACTIVE.
-                stateNext = THRESHOLD_ACTIVE;
-                break;
+            if (count >= nThreshold) {
+                stateNext = THRESHOLD_LOCKED_IN;
             }
-            case THRESHOLD_FAILED:
-            case THRESHOLD_ACTIVE: {
-                // Nothing happens, these are terminal states.
-                break;
-            }
+            break;
+        }
+        case THRESHOLD_LOCKED_IN: {
+            // Always progresses into ACTIVE.
+            stateNext = THRESHOLD_ACTIVE;
+            break;
+        }
+        case THRESHOLD_FAILED:
+        case THRESHOLD_ACTIVE: {
+            // Nothing happens, these are terminal states.
+            break;
+        }
         }
         cache[pindexPrev] = state = stateNext;
     }
@@ -98,10 +98,18 @@ private:
     const Consensus::DeploymentPos id;
 
 protected:
-    int64_t BeginTime(const Consensus::Params& params) const { return params.vDeployments[id].nStartTime; }
-    int64_t EndTime(const Consensus::Params& params) const { return params.vDeployments[id].nTimeout; }
-    int Period(const Consensus::Params& params) const { return params.nMinerConfirmationWindow; }
-    int Threshold(const Consensus::Params& params) const { return params.nRuleChangeActivationThreshold; }
+    int64_t BeginTime(const Consensus::Params& params) const {
+        return params.vDeployments[id].nStartTime;
+    }
+    int64_t EndTime(const Consensus::Params& params) const {
+        return params.vDeployments[id].nTimeout;
+    }
+    int Period(const Consensus::Params& params) const {
+        return params.nMinerConfirmationWindow;
+    }
+    int Threshold(const Consensus::Params& params) const {
+        return params.nRuleChangeActivationThreshold;
+    }
 
     bool Condition(const CBlockIndex* pindex, const Consensus::Params& params) const
     {
@@ -110,7 +118,9 @@ protected:
 
 public:
     VersionBitsConditionChecker(Consensus::DeploymentPos id_) : id(id_) {}
-    uint32_t Mask(const Consensus::Params& params) const { return ((uint32_t)1) << params.vDeployments[id].bit; }
+    uint32_t Mask(const Consensus::Params& params) const {
+        return ((uint32_t)1) << params.vDeployments[id].bit;
+    }
 };
 
 }

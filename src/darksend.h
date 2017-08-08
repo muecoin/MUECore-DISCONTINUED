@@ -63,13 +63,13 @@ public:
         CTxIn(txin),
         fHasSig(false),
         nSentTimes(0)
-        {}
+    {}
 
     CTxDSIn() :
         CTxIn(),
         fHasSig(false),
         nSentTimes(0)
-        {}
+    {}
 };
 
 /** Holds an mixing output
@@ -82,12 +82,12 @@ public:
     CTxDSOut(const CTxOut& out) :
         CTxOut(out),
         nSentTimes(0)
-        {}
+    {}
 
     CTxDSOut() :
         CTxOut(),
         nSentTimes(0)
-        {}
+    {}
 };
 
 // A clients transaction in the mixing pool
@@ -102,15 +102,15 @@ public:
         vecTxDSIn(std::vector<CTxDSIn>()),
         vecTxDSOut(std::vector<CTxDSOut>()),
         txCollateral(CTransaction())
-        {}
+    {}
 
     CDarkSendEntry(const std::vector<CTxIn>& vecTxIn, const std::vector<CTxOut>& vecTxOut, const CTransaction& txCollateral) :
         txCollateral(txCollateral)
     {
         BOOST_FOREACH(CTxIn txin, vecTxIn)
-            vecTxDSIn.push_back(txin);
+        vecTxDSIn.push_back(txin);
         BOOST_FOREACH(CTxOut txout, vecTxOut)
-            vecTxDSOut.push_back(txout);
+        vecTxDSOut.push_back(txout);
     }
 
     ADD_SERIALIZE_METHODS;
@@ -147,7 +147,7 @@ public:
         fReady(false),
         vchSig(std::vector<unsigned char>()),
         fTried(false)
-        {}
+    {}
 
     CDarksendQueue(int nDenom, CTxIn vin, int64_t nTime, bool fReady) :
         nDenom(nDenom),
@@ -156,7 +156,7 @@ public:
         fReady(fReady),
         vchSig(std::vector<unsigned char>()),
         fTried(false)
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -183,12 +183,14 @@ public:
     bool Relay();
 
     /// Is this queue expired?
-    bool IsExpired() { return GetTime() - nTime > PRIVATESEND_QUEUE_TIMEOUT; }
+    bool IsExpired() {
+        return GetTime() - nTime > PRIVATESEND_QUEUE_TIMEOUT;
+    }
 
     std::string ToString()
     {
         return strprintf("nDenom=%d, nTime=%lld, fReady=%s, fTried=%s, masternode=%s",
-                        nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", vin.prevout.ToStringShort());
+                         nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", vin.prevout.ToStringShort());
     }
 
     friend bool operator==(const CDarksendQueue& a, const CDarksendQueue& b)
@@ -212,14 +214,14 @@ public:
         vin(CTxIn()),
         vchSig(std::vector<unsigned char>()),
         sigTime(0)
-        {}
+    {}
 
     CDarksendBroadcastTx(CTransaction tx, CTxIn vin, int64_t sigTime) :
         tx(tx),
         vin(vin),
         vchSig(std::vector<unsigned char>()),
         sigTime(sigTime)
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -359,14 +361,18 @@ private:
     std::string GetMessageByID(PoolMessage nMessageID);
 
     /// Get the maximum number of transactions for the pool
-    int GetMaxPoolTransactions() { return Params().PoolMaxTransactions(); }
+    int GetMaxPoolTransactions() {
+        return Params().PoolMaxTransactions();
+    }
 
     /// Is this nDenom and txCollateral acceptable?
     bool IsAcceptableDenomAndCollateral(int nDenom, CTransaction txCollateral, PoolMessage &nMessageIDRet);
     bool CreateNewSession(int nDenom, CTransaction txCollateral, PoolMessage &nMessageIDRet);
     bool AddUserToExistingSession(int nDenom, CTransaction txCollateral, PoolMessage &nMessageIDRet);
     /// Do we have enough users to take entries?
-    bool IsSessionReady() { return (int)vecSessionCollaterals.size() >= GetMaxPoolTransactions(); }
+    bool IsSessionReady() {
+        return (int)vecSessionCollaterals.size() >= GetMaxPoolTransactions();
+    }
 
     /// If the collateral is valid given by a client
     bool IsCollateralValid(const CTransaction& txCollateral);
@@ -427,7 +433,9 @@ public:
         fUnitTest(false),
         txMyCollateral(CMutableTransaction()),
         nCachedNumBlocks(std::numeric_limits<int>::max()),
-        fCreateAutoBackups(true) { SetNull(); }
+        fCreateAutoBackups(true) {
+        SetNull();
+    }
 
     /** Process a mixing message using the protocol below
      * \param pfrom
@@ -446,7 +454,9 @@ public:
     void ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
 
     void InitDenominations();
-    void ClearSkippedDenominations() { vecDenominationsSkipped.clear(); }
+    void ClearSkippedDenominations() {
+        vecDenominationsSkipped.clear();
+    }
 
     /// Get the denominations for a list of outputs (returns a bitshifted integer)
     int GetDenominations(const std::vector<CTxOut>& vecTxOut, bool fSingleRandomDenom = false);
@@ -454,18 +464,26 @@ public:
     std::string GetDenominationsToString(int nDenom);
     bool GetDenominationsBits(int nDenom, std::vector<int> &vecBitsRet);
 
-    void SetMinBlockSpacing(int nMinBlockSpacingIn) { nMinBlockSpacing = nMinBlockSpacingIn; }
+    void SetMinBlockSpacing(int nMinBlockSpacingIn) {
+        nMinBlockSpacing = nMinBlockSpacingIn;
+    }
 
     void ResetPool();
 
     void UnlockCoins();
 
-    int GetQueueSize() const { return vecDarksendQueue.size(); }
-    int GetState() const { return nState; }
+    int GetQueueSize() const {
+        return vecDarksendQueue.size();
+    }
+    int GetState() const {
+        return nState;
+    }
     std::string GetStateString() const;
     std::string GetStatus();
 
-    int GetEntriesCount() const { return vecEntries.size(); }
+    int GetEntriesCount() const {
+        return vecEntries.size();
+    }
 
     /// Passively run mixing in the background according to the configuration in settings
     bool DoAutomaticDenominating(bool fDryRun=false);

@@ -36,7 +36,7 @@ public:
 class CSignatureCache
 {
 private:
-     //! Entries are SHA256(nonce || signature hash || public key || signature):
+    //! Entries are SHA256(nonce || signature hash || public key || signature):
     uint256 nonce;
     typedef boost::unordered_set<uint256, CSignatureCacheHasher> map_type;
     map_type setValid;

@@ -22,18 +22,42 @@ namespace memusage
 static size_t MallocUsage(size_t alloc);
 
 /** Dynamic memory usage for built-in types is zero. */
-static inline size_t DynamicUsage(const int8_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint8_t& v) { return 0; }
-static inline size_t DynamicUsage(const int16_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint16_t& v) { return 0; }
-static inline size_t DynamicUsage(const int32_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint32_t& v) { return 0; }
-static inline size_t DynamicUsage(const int64_t& v) { return 0; }
-static inline size_t DynamicUsage(const uint64_t& v) { return 0; }
-static inline size_t DynamicUsage(const float& v) { return 0; }
-static inline size_t DynamicUsage(const double& v) { return 0; }
-template<typename X> static inline size_t DynamicUsage(X * const &v) { return 0; }
-template<typename X> static inline size_t DynamicUsage(const X * const &v) { return 0; }
+static inline size_t DynamicUsage(const int8_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const uint8_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const int16_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const uint16_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const int32_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const uint32_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const int64_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const uint64_t& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const float& v) {
+    return 0;
+}
+static inline size_t DynamicUsage(const double& v) {
+    return 0;
+}
+template<typename X> static inline size_t DynamicUsage(X * const &v) {
+    return 0;
+}
+template<typename X> static inline size_t DynamicUsage(const X * const &v) {
+    return 0;
+}
 
 /** Compute the memory used for dynamically allocated but owned data structures.
  *  For generic data types, this is *not* recursive. DynamicUsage(vector<vector<int> >)

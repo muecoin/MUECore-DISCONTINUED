@@ -62,8 +62,12 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
     //BOOST_CHECK_EQUAL(nSum, 1350824726649000ULL);
 }
 
-bool ReturnFalse() { return false; }
-bool ReturnTrue() { return true; }
+bool ReturnFalse() {
+    return false;
+}
+bool ReturnTrue() {
+    return true;
+}
 
 BOOST_AUTO_TEST_CASE(test_combiner_all)
 {

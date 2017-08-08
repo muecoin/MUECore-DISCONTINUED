@@ -90,8 +90,8 @@ void RPCTypeCheck(const UniValue& params,
 }
 
 void RPCTypeCheckObj(const UniValue& o,
-                  const map<string, UniValue::VType>& typesExpected,
-                  bool fAllowNull)
+                     const map<string, UniValue::VType>& typesExpected,
+                     bool fAllowNull)
 {
     BOOST_FOREACH(const PAIRTYPE(string, UniValue::VType)& t, typesExpected)
     {
@@ -127,7 +127,7 @@ UniValue ValueFromAmount(const CAmount& amount)
     int64_t quotient = n_abs / COIN;
     int64_t remainder = n_abs % COIN;
     return UniValue(UniValue::VNUM,
-            strprintf("%s%d.%08d", sign ? "-" : "", quotient, remainder));
+                    strprintf("%s%d.%08d", sign ? "-" : "", quotient, remainder));
 }
 
 uint256 ParseHashV(const UniValue& v, string strName)
@@ -255,8 +255,8 @@ UniValue stop(const UniValue& params, bool fHelp)
  * Call Table
  */
 static const CRPCCommand vRPCCommands[] =
-{ //  category              name                      actor (function)         okSafeMode
-  //  --------------------- ------------------------  -----------------------  ----------
+{   //  category              name                      actor (function)         okSafeMode
+    //  --------------------- ------------------------  -----------------------  ----------
     /* Overall control/query calls */
     { "control",            "getinfo",                &getinfo,                true  }, /* uses wallet if enabled */
     { "control",            "debug",                  &debug,                  true  },
@@ -571,8 +571,8 @@ std::vector<std::string> CRPCTable::listCommands() const
     typedef std::map<std::string, const CRPCCommand*> commandMap;
 
     std::transform( mapCommands.begin(), mapCommands.end(),
-                   std::back_inserter(commandList),
-                   boost::bind(&commandMap::value_type::first,_1) );
+                    std::back_inserter(commandList),
+                    boost::bind(&commandMap::value_type::first,_1) );
     return commandList;
 }
 
@@ -584,7 +584,7 @@ std::string HelpExampleCli(const std::string& methodname, const std::string& arg
 std::string HelpExampleRpc(const std::string& methodname, const std::string& args)
 {
     return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\":\"curltest\", "
-        "\"method\": \"" + methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:9998/\n";
+           "\"method\": \"" + methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:9998/\n";
 }
 
 void RPCRegisterTimerInterface(RPCTimerInterface *iface)

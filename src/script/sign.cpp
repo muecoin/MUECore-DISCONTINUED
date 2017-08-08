@@ -151,7 +151,7 @@ static CScript PushAll(const vector<valtype>& values)
 {
     CScript result;
     BOOST_FOREACH(const valtype& v, values)
-        result << v;
+    result << v;
     return result;
 }
 
@@ -194,7 +194,8 @@ static CScript CombineMultisig(const CScript& scriptPubKey, const BaseSignatureC
     }
     // Now build a merged CScript:
     unsigned int nSigsHave = 0;
-    CScript result; result << OP_0; // pop-one-too-many workaround
+    CScript result;
+    result << OP_0; // pop-one-too-many workaround
     for (unsigned int i = 0; i < nPubKeys && nSigsHave < nSigsRequired; i++)
     {
         if (sigs.count(vSolutions[i+1]))

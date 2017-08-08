@@ -95,7 +95,7 @@ UniValue getnetworkhashps(const UniValue& params, bool fHelp)
             "\nExamples:\n"
             + HelpExampleCli("getnetworkhashps", "")
             + HelpExampleRpc("getnetworkhashps", "")
-       );
+        );
 
     LOCK(cs_main);
     return GetNetworkHashPS(params.size() > 0 ? params[0].get_int() : 120, params.size() > 1 ? params[1].get_int() : -1);
@@ -229,7 +229,7 @@ UniValue setgenerate(const UniValue& params, bool fHelp)
 
     mapArgs["-gen"] = (fGenerate ? "1" : "0");
     mapArgs ["-genproclimit"] = itostr(nGenProcLimit);
-    GenerateBitcoins(fGenerate, nGenProcLimit, Params());
+    GenerateMue(fGenerate, nGenProcLimit, Params());
 
     return NullUniValue;
 }
@@ -404,7 +404,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             "\nExamples:\n"
             + HelpExampleCli("getblocktemplate", "")
             + HelpExampleRpc("getblocktemplate", "")
-         );
+        );
 
     LOCK(cs_main);
 
@@ -460,13 +460,13 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
 
     if (vNodes.empty())
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "MonetaryUnit Core is not connected!");
-/*
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "MonetaryUnit Core is downloading blocks...");
+    /*
+        if (IsInitialBlockDownload())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "MonetaryUnit Core is downloading blocks...");
 
-    if (!masternodeSync.IsSynced())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "MonetaryUnit Core is syncing with network...");
-*/
+        if (!masternodeSync.IsSynced())
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "MonetaryUnit Core is syncing with network...");
+    */
     static unsigned int nTransactionsUpdatedLast;
 
     if (!lpval.isNull())
@@ -520,7 +520,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     static int64_t nStart;
     static CBlockTemplate* pblocktemplate;
     if (pindexPrev != chainActive.Tip() ||
-        (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5))
+            (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 5))
     {
         // Clear pindexPrev so future calls make a new block, despite any failures from here on
         pindexPrev = NULL;
@@ -550,7 +550,8 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     UpdateTime(pblock, Params().GetConsensus(), pindexPrev);
     pblock->nNonce = 0;
 
-    UniValue aCaps(UniValue::VARR); aCaps.push_back("proposal");
+    UniValue aCaps(UniValue::VARR);
+    aCaps.push_back("proposal");
 
     UniValue transactions(UniValue::VARR);
     map<uint256, int64_t> setTxIndex;
@@ -742,7 +743,7 @@ UniValue estimatefee(const UniValue& params, bool fHelp)
             "have been observed to make an estimate.\n"
             "\nExample:\n"
             + HelpExampleCli("estimatefee", "6")
-            );
+        );
 
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
 
@@ -773,7 +774,7 @@ UniValue estimatepriority(const UniValue& params, bool fHelp)
             "have been observed to make an estimate.\n"
             "\nExample:\n"
             + HelpExampleCli("estimatepriority", "6")
-            );
+        );
 
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
 
@@ -806,7 +807,7 @@ UniValue estimatesmartfee(const UniValue& params, bool fHelp)
             "However it will not return a value below the mempool reject fee.\n"
             "\nExample:\n"
             + HelpExampleCli("estimatesmartfee", "6")
-            );
+        );
 
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
 
@@ -842,7 +843,7 @@ UniValue estimatesmartpriority(const UniValue& params, bool fHelp)
             "However if the mempool reject fee is set it will return 1e9 * MAX_MONEY.\n"
             "\nExample:\n"
             + HelpExampleCli("estimatesmartpriority", "6")
-            );
+        );
 
     RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM));
 

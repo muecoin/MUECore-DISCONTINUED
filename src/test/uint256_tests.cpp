@@ -164,8 +164,10 @@ BOOST_AUTO_TEST_CASE( methods ) // GetHex SetHex begin() end() size() GetLow64 G
     BOOST_CHECK(MaxL.GetHex() == MaxL.ToString());
     uint256 TmpL(R1L);
     BOOST_CHECK(TmpL == R1L);
-    TmpL.SetHex(R2L.ToString());   BOOST_CHECK(TmpL == R2L);
-    TmpL.SetHex(ZeroL.ToString()); BOOST_CHECK(TmpL == uint256());
+    TmpL.SetHex(R2L.ToString());
+    BOOST_CHECK(TmpL == R2L);
+    TmpL.SetHex(ZeroL.ToString());
+    BOOST_CHECK(TmpL == uint256());
 
     TmpL.SetHex(R1L.ToString());
     BOOST_CHECK(memcmp(R1L.begin(), R1Array, 32)==0);
@@ -210,8 +212,10 @@ BOOST_AUTO_TEST_CASE( methods ) // GetHex SetHex begin() end() size() GetLow64 G
     BOOST_CHECK(MaxS.GetHex() == MaxS.ToString());
     uint160 TmpS(R1S);
     BOOST_CHECK(TmpS == R1S);
-    TmpS.SetHex(R2S.ToString());   BOOST_CHECK(TmpS == R2S);
-    TmpS.SetHex(ZeroS.ToString()); BOOST_CHECK(TmpS == uint160());
+    TmpS.SetHex(R2S.ToString());
+    BOOST_CHECK(TmpS == R2S);
+    TmpS.SetHex(ZeroS.ToString());
+    BOOST_CHECK(TmpS == uint160());
 
     TmpS.SetHex(R1S.ToString());
     BOOST_CHECK(memcmp(R1S.begin(), R1Array, 20)==0);

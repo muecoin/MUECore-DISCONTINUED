@@ -83,7 +83,9 @@ public:
     static void LoadRootCAs(X509_STORE* store = NULL);
 
     // Return certificate store
-    static X509_STORE* getCertStore() { return certStore; }
+    static X509_STORE* getCertStore() {
+        return certStore;
+    }
 
     // OptionsModel is used for getting proxy settings and display unit
     void setOptionsModel(OptionsModel *optionsModel);

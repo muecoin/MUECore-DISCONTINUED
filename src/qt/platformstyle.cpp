@@ -136,10 +136,10 @@ const PlatformStyle *PlatformStyle::instantiate(const QString &platformId)
         if (platformId == platform_styles[x].platformId)
         {
             return new PlatformStyle(
-                    platform_styles[x].platformId,
-                    platform_styles[x].imagesOnButtons,
-                    platform_styles[x].colorizeIcons,
-                    platform_styles[x].useExtraSpacing);
+                       platform_styles[x].platformId,
+                       platform_styles[x].imagesOnButtons,
+                       platform_styles[x].colorizeIcons,
+                       platform_styles[x].useExtraSpacing);
         }
     }
     return 0;

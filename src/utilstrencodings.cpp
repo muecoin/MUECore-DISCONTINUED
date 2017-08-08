@@ -34,22 +34,23 @@ string SanitizeString(const string& str, int rule)
 }
 
 const signed char p_util_hexdigit[256] =
-{ -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  0,1,2,3,4,5,6,7,8,9,-1,-1,-1,-1,-1,-1,
-  -1,0xa,0xb,0xc,0xd,0xe,0xf,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,0xa,0xb,0xc,0xd,0xe,0xf,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-  -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, };
+{   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    0,1,2,3,4,5,6,7,8,9,-1,-1,-1,-1,-1,-1,
+    -1,0xa,0xb,0xc,0xd,0xe,0xf,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,0xa,0xb,0xc,0xd,0xe,0xf,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+};
 
 signed char HexDigit(char c)
 {
@@ -107,23 +108,23 @@ string EncodeBase64(const unsigned char* pch, size_t len)
         int enc = *(pch++);
         switch (mode)
         {
-            case 0: // we have no bits
-                strRet += pbase64[enc >> 2];
-                left = (enc & 3) << 4;
-                mode = 1;
-                break;
+        case 0: // we have no bits
+            strRet += pbase64[enc >> 2];
+            left = (enc & 3) << 4;
+            mode = 1;
+            break;
 
-            case 1: // we have two bits
-                strRet += pbase64[left | (enc >> 4)];
-                left = (enc & 15) << 2;
-                mode = 2;
-                break;
+        case 1: // we have two bits
+            strRet += pbase64[left | (enc >> 4)];
+            left = (enc & 15) << 2;
+            mode = 2;
+            break;
 
-            case 2: // we have four bits
-                strRet += pbase64[left | (enc >> 6)];
-                strRet += pbase64[enc & 63];
-                mode = 0;
-                break;
+        case 2: // we have four bits
+            strRet += pbase64[left | (enc >> 6)];
+            strRet += pbase64[enc & 63];
+            mode = 0;
+            break;
         }
     }
 
@@ -173,54 +174,54 @@ vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
 
     while (1)
     {
-         int dec = decode64_table[(unsigned char)*p];
-         if (dec == -1) break;
-         p++;
-         switch (mode)
-         {
-             case 0: // we have no bits and get 6
-                 left = dec;
-                 mode = 1;
-                 break;
+        int dec = decode64_table[(unsigned char)*p];
+        if (dec == -1) break;
+        p++;
+        switch (mode)
+        {
+        case 0: // we have no bits and get 6
+            left = dec;
+            mode = 1;
+            break;
 
-              case 1: // we have 6 bits and keep 4
-                  vchRet.push_back((left<<2) | (dec>>4));
-                  left = dec & 15;
-                  mode = 2;
-                  break;
+        case 1: // we have 6 bits and keep 4
+            vchRet.push_back((left<<2) | (dec>>4));
+            left = dec & 15;
+            mode = 2;
+            break;
 
-             case 2: // we have 4 bits and get 6, we keep 2
-                 vchRet.push_back((left<<4) | (dec>>2));
-                 left = dec & 3;
-                 mode = 3;
-                 break;
+        case 2: // we have 4 bits and get 6, we keep 2
+            vchRet.push_back((left<<4) | (dec>>2));
+            left = dec & 3;
+            mode = 3;
+            break;
 
-             case 3: // we have 2 bits and get 6
-                 vchRet.push_back((left<<6) | dec);
-                 mode = 0;
-                 break;
-         }
+        case 3: // we have 2 bits and get 6
+            vchRet.push_back((left<<6) | dec);
+            mode = 0;
+            break;
+        }
     }
 
     if (pfInvalid)
         switch (mode)
         {
-            case 0: // 4n base64 characters processed: ok
-                break;
+        case 0: // 4n base64 characters processed: ok
+            break;
 
-            case 1: // 4n+1 base64 character processed: impossible
+        case 1: // 4n+1 base64 character processed: impossible
+            *pfInvalid = true;
+            break;
+
+        case 2: // 4n+2 base64 characters processed: require '=='
+            if (left || p[0] != '=' || p[1] != '=' || decode64_table[(unsigned char)p[2]] != -1)
                 *pfInvalid = true;
-                break;
+            break;
 
-            case 2: // 4n+2 base64 characters processed: require '=='
-                if (left || p[0] != '=' || p[1] != '=' || decode64_table[(unsigned char)p[2]] != -1)
-                    *pfInvalid = true;
-                break;
-
-            case 3: // 4n+3 base64 characters processed: require '='
-                if (left || p[0] != '=' || decode64_table[(unsigned char)p[1]] != -1)
-                    *pfInvalid = true;
-                break;
+        case 3: // 4n+3 base64 characters processed: require '='
+            if (left || p[0] != '=' || decode64_table[(unsigned char)p[1]] != -1)
+                *pfInvalid = true;
+            break;
         }
 
     return vchRet;
@@ -247,36 +248,36 @@ string EncodeBase32(const unsigned char* pch, size_t len)
         int enc = *(pch++);
         switch (mode)
         {
-            case 0: // we have no bits
-                strRet += pbase32[enc >> 3];
-                left = (enc & 7) << 2;
-                mode = 1;
-                break;
+        case 0: // we have no bits
+            strRet += pbase32[enc >> 3];
+            left = (enc & 7) << 2;
+            mode = 1;
+            break;
 
-            case 1: // we have three bits
-                strRet += pbase32[left | (enc >> 6)];
-                strRet += pbase32[(enc >> 1) & 31];
-                left = (enc & 1) << 4;
-                mode = 2;
-                break;
+        case 1: // we have three bits
+            strRet += pbase32[left | (enc >> 6)];
+            strRet += pbase32[(enc >> 1) & 31];
+            left = (enc & 1) << 4;
+            mode = 2;
+            break;
 
-            case 2: // we have one bit
-                strRet += pbase32[left | (enc >> 4)];
-                left = (enc & 15) << 1;
-                mode = 3;
-                break;
+        case 2: // we have one bit
+            strRet += pbase32[left | (enc >> 4)];
+            left = (enc & 15) << 1;
+            mode = 3;
+            break;
 
-            case 3: // we have four bits
-                strRet += pbase32[left | (enc >> 7)];
-                strRet += pbase32[(enc >> 2) & 31];
-                left = (enc & 3) << 3;
-                mode = 4;
-                break;
+        case 3: // we have four bits
+            strRet += pbase32[left | (enc >> 7)];
+            strRet += pbase32[(enc >> 2) & 31];
+            left = (enc & 3) << 3;
+            mode = 4;
+            break;
 
-            case 4: // we have two bits
-                strRet += pbase32[left | (enc >> 5)];
-                strRet += pbase32[enc & 31];
-                mode = 0;
+        case 4: // we have two bits
+            strRet += pbase32[left | (enc >> 5)];
+            strRet += pbase32[enc & 31];
+            mode = 0;
         }
     }
 
@@ -285,7 +286,7 @@ string EncodeBase32(const unsigned char* pch, size_t len)
     {
         strRet += pbase32[left];
         for (int n=0; n<nPadding[mode]; n++)
-             strRet += '=';
+            strRet += '=';
     }
 
     return strRet;
@@ -305,7 +306,7 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, -1, -1, -1, -1,
         -1, -1, -1, -1, -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
         15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1,  0,  1,  2,
-         3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+        3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
         23, 24, 25, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -326,88 +327,88 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
 
     while (1)
     {
-         int dec = decode32_table[(unsigned char)*p];
-         if (dec == -1) break;
-         p++;
-         switch (mode)
-         {
-             case 0: // we have no bits and get 5
-                 left = dec;
-                 mode = 1;
-                 break;
+        int dec = decode32_table[(unsigned char)*p];
+        if (dec == -1) break;
+        p++;
+        switch (mode)
+        {
+        case 0: // we have no bits and get 5
+            left = dec;
+            mode = 1;
+            break;
 
-              case 1: // we have 5 bits and keep 2
-                  vchRet.push_back((left<<3) | (dec>>2));
-                  left = dec & 3;
-                  mode = 2;
-                  break;
+        case 1: // we have 5 bits and keep 2
+            vchRet.push_back((left<<3) | (dec>>2));
+            left = dec & 3;
+            mode = 2;
+            break;
 
-             case 2: // we have 2 bits and keep 7
-                 left = left << 5 | dec;
-                 mode = 3;
-                 break;
+        case 2: // we have 2 bits and keep 7
+            left = left << 5 | dec;
+            mode = 3;
+            break;
 
-             case 3: // we have 7 bits and keep 4
-                 vchRet.push_back((left<<1) | (dec>>4));
-                 left = dec & 15;
-                 mode = 4;
-                 break;
+        case 3: // we have 7 bits and keep 4
+            vchRet.push_back((left<<1) | (dec>>4));
+            left = dec & 15;
+            mode = 4;
+            break;
 
-             case 4: // we have 4 bits, and keep 1
-                 vchRet.push_back((left<<4) | (dec>>1));
-                 left = dec & 1;
-                 mode = 5;
-                 break;
+        case 4: // we have 4 bits, and keep 1
+            vchRet.push_back((left<<4) | (dec>>1));
+            left = dec & 1;
+            mode = 5;
+            break;
 
-             case 5: // we have 1 bit, and keep 6
-                 left = left << 5 | dec;
-                 mode = 6;
-                 break;
+        case 5: // we have 1 bit, and keep 6
+            left = left << 5 | dec;
+            mode = 6;
+            break;
 
-             case 6: // we have 6 bits, and keep 3
-                 vchRet.push_back((left<<2) | (dec>>3));
-                 left = dec & 7;
-                 mode = 7;
-                 break;
+        case 6: // we have 6 bits, and keep 3
+            vchRet.push_back((left<<2) | (dec>>3));
+            left = dec & 7;
+            mode = 7;
+            break;
 
-             case 7: // we have 3 bits, and keep 0
-                 vchRet.push_back((left<<5) | dec);
-                 mode = 0;
-                 break;
-         }
+        case 7: // we have 3 bits, and keep 0
+            vchRet.push_back((left<<5) | dec);
+            mode = 0;
+            break;
+        }
     }
 
     if (pfInvalid)
         switch (mode)
         {
-            case 0: // 8n base32 characters processed: ok
-                break;
+        case 0: // 8n base32 characters processed: ok
+            break;
 
-            case 1: // 8n+1 base32 characters processed: impossible
-            case 3: //   +3
-            case 6: //   +6
+        case 1: // 8n+1 base32 characters processed: impossible
+        case 3: //   +3
+        case 6: //   +6
+            *pfInvalid = true;
+            break;
+
+        case 2: // 8n+2 base32 characters processed: require '======'
+            if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' || p[3] != '=' || p[4] != '=' || p[5] != '=' || decode32_table[(unsigned char)p[6]] != -1)
                 *pfInvalid = true;
-                break;
+            break;
 
-            case 2: // 8n+2 base32 characters processed: require '======'
-                if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' || p[3] != '=' || p[4] != '=' || p[5] != '=' || decode32_table[(unsigned char)p[6]] != -1)
-                    *pfInvalid = true;
-                break;
+        case 4: // 8n+4 base32 characters processed: require '===='
+            if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' || p[3] != '=' || decode32_table[(unsigned char)p[4]] != -1)
+                *pfInvalid = true;
+            break;
 
-            case 4: // 8n+4 base32 characters processed: require '===='
-                if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' || p[3] != '=' || decode32_table[(unsigned char)p[4]] != -1)
-                    *pfInvalid = true;
-                break;
+        case 5: // 8n+5 base32 characters processed: require '==='
+            if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' || decode32_table[(unsigned char)p[3]] != -1)
+                *pfInvalid = true;
+            break;
 
-            case 5: // 8n+5 base32 characters processed: require '==='
-                if (left || p[0] != '=' || p[1] != '=' || p[2] != '=' || decode32_table[(unsigned char)p[3]] != -1)
-                    *pfInvalid = true;
-                break;
-
-            case 7: // 8n+7 base32 characters processed: require '='
-                if (left || p[0] != '=' || decode32_table[(unsigned char)p[1]] != -1)
-                    *pfInvalid = true;
-                break;
+        case 7: // 8n+7 base32 characters processed: require '='
+            if (left || p[0] != '=' || decode32_table[(unsigned char)p[1]] != -1)
+                *pfInvalid = true;
+            break;
         }
 
     return vchRet;
@@ -442,8 +443,8 @@ bool ParseInt32(const std::string& str, int32_t *out)
     // we still have to check that the returned value is within the range of an *int32_t*. On 64-bit
     // platforms the size of these types may be different.
     return endp && *endp == 0 && !errno &&
-        n >= std::numeric_limits<int32_t>::min() &&
-        n <= std::numeric_limits<int32_t>::max();
+           n >= std::numeric_limits<int32_t>::min() &&
+           n <= std::numeric_limits<int32_t>::max();
 }
 
 bool ParseInt64(const std::string& str, int64_t *out)
@@ -457,8 +458,8 @@ bool ParseInt64(const std::string& str, int64_t *out)
     // Note that strtoll returns a *long long int*, so even if strtol doesn't report a over/underflow
     // we still have to check that the returned value is within the range of an *int64_t*.
     return endp && *endp == 0 && !errno &&
-        n >= std::numeric_limits<int64_t>::min() &&
-        n <= std::numeric_limits<int64_t>::max();
+           n >= std::numeric_limits<int64_t>::min() &&
+           n <= std::numeric_limits<int64_t>::max();
 }
 
 bool ParseDouble(const std::string& str, double *out)

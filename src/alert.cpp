@@ -50,37 +50,37 @@ std::string CUnsignedAlert::ToString() const
 {
     std::string strSetCancel;
     BOOST_FOREACH(int n, setCancel)
-        strSetCancel += strprintf("%d ", n);
+    strSetCancel += strprintf("%d ", n);
     std::string strSetSubVer;
     BOOST_FOREACH(const std::string& str, setSubVer)
-        strSetSubVer += "\"" + str + "\" ";
+    strSetSubVer += "\"" + str + "\" ";
     return strprintf(
-        "CAlert(\n"
-        "    nVersion     = %d\n"
-        "    nRelayUntil  = %d\n"
-        "    nExpiration  = %d\n"
-        "    nID          = %d\n"
-        "    nCancel      = %d\n"
-        "    setCancel    = %s\n"
-        "    nMinVer      = %d\n"
-        "    nMaxVer      = %d\n"
-        "    setSubVer    = %s\n"
-        "    nPriority    = %d\n"
-        "    strComment   = \"%s\"\n"
-        "    strStatusBar = \"%s\"\n"
-        ")\n",
-        nVersion,
-        nRelayUntil,
-        nExpiration,
-        nID,
-        nCancel,
-        strSetCancel,
-        nMinVer,
-        nMaxVer,
-        strSetSubVer,
-        nPriority,
-        strComment,
-        strStatusBar);
+               "CAlert(\n"
+               "    nVersion     = %d\n"
+               "    nRelayUntil  = %d\n"
+               "    nExpiration  = %d\n"
+               "    nID          = %d\n"
+               "    nCancel      = %d\n"
+               "    setCancel    = %s\n"
+               "    nMinVer      = %d\n"
+               "    nMaxVer      = %d\n"
+               "    setSubVer    = %s\n"
+               "    nPriority    = %d\n"
+               "    strComment   = \"%s\"\n"
+               "    strStatusBar = \"%s\"\n"
+               ")\n",
+               nVersion,
+               nRelayUntil,
+               nExpiration,
+               nID,
+               nCancel,
+               strSetCancel,
+               nMinVer,
+               nMaxVer,
+               strSetSubVer,
+               nPriority,
+               strComment,
+               strStatusBar);
 }
 
 void CAlert::SetNull()
@@ -136,8 +136,8 @@ bool CAlert::RelayTo(CNode* pnode) const
     if (pnode->setKnown.insert(GetHash()).second)
     {
         if (AppliesTo(pnode->nVersion, pnode->strSubVer) ||
-            AppliesToMe() ||
-            GetAdjustedTime() < nRelayUntil)
+                AppliesToMe() ||
+                GetAdjustedTime() < nRelayUntil)
         {
             pnode->PushMessage(NetMsgType::ALERT, *this);
             return true;
@@ -209,13 +209,13 @@ bool CAlert::ProcessAlert(const std::vector<unsigned char>& alertKey, bool fThre
     if (nID == maxInt)
     {
         if (!(
-                nExpiration == maxInt &&
-                nCancel == (maxInt-1) &&
-                nMinVer == 0 &&
-                nMaxVer == maxInt &&
-                setSubVer.empty() &&
-                nPriority == maxInt &&
-                strStatusBar == "URGENT: Alert key compromised, upgrade required"
+                    nExpiration == maxInt &&
+                    nCancel == (maxInt-1) &&
+                    nMinVer == 0 &&
+                    nMaxVer == maxInt &&
+                    setSubVer.empty() &&
+                    nPriority == maxInt &&
+                    strStatusBar == "URGENT: Alert key compromised, upgrade required"
                 ))
             return false;
     }

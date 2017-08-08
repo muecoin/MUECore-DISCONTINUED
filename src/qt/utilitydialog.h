@@ -12,7 +12,7 @@ class BitcoinGUI;
 class ClientModel;
 
 namespace Ui {
-    class HelpMessageDialog;
+class HelpMessageDialog;
 }
 
 /** "Help message" dialog box */

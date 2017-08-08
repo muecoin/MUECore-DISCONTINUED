@@ -47,7 +47,7 @@ public:
           nDataStart(0),
           nDataEnd(0),
           fBufferEmpty(true)
-        {}
+    {}
 
     void AddTimestamp(int64_t nTimestamp)
     {
@@ -154,7 +154,7 @@ public: // Types
             : triggerBuffer(),
               watchdogBuffer(),
               fStatusOK(fStatusOKIn)
-            {}
+        {}
 
         ADD_SERIALIZE_METHODS;
 
@@ -295,13 +295,15 @@ public:
     std::vector<CGovernanceObject*> GetAllNewerThan(int64_t nMoreThanTime);
 
     bool IsBudgetPaymentBlock(int nBlockHeight);
-    bool AddGovernanceObject(CGovernanceObject& govobj, bool& fAddToSeen, CNode* pfrom = NULL);
+    bool AddGovernanceObject(CGovernanceObject& govobj, bool& fAddToSeen, CNode* pfrom = NULL); //BBoBB 1417
 
     std::string GetRequiredPaymentsString(int nBlockHeight);
 
     void UpdateCachesAndClean();
 
-    void CheckAndRemove() {UpdateCachesAndClean();}
+    void CheckAndRemove() {
+        UpdateCachesAndClean();
+    }
 
     void Clear()
     {
@@ -349,10 +351,16 @@ public:
     }
 
     void UpdatedBlockTip(const CBlockIndex *pindex);
-    int64_t GetLastDiffTime() { return nTimeLastDiff; }
-    void UpdateLastDiffTime(int64_t nTimeIn) { nTimeLastDiff = nTimeIn; }
+    int64_t GetLastDiffTime() {
+        return nTimeLastDiff;
+    }
+    void UpdateLastDiffTime(int64_t nTimeIn) {
+        nTimeLastDiff = nTimeIn;
+    }
 
-    int GetCachedBlockHeight() { return nCachedBlockHeight; }
+    int GetCachedBlockHeight() {
+        return nCachedBlockHeight;
+    }
 
     // Accessors for thread-safe access to maps
     bool HaveObjectForHash(uint256 nHash);

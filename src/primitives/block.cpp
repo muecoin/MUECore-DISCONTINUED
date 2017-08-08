@@ -10,23 +10,21 @@
 #include "utilstrencodings.h"
 #include "crypto/common.h"
 
-uint256 CBlockHeader::GetHash() const
-{
+uint256 CBlockHeader::GetHash() const {
     return HashX11(BEGIN(nVersion), END(nNonce));
 }
 
-std::string CBlock::ToString() const
-{
+std::string CBlock::ToString() const {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
-        GetHash().ToString(),
-        nVersion,
-        hashPrevBlock.ToString(),
-        hashMerkleRoot.ToString(),
-        nTime, nBits, nNonce,
-        vtx.size());
-    for (unsigned int i = 0; i < vtx.size(); i++)
-    {
+    s << strprintf(
+          "CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+          GetHash().ToString(),
+          nVersion,
+          hashPrevBlock.ToString(),
+          hashMerkleRoot.ToString(),
+          nTime, nBits, nNonce,
+          vtx.size());
+    for (unsigned int i = 0; i < vtx.size(); i++) {
         s << "  " << vtx[i].ToString() << "\n";
     }
     return s.str();

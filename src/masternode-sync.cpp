@@ -30,17 +30,17 @@ bool CMasternodeSync::CheckNodeHeight(CNode* pnode, bool fDisconnectStuckNodes)
             // Disconnect to free this connection slot for another peer.
             pnode->fDisconnect = true;
             LogPrintf("CMasternodeSync::CheckNodeHeight -- disconnecting from stuck peer, nHeight=%d, nCommonHeight=%d, peer=%d\n",
-                        pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
+                      pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
         } else {
             LogPrintf("CMasternodeSync::CheckNodeHeight -- skipping stuck peer, nHeight=%d, nCommonHeight=%d, peer=%d\n",
-                        pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
+                      pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
         }
         return false;
     }
     else if(pCurrentBlockIndex->nHeight < stats.nSyncHeight - 1) {
         // This peer announced more headers than we have blocks currently
         LogPrintf("CMasternodeSync::CheckNodeHeight -- skipping peer, who announced more headers than we have blocks currently, nHeight=%d, nSyncHeight=%d, peer=%d\n",
-                    pCurrentBlockIndex->nHeight, stats.nSyncHeight, pnode->id);
+                  pCurrentBlockIndex->nHeight, stats.nSyncHeight, pnode->id);
         return false;
     }
 
@@ -145,14 +145,22 @@ std::string CMasternodeSync::GetAssetName()
 {
     switch(nRequestedMasternodeAssets)
     {
-        case(MASTERNODE_SYNC_INITIAL):      return "MASTERNODE_SYNC_INITIAL";
-        case(MASTERNODE_SYNC_SPORKS):       return "MASTERNODE_SYNC_SPORKS";
-        case(MASTERNODE_SYNC_LIST):         return "MASTERNODE_SYNC_LIST";
-        case(MASTERNODE_SYNC_MNW):          return "MASTERNODE_SYNC_MNW";
-        case(MASTERNODE_SYNC_GOVERNANCE):   return "MASTERNODE_SYNC_GOVERNANCE";
-        case(MASTERNODE_SYNC_FAILED):       return "MASTERNODE_SYNC_FAILED";
-        case MASTERNODE_SYNC_FINISHED:      return "MASTERNODE_SYNC_FINISHED";
-        default:                            return "UNKNOWN";
+    case(MASTERNODE_SYNC_INITIAL):
+        return "MASTERNODE_SYNC_INITIAL";
+    case(MASTERNODE_SYNC_SPORKS):
+        return "MASTERNODE_SYNC_SPORKS";
+    case(MASTERNODE_SYNC_LIST):
+        return "MASTERNODE_SYNC_LIST";
+    case(MASTERNODE_SYNC_MNW):
+        return "MASTERNODE_SYNC_MNW";
+    case(MASTERNODE_SYNC_GOVERNANCE):
+        return "MASTERNODE_SYNC_GOVERNANCE";
+    case(MASTERNODE_SYNC_FAILED):
+        return "MASTERNODE_SYNC_FAILED";
+    case MASTERNODE_SYNC_FINISHED:
+        return "MASTERNODE_SYNC_FINISHED";
+    default:
+        return "UNKNOWN";
     }
 }
 
@@ -160,44 +168,44 @@ void CMasternodeSync::SwitchToNextAsset()
 {
     switch(nRequestedMasternodeAssets)
     {
-        case(MASTERNODE_SYNC_FAILED):
-            throw std::runtime_error("Can't switch to next asset from failed, should use Reset() first!");
-            break;
-        case(MASTERNODE_SYNC_INITIAL):
-            ClearFulfilledRequests();
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_SPORKS;
-            LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
-        case(MASTERNODE_SYNC_SPORKS):
-            nTimeLastMasternodeList = GetTime();
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_LIST;
-            LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
-        case(MASTERNODE_SYNC_LIST):
-            nTimeLastPaymentVote = GetTime();
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_MNW;
-            LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
-        case(MASTERNODE_SYNC_MNW):
-            nTimeLastGovernanceItem = GetTime();
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_GOVERNANCE;
-            LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
-        case(MASTERNODE_SYNC_GOVERNANCE):
-            LogPrintf("CMasternodeSync::SwitchToNextAsset -- Sync has finished\n");
-            nRequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
-            uiInterface.NotifyAdditionalDataSyncProgressChanged(1);
-            //try to activate our masternode if possible
-            activeMasternode.ManageState();
+    case(MASTERNODE_SYNC_FAILED):
+        throw std::runtime_error("Can't switch to next asset from failed, should use Reset() first!");
+        break;
+    case(MASTERNODE_SYNC_INITIAL):
+        ClearFulfilledRequests();
+        nRequestedMasternodeAssets = MASTERNODE_SYNC_SPORKS;
+        LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
+    case(MASTERNODE_SYNC_SPORKS):
+        nTimeLastMasternodeList = GetTime();
+        nRequestedMasternodeAssets = MASTERNODE_SYNC_LIST;
+        LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
+    case(MASTERNODE_SYNC_LIST):
+        nTimeLastPaymentVote = GetTime();
+        nRequestedMasternodeAssets = MASTERNODE_SYNC_MNW;
+        LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
+    case(MASTERNODE_SYNC_MNW):
+        nTimeLastGovernanceItem = GetTime();
+        nRequestedMasternodeAssets = MASTERNODE_SYNC_GOVERNANCE;
+        LogPrintf("CMasternodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
+    case(MASTERNODE_SYNC_GOVERNANCE):
+        LogPrintf("CMasternodeSync::SwitchToNextAsset -- Sync has finished\n");
+        nRequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
+        uiInterface.NotifyAdditionalDataSyncProgressChanged(1);
+        //try to activate our masternode if possible
+        activeMasternode.ManageState();
 
-            TRY_LOCK(cs_vNodes, lockRecv);
-            if(!lockRecv) return;
+        TRY_LOCK(cs_vNodes, lockRecv);
+        if(!lockRecv) return;
 
-            BOOST_FOREACH(CNode* pnode, vNodes) {
-                netfulfilledman.AddFulfilledRequest(pnode->addr, "full-sync");
-            }
+        BOOST_FOREACH(CNode* pnode, vNodes) {
+            netfulfilledman.AddFulfilledRequest(pnode->addr, "full-sync");
+        }
 
-            break;
+        break;
     }
     nRequestedMasternodeAttempt = 0;
     nTimeAssetSyncStarted = GetTime();
@@ -206,14 +214,22 @@ void CMasternodeSync::SwitchToNextAsset()
 std::string CMasternodeSync::GetSyncStatus()
 {
     switch (masternodeSync.nRequestedMasternodeAssets) {
-        case MASTERNODE_SYNC_INITIAL:       return _("Synchronization pending...");
-        case MASTERNODE_SYNC_SPORKS:        return _("Synchronizing sporks...");
-        case MASTERNODE_SYNC_LIST:          return _("Synchronizing masternodes...");
-        case MASTERNODE_SYNC_MNW:           return _("Synchronizing masternode payments...");
-        case MASTERNODE_SYNC_GOVERNANCE:    return _("Synchronizing governance objects...");
-        case MASTERNODE_SYNC_FAILED:        return _("Synchronization failed");
-        case MASTERNODE_SYNC_FINISHED:      return _("Synchronization finished");
-        default:                            return "";
+    case MASTERNODE_SYNC_INITIAL:
+        return _("Synchronization pending...");
+    case MASTERNODE_SYNC_SPORKS:
+        return _("Synchronizing sporks...");
+    case MASTERNODE_SYNC_LIST:
+        return _("Synchronizing masternodes...");
+    case MASTERNODE_SYNC_MNW:
+        return _("Synchronizing masternode payments...");
+    case MASTERNODE_SYNC_GOVERNANCE:
+        return _("Synchronizing governance objects...");
+    case MASTERNODE_SYNC_FAILED:
+        return _("Synchronization failed");
+    case MASTERNODE_SYNC_FINISHED:
+        return _("Synchronization finished");
+    default:
+        return "";
     }
 }
 
@@ -300,8 +316,8 @@ void CMasternodeSync::ProcessTick()
         return;
     }
 
-   if(nRequestedMasternodeAssets == MASTERNODE_SYNC_INITIAL ||
-        (nRequestedMasternodeAssets == MASTERNODE_SYNC_SPORKS && IsBlockchainSynced()))
+    if(nRequestedMasternodeAssets == MASTERNODE_SYNC_INITIAL ||
+            (nRequestedMasternodeAssets == MASTERNODE_SYNC_SPORKS && IsBlockchainSynced()))
     {
         SwitchToNextAsset();
     }
@@ -468,8 +484,8 @@ void CMasternodeSync::ProcessTick()
                         // make sure the condition below is checked only once per tick
                         if(nLastTick == nTick) continue;
                         if(GetTime() - nTimeNoObjectsLeft > MASTERNODE_SYNC_TIMEOUT_SECONDS &&
-                            governance.GetVoteCount() - nLastVotes < std::max(int(0.0001 * nLastVotes), MASTERNODE_SYNC_TICK_SECONDS)
-                        ) {
+                                governance.GetVoteCount() - nLastVotes < std::max(int(0.0001 * nLastVotes), MASTERNODE_SYNC_TICK_SECONDS)
+                          ) {
                             // We already asked for all objects, waited for MASTERNODE_SYNC_TIMEOUT_SECONDS
                             // after that and less then 0.01% or MASTERNODE_SYNC_TICK_SECONDS
                             // (i.e. 1 per second) votes were recieved during the last tick.

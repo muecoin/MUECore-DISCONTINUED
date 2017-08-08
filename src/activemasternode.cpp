@@ -53,24 +53,36 @@ void CActiveMasternode::ManageState()
 std::string CActiveMasternode::GetStateString() const
 {
     switch (nState) {
-        case ACTIVE_MASTERNODE_INITIAL:         return "INITIAL";
-        case ACTIVE_MASTERNODE_SYNC_IN_PROCESS: return "SYNC_IN_PROCESS";
-        case ACTIVE_MASTERNODE_INPUT_TOO_NEW:   return "INPUT_TOO_NEW";
-        case ACTIVE_MASTERNODE_NOT_CAPABLE:     return "NOT_CAPABLE";
-        case ACTIVE_MASTERNODE_STARTED:         return "STARTED";
-        default:                                return "UNKNOWN";
+    case ACTIVE_MASTERNODE_INITIAL:
+        return "INITIAL";
+    case ACTIVE_MASTERNODE_SYNC_IN_PROCESS:
+        return "SYNC_IN_PROCESS";
+    case ACTIVE_MASTERNODE_INPUT_TOO_NEW:
+        return "INPUT_TOO_NEW";
+    case ACTIVE_MASTERNODE_NOT_CAPABLE:
+        return "NOT_CAPABLE";
+    case ACTIVE_MASTERNODE_STARTED:
+        return "STARTED";
+    default:
+        return "UNKNOWN";
     }
 }
 
 std::string CActiveMasternode::GetStatus() const
 {
     switch (nState) {
-        case ACTIVE_MASTERNODE_INITIAL:         return "Node just started, not yet activated";
-        case ACTIVE_MASTERNODE_SYNC_IN_PROCESS: return "Sync in progress. Must wait until sync is complete to start Masternode";
-        case ACTIVE_MASTERNODE_INPUT_TOO_NEW:   return strprintf("Masternode input must have at least %d confirmations", Params().GetConsensus().nMasternodeMinimumConfirmations);
-        case ACTIVE_MASTERNODE_NOT_CAPABLE:     return "Not capable masternode: " + strNotCapableReason;
-        case ACTIVE_MASTERNODE_STARTED:         return "Masternode successfully started";
-        default:                                return "Unknown";
+    case ACTIVE_MASTERNODE_INITIAL:
+        return "Node just started, not yet activated";
+    case ACTIVE_MASTERNODE_SYNC_IN_PROCESS:
+        return "Sync in progress. Must wait until sync is complete to start Masternode";
+    case ACTIVE_MASTERNODE_INPUT_TOO_NEW:
+        return strprintf("Masternode input must have at least %d confirmations", Params().GetConsensus().nMasternodeMinimumConfirmations);
+    case ACTIVE_MASTERNODE_NOT_CAPABLE:
+        return "Not capable masternode: " + strNotCapableReason;
+    case ACTIVE_MASTERNODE_STARTED:
+        return "Masternode successfully started";
+    default:
+        return "Unknown";
     }
 }
 
@@ -229,7 +241,7 @@ void CActiveMasternode::ManageStateInitial()
 
 void CActiveMasternode::ManageStateRemote()
 {
-    LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n", 
+    LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n",
              GetStatus(), fPingerEnabled, GetTypeString(), pubKeyMasternode.GetID().ToString());
 
     mnodeman.CheckMasternode(pubKeyMasternode);
@@ -281,7 +293,7 @@ void CActiveMasternode::ManageStateLocal()
 
     if(pwalletMain->GetMasternodeVinAndKeys(vin, pubKeyCollateral, keyCollateral)) {
         int nInputAge = GetInputAge(vin);
-        if(nInputAge < Params().GetConsensus().nMasternodeMinimumConfirmations){
+        if(nInputAge < Params().GetConsensus().nMasternodeMinimumConfirmations) {
             nState = ACTIVE_MASTERNODE_INPUT_TOO_NEW;
             strNotCapableReason = strprintf(_("%s - %d confirmations"), GetStatus(), nInputAge);
             LogPrintf("CActiveMasternode::ManageStateLocal -- %s: %s\n", GetStateString(), strNotCapableReason);

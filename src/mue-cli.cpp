@@ -79,9 +79,9 @@ static int AppInitRPC(int argc, char* argv[])
         std::string strUsage = _("MonetaryUnit Core RPC client version") + " " + FormatFullVersion() + "\n";
         if (!mapArgs.count("-version")) {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  mue-cli [options] <command> [params]  " + _("Send command to MonetaryUnit Core") + "\n" +
-                  "  mue-cli [options] help                " + _("List commands") + "\n" +
-                  "  mue-cli [options] help <command>      " + _("Get help for a command") + "\n";
+                        "  mue-cli [options] <command> [params]  " + _("Send command to MonetaryUnit Core") + "\n" +
+                        "  mue-cli [options] help                " + _("List commands") + "\n" +
+                        "  mue-cli [options] help <command>      " + _("Get help for a command") + "\n";
 
             strUsage += "\n" + HelpMessageCli();
         }
@@ -178,8 +178,8 @@ UniValue CallRPC(const string& strMethod, const UniValue& params)
         // Try fall back to cookie-based authentication if no password is provided
         if (!GetAuthCookie(&strRPCUserColonPass)) {
             throw runtime_error(strprintf(
-                _("Could not locate RPC credentials. No authentication cookie could be found, and no rpcpassword is set in the configuration file (%s)"),
-                    GetConfigFile().string().c_str()));
+                                    _("Could not locate RPC credentials. No authentication cookie could be found, and no rpcpassword is set in the configuration file (%s)"),
+                                    GetConfigFile().string().c_str()));
 
         }
     } else {

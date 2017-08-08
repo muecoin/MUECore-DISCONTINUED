@@ -156,27 +156,31 @@ namespace detail {
 template <typename T1, typename T2>
 struct is_convertible
 {
-    private:
-        // two types of different size
-        struct fail { char dummy[2]; };
-        struct succeed { char dummy; };
-        // Try to convert a T1 to a T2 by plugging into tryConvert
-        static fail tryConvert(...);
-        static succeed tryConvert(const T2&);
-        static const T1& makeT1();
-    public:
+private:
+    // two types of different size
+    struct fail {
+        char dummy[2];
+    };
+    struct succeed {
+        char dummy;
+    };
+    // Try to convert a T1 to a T2 by plugging into tryConvert
+    static fail tryConvert(...);
+    static succeed tryConvert(const T2&);
+    static const T1& makeT1();
+public:
 #       ifdef _MSC_VER
-        // Disable spurious loss of precision warnings in tryConvert(makeT1())
+    // Disable spurious loss of precision warnings in tryConvert(makeT1())
 #       pragma warning(push)
 #       pragma warning(disable:4244)
 #       pragma warning(disable:4267)
 #       endif
-        // Standard trick: the (...) version of tryConvert will be chosen from
-        // the overload set only if the version taking a T2 doesn't match.
-        // Then we compare the sizes of the return types to check which
-        // function matched.  Very neat, in a disgusting kind of way :)
-        static const bool value =
-            sizeof(tryConvert(makeT1())) == sizeof(succeed);
+    // Standard trick: the (...) version of tryConvert will be chosen from
+    // the overload set only if the version taking a T2 doesn't match.
+    // Then we compare the sizes of the return types to check which
+    // function matched.  Very neat, in a disgusting kind of way :)
+    static const bool value =
+        sizeof(tryConvert(makeT1())) == sizeof(succeed);
 #       ifdef _MSC_VER
 #       pragma warning(pop)
 #       endif
@@ -184,7 +188,9 @@ struct is_convertible
 
 
 // Detect when a type is not a wchar_t string
-template<typename T> struct is_wchar { typedef int tinyformat_wchar_is_not_supported; };
+template<typename T> struct is_wchar {
+    typedef int tinyformat_wchar_is_not_supported;
+};
 template<> struct is_wchar<wchar_t*> {};
 template<> struct is_wchar<const wchar_t*> {};
 template<int n> struct is_wchar<const wchar_t[n]> {};
@@ -196,7 +202,9 @@ template<int n> struct is_wchar<wchar_t[n]> {};
 template<typename T, typename fmtT, bool convertible = is_convertible<T, fmtT>::value>
 struct formatValueAsType
 {
-    static void invoke(std::ostream& /*out*/, const T& /*value*/) { assert(0); }
+    static void invoke(std::ostream& /*out*/, const T& /*value*/) {
+        assert(0);
+    }
 };
 // Specialized version for types that can actually be converted to fmtT, as
 // indicated by the "convertible" template parameter.
@@ -204,14 +212,18 @@ template<typename T, typename fmtT>
 struct formatValueAsType<T,fmtT,true>
 {
     static void invoke(std::ostream& out, const T& value)
-        { out << static_cast<fmtT>(value); }
+    {
+        out << static_cast<fmtT>(value);
+    }
 };
 
 #ifdef TINYFORMAT_OLD_LIBSTDCPLUSPLUS_WORKAROUND
 template<typename T, bool convertible = is_convertible<T, int>::value>
 struct formatZeroIntegerWorkaround
 {
-    static bool invoke(std::ostream& /**/, const T& /**/) { return false; }
+    static bool invoke(std::ostream& /**/, const T& /**/) {
+        return false;
+    }
 };
 template<typename T>
 struct formatZeroIntegerWorkaround<T,true>
@@ -244,7 +256,9 @@ struct convertToInt
 template<typename T>
 struct convertToInt<T,true>
 {
-    static int invoke(const T& value) { return static_cast<int>(value); }
+    static int invoke(const T& value) {
+        return static_cast<int>(value);
+    }
 };
 
 } // namespace detail
@@ -439,74 +453,74 @@ namespace detail {
 // which arguments are formatted.
 class FormatIterator
 {
-    public:
-        // Flags for features not representable with standard stream state
-        enum ExtraFormatFlags
-        {
-            Flag_None                = 0,
-            Flag_TruncateToPrecision = 1<<0, // truncate length to stream precision()
-            Flag_SpacePadPositive    = 1<<1, // pad positive values with spaces
-            Flag_VariableWidth       = 1<<2, // variable field width in arg list
-            Flag_VariablePrecision   = 1<<3  // variable field precision in arg list
-        };
+public:
+    // Flags for features not representable with standard stream state
+    enum ExtraFormatFlags
+    {
+        Flag_None                = 0,
+        Flag_TruncateToPrecision = 1<<0, // truncate length to stream precision()
+        Flag_SpacePadPositive    = 1<<1, // pad positive values with spaces
+        Flag_VariableWidth       = 1<<2, // variable field width in arg list
+        Flag_VariablePrecision   = 1<<3  // variable field precision in arg list
+    };
 
-        // out is the output stream, fmt is the full format string
-        FormatIterator(std::ostream& out, const char* fmt)
-            : m_out(out),
-            m_fmt(fmt),
-            m_extraFlags(Flag_None),
-            m_wantWidth(false),
-            m_wantPrecision(false),
-            m_variableWidth(0),
-            m_variablePrecision(0),
-            m_origWidth(out.width()),
-            m_origPrecision(out.precision()),
-            m_origFlags(out.flags()),
-            m_origFill(out.fill())
-        { }
+    // out is the output stream, fmt is the full format string
+    FormatIterator(std::ostream& out, const char* fmt)
+        : m_out(out),
+          m_fmt(fmt),
+          m_extraFlags(Flag_None),
+          m_wantWidth(false),
+          m_wantPrecision(false),
+          m_variableWidth(0),
+          m_variablePrecision(0),
+          m_origWidth(out.width()),
+          m_origPrecision(out.precision()),
+          m_origFlags(out.flags()),
+          m_origFill(out.fill())
+    { }
 
-        // Print remaining part of format string.
-        void finish()
-        {
-            // It would be nice if we could do this from the destructor, but we
-            // can't if TINFORMAT_ERROR is used to throw an exception!
-            m_fmt = printFormatStringLiteral(m_out, m_fmt);
-            if(*m_fmt != '\0')
-                TINYFORMAT_ERROR("tinyformat: Too many conversion specifiers in format string");
-        }
+    // Print remaining part of format string.
+    void finish()
+    {
+        // It would be nice if we could do this from the destructor, but we
+        // can't if TINFORMAT_ERROR is used to throw an exception!
+        m_fmt = printFormatStringLiteral(m_out, m_fmt);
+        if(*m_fmt != '\0')
+            TINYFORMAT_ERROR("tinyformat: Too many conversion specifiers in format string");
+    }
 
-        ~FormatIterator()
-        {
-            // Restore stream state
-            m_out.width(m_origWidth);
-            m_out.precision(m_origPrecision);
-            m_out.flags(m_origFlags);
-            m_out.fill(m_origFill);
-        }
+    ~FormatIterator()
+    {
+        // Restore stream state
+        m_out.width(m_origWidth);
+        m_out.precision(m_origPrecision);
+        m_out.flags(m_origFlags);
+        m_out.fill(m_origFill);
+    }
 
-        template<typename T>
-        void accept(const T& value);
+    template<typename T>
+    void accept(const T& value);
 
-    private:
-        // Parse and return an integer from the string c, as atoi()
-        // On return, c is set to one past the end of the integer.
-        static int parseIntAndAdvance(const char*& c)
-        {
-            int i = 0;
-            for(;*c >= '0' && *c <= '9'; ++c)
-                i = 10*i + (*c - '0');
-            return i;
-        }
+private:
+    // Parse and return an integer from the string c, as atoi()
+    // On return, c is set to one past the end of the integer.
+    static int parseIntAndAdvance(const char*& c)
+    {
+        int i = 0;
+        for(; *c >= '0' && *c <= '9'; ++c)
+            i = 10*i + (*c - '0');
+        return i;
+    }
 
-        // Format at most truncLen characters of a C string to the given
-        // stream.  Return true if formatting proceeded (generic version always
-        // returns false)
-        template<typename T>
-        static bool formatCStringTruncate(std::ostream& /*out*/, const T& /*value*/,
-                                        std::streamsize /*truncLen*/)
-        {
-            return false;
-        }
+    // Format at most truncLen characters of a C string to the given
+    // stream.  Return true if formatting proceeded (generic version always
+    // returns false)
+    template<typename T>
+    static bool formatCStringTruncate(std::ostream& /*out*/, const T& /*value*/,
+                                      std::streamsize /*truncLen*/)
+    {
+        return false;
+    }
 #       define TINYFORMAT_DEFINE_FORMAT_C_STRING_TRUNCATE(type)            \
         static bool formatCStringTruncate(std::ostream& out, type* value,  \
                                         std::streamsize truncLen)          \
@@ -517,65 +531,65 @@ class FormatIterator
             out.write(value, len);                                         \
             return true;                                                   \
         }
-        // Overload for const char* and char*.  Could overload for signed &
-        // unsigned char too, but these are technically unneeded for printf
-        // compatibility.
-        TINYFORMAT_DEFINE_FORMAT_C_STRING_TRUNCATE(const char)
-        TINYFORMAT_DEFINE_FORMAT_C_STRING_TRUNCATE(char)
+    // Overload for const char* and char*.  Could overload for signed &
+    // unsigned char too, but these are technically unneeded for printf
+    // compatibility.
+    TINYFORMAT_DEFINE_FORMAT_C_STRING_TRUNCATE(const char)
+    TINYFORMAT_DEFINE_FORMAT_C_STRING_TRUNCATE(char)
 #       undef TINYFORMAT_DEFINE_FORMAT_C_STRING_TRUNCATE
 
-        // Print literal part of format string and return next format spec
-        // position.
-        //
-        // Skips over any occurrences of '%%', printing a literal '%' to the
-        // output.  The position of the first % character of the next
-        // nontrivial format spec is returned, or the end of string.
-        static const char* printFormatStringLiteral(std::ostream& out,
-                                                    const char* fmt)
+    // Print literal part of format string and return next format spec
+    // position.
+    //
+    // Skips over any occurrences of '%%', printing a literal '%' to the
+    // output.  The position of the first % character of the next
+    // nontrivial format spec is returned, or the end of string.
+    static const char* printFormatStringLiteral(std::ostream& out,
+            const char* fmt)
+    {
+        const char* c = fmt;
+        for(; true; ++c)
         {
-            const char* c = fmt;
-            for(; true; ++c)
+            switch(*c)
             {
-                switch(*c)
-                {
-                    case '\0':
-                        out.write(fmt, static_cast<std::streamsize>(c - fmt));
-                        return c;
-                    case '%':
-                        out.write(fmt, static_cast<std::streamsize>(c - fmt));
-                        if(*(c+1) != '%')
-                            return c;
-                        // for "%%", tack trailing % onto next literal section.
-                        fmt = ++c;
-                        break;
-                }
+            case '\0':
+                out.write(fmt, static_cast<std::streamsize>(c - fmt));
+                return c;
+            case '%':
+                out.write(fmt, static_cast<std::streamsize>(c - fmt));
+                if(*(c+1) != '%')
+                    return c;
+                // for "%%", tack trailing % onto next literal section.
+                fmt = ++c;
+                break;
             }
         }
+    }
 
-        static const char* streamStateFromFormat(std::ostream& out,
-                                                 unsigned int& extraFlags,
-                                                 const char* fmtStart,
-                                                 int variableWidth,
-                                                 int variablePrecision);
+    static const char* streamStateFromFormat(std::ostream& out,
+            unsigned int& extraFlags,
+            const char* fmtStart,
+            int variableWidth,
+            int variablePrecision);
 
-        // Private copy & assign: Kill gcc warnings with -Weffc++
-        FormatIterator(const FormatIterator&);
-        FormatIterator& operator=(const FormatIterator&);
+    // Private copy & assign: Kill gcc warnings with -Weffc++
+    FormatIterator(const FormatIterator&);
+    FormatIterator& operator=(const FormatIterator&);
 
-        // Stream, current format string & state
-        std::ostream& m_out;
-        const char* m_fmt;
-        unsigned int m_extraFlags;
-        // State machine info for handling of variable width & precision
-        bool m_wantWidth;
-        bool m_wantPrecision;
-        int m_variableWidth;
-        int m_variablePrecision;
-        // Saved stream state
-        std::streamsize m_origWidth;
-        std::streamsize m_origPrecision;
-        std::ios::fmtflags m_origFlags;
-        char m_origFill;
+    // Stream, current format string & state
+    std::ostream& m_out;
+    const char* m_fmt;
+    unsigned int m_extraFlags;
+    // State machine info for handling of variable width & precision
+    bool m_wantWidth;
+    bool m_wantPrecision;
+    int m_variableWidth;
+    int m_variablePrecision;
+    // Saved stream state
+    std::streamsize m_origWidth;
+    std::streamsize m_origPrecision;
+    std::ios::fmtflags m_origFlags;
+    char m_origFill;
 };
 
 
@@ -634,7 +648,7 @@ void FormatIterator::accept(const T& value)
         // "%.4s" where at most 4 characters of the c-string should be read.
         // If we didn't include this special case, we might read off the end.
         if(!( (m_extraFlags & Flag_TruncateToPrecision) &&
-             formatCStringTruncate(tmpStream, value, m_out.precision()) ))
+                formatCStringTruncate(tmpStream, value, m_out.precision()) ))
         {
             // Not a truncated c-string; just format normally.
             formatValue(tmpStream, m_fmt, fmtEnd, value);
@@ -647,7 +661,7 @@ void FormatIterator::accept(const T& value)
                     result[i] = ' ';
         }
         if((m_extraFlags & Flag_TruncateToPrecision) &&
-           (int)result.size() > (int)m_out.precision())
+                (int)result.size() > (int)m_out.precision())
             m_out.write(result.c_str(), m_out.precision());
         else
             m_out << result;
@@ -666,10 +680,10 @@ void FormatIterator::accept(const T& value)
 // state are returned in the extraFlags parameter which is a bitwise
 // combination of values from the ExtraFormatFlags enum.
 inline const char* FormatIterator::streamStateFromFormat(std::ostream& out,
-                                                         unsigned int& extraFlags,
-                                                         const char* fmtStart,
-                                                         int variableWidth,
-                                                         int variablePrecision)
+        unsigned int& extraFlags,
+        const char* fmtStart,
+        int variableWidth,
+        int variablePrecision)
 {
     if(*fmtStart != '%')
     {
@@ -693,32 +707,32 @@ inline const char* FormatIterator::streamStateFromFormat(std::ostream& out,
     {
         switch(*c)
         {
-            case '#':
-                out.setf(std::ios::showpoint | std::ios::showbase);
-                continue;
-            case '0':
-                // overridden by left alignment ('-' flag)
-                if(!(out.flags() & std::ios::left))
-                {
-                    // Use internal padding so that numeric values are
-                    // formatted correctly, eg -00010 rather than 000-10
-                    out.fill('0');
-                    out.setf(std::ios::internal, std::ios::adjustfield);
-                }
-                continue;
-            case '-':
-                out.fill(' ');
-                out.setf(std::ios::left, std::ios::adjustfield);
-                continue;
-            case ' ':
-                // overridden by show positive sign, '+' flag.
-                if(!(out.flags() & std::ios::showpos))
-                    extraFlags |= Flag_SpacePadPositive;
-                continue;
-            case '+':
-                out.setf(std::ios::showpos);
-                extraFlags &= ~Flag_SpacePadPositive;
-                continue;
+        case '#':
+            out.setf(std::ios::showpoint | std::ios::showbase);
+            continue;
+        case '0':
+            // overridden by left alignment ('-' flag)
+            if(!(out.flags() & std::ios::left))
+            {
+                // Use internal padding so that numeric values are
+                // formatted correctly, eg -00010 rather than 000-10
+                out.fill('0');
+                out.setf(std::ios::internal, std::ios::adjustfield);
+            }
+            continue;
+        case '-':
+            out.fill(' ');
+            out.setf(std::ios::left, std::ios::adjustfield);
+            continue;
+        case ' ':
+            // overridden by show positive sign, '+' flag.
+            if(!(out.flags() & std::ios::showpos))
+                extraFlags |= Flag_SpacePadPositive;
+            continue;
+        case '+':
+            out.setf(std::ios::showpos);
+            extraFlags &= ~Flag_SpacePadPositive;
+            continue;
         }
         break;
     }
@@ -765,7 +779,7 @@ inline const char* FormatIterator::streamStateFromFormat(std::ostream& out,
     }
     // 4) Ignore any C99 length modifier
     while(*c == 'l' || *c == 'h' || *c == 'L' ||
-          *c == 'j' || *c == 'z' || *c == 't')
+            *c == 'j' || *c == 'z' || *c == 't')
         ++c;
     // 5) We're up to the conversion specifier character.
     // Set stream flags based on conversion specifier (thanks to the
@@ -773,59 +787,63 @@ inline const char* FormatIterator::streamStateFromFormat(std::ostream& out,
     bool intConversion = false;
     switch(*c)
     {
-        case 'u': case 'd': case 'i':
-            out.setf(std::ios::dec, std::ios::basefield);
-            intConversion = true;
-            break;
-        case 'o':
-            out.setf(std::ios::oct, std::ios::basefield);
-            intConversion = true;
-            break;
-        case 'X':
-            out.setf(std::ios::uppercase);
-        case 'x': case 'p':
-            out.setf(std::ios::hex, std::ios::basefield);
-            intConversion = true;
-            break;
-        case 'E':
-            out.setf(std::ios::uppercase);
-        case 'e':
-            out.setf(std::ios::scientific, std::ios::floatfield);
-            out.setf(std::ios::dec, std::ios::basefield);
-            break;
-        case 'F':
-            out.setf(std::ios::uppercase);
-        case 'f':
-            out.setf(std::ios::fixed, std::ios::floatfield);
-            break;
-        case 'G':
-            out.setf(std::ios::uppercase);
-        case 'g':
-            out.setf(std::ios::dec, std::ios::basefield);
-            // As in boost::format, let stream decide float format.
-            out.flags(out.flags() & ~std::ios::floatfield);
-            break;
-        case 'a': case 'A':
-            TINYFORMAT_ERROR("tinyformat: the %a and %A conversion specs "
-                             "are not supported");
-            break;
-        case 'c':
-            // Handled as special case inside formatValue()
-            break;
-        case 's':
-            if(precisionSet)
-                extraFlags |= Flag_TruncateToPrecision;
-            // Make %s print booleans as "true" and "false"
-            out.setf(std::ios::boolalpha);
-            break;
-        case 'n':
-            // Not supported - will cause problems!
-            TINYFORMAT_ERROR("tinyformat: %n conversion spec not supported");
-            break;
-        case '\0':
-            TINYFORMAT_ERROR("tinyformat: Conversion spec incorrectly "
-                             "terminated by end of string");
-            return c;
+    case 'u':
+    case 'd':
+    case 'i':
+        out.setf(std::ios::dec, std::ios::basefield);
+        intConversion = true;
+        break;
+    case 'o':
+        out.setf(std::ios::oct, std::ios::basefield);
+        intConversion = true;
+        break;
+    case 'X':
+        out.setf(std::ios::uppercase);
+    case 'x':
+    case 'p':
+        out.setf(std::ios::hex, std::ios::basefield);
+        intConversion = true;
+        break;
+    case 'E':
+        out.setf(std::ios::uppercase);
+    case 'e':
+        out.setf(std::ios::scientific, std::ios::floatfield);
+        out.setf(std::ios::dec, std::ios::basefield);
+        break;
+    case 'F':
+        out.setf(std::ios::uppercase);
+    case 'f':
+        out.setf(std::ios::fixed, std::ios::floatfield);
+        break;
+    case 'G':
+        out.setf(std::ios::uppercase);
+    case 'g':
+        out.setf(std::ios::dec, std::ios::basefield);
+        // As in boost::format, let stream decide float format.
+        out.flags(out.flags() & ~std::ios::floatfield);
+        break;
+    case 'a':
+    case 'A':
+        TINYFORMAT_ERROR("tinyformat: the %a and %A conversion specs "
+                         "are not supported");
+        break;
+    case 'c':
+        // Handled as special case inside formatValue()
+        break;
+    case 's':
+        if(precisionSet)
+            extraFlags |= Flag_TruncateToPrecision;
+        // Make %s print booleans as "true" and "false"
+        out.setf(std::ios::boolalpha);
+        break;
+    case 'n':
+        // Not supported - will cause problems!
+        TINYFORMAT_ERROR("tinyformat: %n conversion spec not supported");
+        break;
+    case '\0':
+        TINYFORMAT_ERROR("tinyformat: Conversion spec incorrectly "
+                         "terminated by end of string");
+        return c;
     }
     if(intConversion && precisionSet && !widthSet)
     {

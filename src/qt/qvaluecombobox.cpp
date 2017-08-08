@@ -5,7 +5,7 @@
 #include "qvaluecombobox.h"
 
 QValueComboBox::QValueComboBox(QWidget *parent) :
-        QComboBox(parent), role(Qt::UserRole)
+    QComboBox(parent), role(Qt::UserRole)
 {
     connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(handleSelectionChanged(int)));
 }

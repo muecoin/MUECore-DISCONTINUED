@@ -42,7 +42,7 @@ public:
         blockHash(),
         sigTime(0),
         vchSig()
-        {}
+    {}
 
     CMasternodePing(CTxIn& vinNew);
 
@@ -77,7 +77,9 @@ public:
         return ss.GetHash();
     }
 
-    bool IsExpired() { return GetTime() - sigTime > MASTERNODE_NEW_START_REQUIRED_SECONDS; }
+    bool IsExpired() {
+        return GetTime() - sigTime > MASTERNODE_NEW_START_REQUIRED_SECONDS;
+    }
 
     bool Sign(CKey& keyMasternode, CPubKey& pubKeyMasternode);
     bool CheckSignature(CPubKey& pubKeyMasternode, int &nDos);
@@ -117,7 +119,7 @@ struct masternode_info_t
           nActiveState(0),
           nProtocolVersion(0),
           fInfoValid(false)
-        {}
+    {}
 
     CTxIn vin;
     CService addr;
@@ -247,7 +249,9 @@ public:
 
     void Check(bool fForce = false);
 
-    bool IsBroadcastedWithin(int nSeconds) { return GetAdjustedTime() - sigTime < nSeconds; }
+    bool IsBroadcastedWithin(int nSeconds) {
+        return GetAdjustedTime() - sigTime < nSeconds;
+    }
 
     bool IsPingedWithin(int nSeconds, int64_t nTimeToCheckAt = -1)
     {
@@ -259,16 +263,34 @@ public:
         return nTimeToCheckAt - lastPing.sigTime < nSeconds;
     }
 
-    bool IsEnabled() { return nActiveState == MASTERNODE_ENABLED; }
-    bool IsPreEnabled() { return nActiveState == MASTERNODE_PRE_ENABLED; }
-    bool IsPoSeBanned() { return nActiveState == MASTERNODE_POSE_BAN; }
+    bool IsEnabled() {
+        return nActiveState == MASTERNODE_ENABLED;
+    }
+    bool IsPreEnabled() {
+        return nActiveState == MASTERNODE_PRE_ENABLED;
+    }
+    bool IsPoSeBanned() {
+        return nActiveState == MASTERNODE_POSE_BAN;
+    }
     // NOTE: this one relies on nPoSeBanScore, not on nActiveState as everything else here
-    bool IsPoSeVerified() { return nPoSeBanScore <= -MASTERNODE_POSE_BAN_MAX_SCORE; }
-    bool IsExpired() { return nActiveState == MASTERNODE_EXPIRED; }
-    bool IsOutpointSpent() { return nActiveState == MASTERNODE_OUTPOINT_SPENT; }
-    bool IsUpdateRequired() { return nActiveState == MASTERNODE_UPDATE_REQUIRED; }
-    bool IsWatchdogExpired() { return nActiveState == MASTERNODE_WATCHDOG_EXPIRED; }
-    bool IsNewStartRequired() { return nActiveState == MASTERNODE_NEW_START_REQUIRED; }
+    bool IsPoSeVerified() {
+        return nPoSeBanScore <= -MASTERNODE_POSE_BAN_MAX_SCORE;
+    }
+    bool IsExpired() {
+        return nActiveState == MASTERNODE_EXPIRED;
+    }
+    bool IsOutpointSpent() {
+        return nActiveState == MASTERNODE_OUTPOINT_SPENT;
+    }
+    bool IsUpdateRequired() {
+        return nActiveState == MASTERNODE_UPDATE_REQUIRED;
+    }
+    bool IsWatchdogExpired() {
+        return nActiveState == MASTERNODE_WATCHDOG_EXPIRED;
+    }
+    bool IsNewStartRequired() {
+        return nActiveState == MASTERNODE_NEW_START_REQUIRED;
+    }
 
     static bool IsValidStateForAutoStart(int nActiveStateIn)
     {
@@ -284,7 +306,7 @@ public:
             return true;
         }
         if(!sporkManager.IsSporkActive(SPORK_14_REQUIRE_SENTINEL_FLAG) &&
-           (nActiveState == MASTERNODE_WATCHDOG_EXPIRED)) {
+                (nActiveState == MASTERNODE_WATCHDOG_EXPIRED)) {
             return true;
         }
 
@@ -294,8 +316,12 @@ public:
     bool IsValidNetAddr();
     static bool IsValidNetAddr(CService addrIn);
 
-    void IncreasePoSeBanScore() { if(nPoSeBanScore < MASTERNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++; }
-    void DecreasePoSeBanScore() { if(nPoSeBanScore > -MASTERNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--; }
+    void IncreasePoSeBanScore() {
+        if(nPoSeBanScore < MASTERNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++;
+    }
+    void DecreasePoSeBanScore() {
+        if(nPoSeBanScore > -MASTERNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--;
+    }
 
     masternode_info_t GetInfo();
 
@@ -305,8 +331,12 @@ public:
 
     int GetCollateralAge();
 
-    int GetLastPaidTime() { return nTimeLastPaid; }
-    int GetLastPaidBlock() { return nBlockLastPaid; }
+    int GetLastPaidTime() {
+        return nTimeLastPaid;
+    }
+    int GetLastPaidBlock() {
+        return nBlockLastPaid;
+    }
     void UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScanBack);
 
     // KEEP TRACK OF EACH GOVERNANCE ITEM INCASE THIS NODE GOES OFFLINE, SO WE CAN RECALC THEIR STATUS
@@ -405,7 +435,7 @@ public:
         nBlockHeight(0),
         vchSig1(),
         vchSig2()
-        {}
+    {}
 
     CMasternodeVerification(CService addr, int nonce, int nBlockHeight) :
         vin1(),
@@ -415,7 +445,7 @@ public:
         nBlockHeight(nBlockHeight),
         vchSig1(),
         vchSig2()
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 

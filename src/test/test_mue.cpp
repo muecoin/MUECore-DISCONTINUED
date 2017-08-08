@@ -35,65 +35,65 @@ extern void noui_connect();
 
 BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
 {
-        ECC_Start();
-        SetupEnvironment();
-        SetupNetworking();
-        fPrintToDebugLog = false; // don't want to write to debug.log file
-        fCheckBlockIndex = true;
-        SelectParams(chainName);
-        noui_connect();
+    ECC_Start();
+    SetupEnvironment();
+    SetupNetworking();
+    fPrintToDebugLog = false; // don't want to write to debug.log file
+    fCheckBlockIndex = true;
+    SelectParams(chainName);
+    noui_connect();
 }
 
 BasicTestingSetup::~BasicTestingSetup()
 {
-        ECC_Stop();
+    ECC_Stop();
 }
 
 TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(chainName)
 {
     const CChainParams& chainparams = Params();
 #ifdef ENABLE_WALLET
-        bitdb.MakeMock();
+    bitdb.MakeMock();
 #endif
-        ClearDatadirCache();
-        pathTemp = GetTempPath() / strprintf("test_mue_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
-        boost::filesystem::create_directories(pathTemp);
-        mapArgs["-datadir"] = pathTemp.string();
-        pblocktree = new CBlockTreeDB(1 << 20, true);
-        pcoinsdbview = new CCoinsViewDB(1 << 23, true);
-        pcoinsTip = new CCoinsViewCache(pcoinsdbview);
-        InitBlockIndex(chainparams);
+    ClearDatadirCache();
+    pathTemp = GetTempPath() / strprintf("test_mue_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+    boost::filesystem::create_directories(pathTemp);
+    mapArgs["-datadir"] = pathTemp.string();
+    pblocktree = new CBlockTreeDB(1 << 20, true);
+    pcoinsdbview = new CCoinsViewDB(1 << 23, true);
+    pcoinsTip = new CCoinsViewCache(pcoinsdbview);
+    InitBlockIndex(chainparams);
 #ifdef ENABLE_WALLET
-        bool fFirstRun;
-        pwalletMain = new CWallet("wallet.dat");
-        pwalletMain->LoadWallet(fFirstRun);
-        RegisterValidationInterface(pwalletMain);
+    bool fFirstRun;
+    pwalletMain = new CWallet("wallet.dat");
+    pwalletMain->LoadWallet(fFirstRun);
+    RegisterValidationInterface(pwalletMain);
 #endif
-        nScriptCheckThreads = 3;
-        for (int i=0; i < nScriptCheckThreads-1; i++)
-            threadGroup.create_thread(&ThreadScriptCheck);
-        RegisterNodeSignals(GetNodeSignals());
+    nScriptCheckThreads = 3;
+    for (int i=0; i < nScriptCheckThreads-1; i++)
+        threadGroup.create_thread(&ThreadScriptCheck);
+    RegisterNodeSignals(GetNodeSignals());
 }
 
 TestingSetup::~TestingSetup()
 {
-        UnregisterNodeSignals(GetNodeSignals());
-        threadGroup.interrupt_all();
-        threadGroup.join_all();
+    UnregisterNodeSignals(GetNodeSignals());
+    threadGroup.interrupt_all();
+    threadGroup.join_all();
 #ifdef ENABLE_WALLET
-        UnregisterValidationInterface(pwalletMain);
-        delete pwalletMain;
-        pwalletMain = NULL;
+    UnregisterValidationInterface(pwalletMain);
+    delete pwalletMain;
+    pwalletMain = NULL;
 #endif
-        UnloadBlockIndex();
-        delete pcoinsTip;
-        delete pcoinsdbview;
-        delete pblocktree;
+    UnloadBlockIndex();
+    delete pcoinsTip;
+    delete pcoinsdbview;
+    delete pblocktree;
 #ifdef ENABLE_WALLET
-        bitdb.Flush(true);
-        bitdb.Reset();
+    bitdb.Flush(true);
+    bitdb.Reset();
 #endif
-        boost::filesystem::remove_all(pathTemp);
+    boost::filesystem::remove_all(pathTemp);
 }
 
 TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
@@ -123,7 +123,7 @@ TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>&
     // Replace mempool-selected txns with just coinbase plus passed-in txns:
     block.vtx.resize(1);
     BOOST_FOREACH(const CMutableTransaction& tx, txns)
-        block.vtx.push_back(tx);
+    block.vtx.push_back(tx);
     // IncrementExtraNonce creates a valid coinbase and merkleRoot
     unsigned int extraNonce = 0;
     IncrementExtraNonce(&block, chainActive.Tip(), extraNonce);
@@ -155,15 +155,15 @@ CTxMemPoolEntry TestMemPoolEntryHelper::FromTx(CMutableTransaction &tx, CTxMemPo
 
 void Shutdown(void* parg)
 {
-  exit(0);
+    exit(0);
 }
 
 void StartShutdown()
 {
-  exit(0);
+    exit(0);
 }
 
 bool ShutdownRequested()
 {
-  return false;
+    return false;
 }

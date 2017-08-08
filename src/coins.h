@@ -18,7 +18,7 @@
 #include <boost/foreach.hpp>
 #include <boost/unordered_map.hpp>
 
-/** 
+/**
  * Pruned version of CTransaction: only retains metadata and unspent transaction outputs
  *
  * Serialized format:
@@ -134,13 +134,13 @@ public:
 
     //! equality test
     friend bool operator==(const CCoins &a, const CCoins &b) {
-         // Empty CCoins objects are always equal.
-         if (a.IsPruned() && b.IsPruned())
-             return true;
-         return a.fCoinBase == b.fCoinBase &&
-                a.nHeight == b.nHeight &&
-                a.nVersion == b.nVersion &&
-                a.vout == b.vout;
+        // Empty CCoins objects are always equal.
+        if (a.IsPruned() && b.IsPruned())
+            return true;
+        return a.fCoinBase == b.fCoinBase &&
+               a.nHeight == b.nHeight &&
+               a.nVersion == b.nVersion &&
+               a.vout == b.vout;
     }
     friend bool operator!=(const CCoins &a, const CCoins &b) {
         return !(a == b);
@@ -250,8 +250,8 @@ public:
     //! note that only !IsPruned() CCoins can be serialized
     bool IsPruned() const {
         BOOST_FOREACH(const CTxOut &out, vout)
-            if (!out.IsNull())
-                return false;
+        if (!out.IsNull())
+            return false;
         return true;
     }
 
@@ -356,10 +356,10 @@ public:
 
 class CCoinsViewCache;
 
-/** 
+/**
  * A reference to a mutable cache entry. Encapsulating it allows us to run
  *  cleanup code after the modification is finished, and keeping track of
- *  concurrent modifications. 
+ *  concurrent modifications.
  */
 class CCoinsModifier
 {
@@ -370,8 +370,12 @@ private:
     CCoinsModifier(CCoinsViewCache& cache_, CCoinsMap::iterator it_, size_t usage);
 
 public:
-    CCoins* operator->() { return &it->second.coins; }
-    CCoins& operator*() { return it->second.coins; }
+    CCoins* operator->() {
+        return &it->second.coins;
+    }
+    CCoins& operator*() {
+        return it->second.coins;
+    }
     ~CCoinsModifier();
     friend class CCoinsViewCache;
 };
@@ -386,7 +390,7 @@ protected:
 
     /**
      * Make mutable so that we can "fill the cache" even from Get-methods
-     * declared as "const".  
+     * declared as "const".
      */
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
@@ -456,7 +460,7 @@ public:
     //! Calculate the size of the cache (in bytes)
     size_t DynamicMemoryUsage() const;
 
-    /** 
+    /**
      * Amount of mue coming in to a transaction
      * Note that lightweight clients may not know anything besides the hash of previous transactions,
      * so may not be able to calculate this.

@@ -194,7 +194,7 @@ static void secp256k1_ecmult_context_build(secp256k1_ecmult_context *ctx, const 
 }
 
 static void secp256k1_ecmult_context_clone(secp256k1_ecmult_context *dst,
-                                           const secp256k1_ecmult_context *src, const secp256k1_callback *cb) {
+        const secp256k1_ecmult_context *src, const secp256k1_callback *cb) {
     if (src->pre_g == NULL) {
         dst->pre_g = NULL;
     } else {
@@ -278,7 +278,7 @@ static int secp256k1_ecmult_wnaf(int *wnaf, int len, const secp256k1_scalar *a, 
     CHECK(carry == 0);
     while (bit < 256) {
         CHECK(secp256k1_scalar_get_bits(&s, bit++, 1) == 0);
-    } 
+    }
 #endif
     return last_set_bit + 1;
 }

@@ -224,7 +224,9 @@ public:
     void requestShutdown();
 
     /// Get process return value
-    int getReturnValue() { return returnValue; }
+    int getReturnValue() {
+        return returnValue;
+    }
 
     /// Get window identifier of QMainWindow (BitcoinGUI)
     WId getMainWinId() const;
@@ -372,7 +374,7 @@ BitcoinApplication::~BitcoinApplication()
 #endif
     // Delete Qt-settings if user clicked on "Reset Options"
     QSettings settings;
-    if(optionsModel && optionsModel->resetSettings){
+    if(optionsModel && optionsModel->resetSettings) {
         settings.clear();
         settings.sync();
     }
@@ -498,7 +500,7 @@ void BitcoinApplication::initializeResult(int retval)
             window->setCurrentWallet(BitcoinGUI::DEFAULT_WALLET);
 
             connect(walletModel, SIGNAL(coinsSent(CWallet*,SendCoinsRecipient,QByteArray)),
-                             paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
+                    paymentServer, SLOT(fetchPaymentACK(CWallet*,const SendCoinsRecipient&,QByteArray)));
         }
 #endif
 
@@ -517,11 +519,11 @@ void BitcoinApplication::initializeResult(int retval)
         // Now that initialization/startup is done, process any command-line
         // mue: URIs or payment requests:
         connect(paymentServer, SIGNAL(receivedPaymentRequest(SendCoinsRecipient)),
-                         window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
+                window, SLOT(handlePaymentRequest(SendCoinsRecipient)));
         connect(window, SIGNAL(receivedURI(QString)),
-                         paymentServer, SLOT(handleURIOrFile(QString)));
+                paymentServer, SLOT(handleURIOrFile(QString)));
         connect(paymentServer, SIGNAL(message(QString,QString,unsigned int)),
-                         window, SLOT(message(QString,QString,unsigned int)));
+                window, SLOT(message(QString,QString,unsigned int)));
         QTimer::singleShot(100, paymentServer, SLOT(uiReady()));
 #endif
     } else {

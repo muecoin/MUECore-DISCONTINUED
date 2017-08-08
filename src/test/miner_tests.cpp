@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
     mempool.clear();
 
     BOOST_FOREACH(CTransaction *tx, txFirst)
-        delete tx;
+    delete tx;
 
     fCheckpointsEnabled = true;
 }

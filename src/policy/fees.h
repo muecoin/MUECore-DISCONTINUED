@@ -163,7 +163,9 @@ public:
                              double minSuccess, bool requireGreater, unsigned int nBlockHeight);
 
     /** Return the max number of confirms we're tracking */
-    unsigned int GetMaxConfirms() { return confAvg.size(); }
+    unsigned int GetMaxConfirms() {
+        return confAvg.size();
+    }
 
     /** Write state of estimation data to a file*/
     void Write(CAutoFile& fileout);

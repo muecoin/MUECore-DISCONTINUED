@@ -249,8 +249,10 @@ bool CPubKey::Derive(CPubKey& pubkeyChild, ChainCode &ccChild, unsigned int nChi
 void CExtPubKey::Encode(unsigned char code[74]) const {
     code[0] = nDepth;
     memcpy(code+1, vchFingerprint, 4);
-    code[5] = (nChild >> 24) & 0xFF; code[6] = (nChild >> 16) & 0xFF;
-    code[7] = (nChild >>  8) & 0xFF; code[8] = (nChild >>  0) & 0xFF;
+    code[5] = (nChild >> 24) & 0xFF;
+    code[6] = (nChild >> 16) & 0xFF;
+    code[7] = (nChild >>  8) & 0xFF;
+    code[8] = (nChild >>  0) & 0xFF;
     memcpy(code+9, chaincode.begin(), 32);
     assert(pubkey.size() == 33);
     memcpy(code+41, pubkey.begin(), 33);

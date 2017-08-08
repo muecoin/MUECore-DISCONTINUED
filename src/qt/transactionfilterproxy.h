@@ -27,7 +27,9 @@ public:
     /** Type filter bit field (all types but Darksend-SPAM) */
     static const quint32 COMMON_TYPES = 4223;
 
-    static quint32 TYPE(int type) { return 1<<type; }
+    static quint32 TYPE(int type) {
+        return 1<<type;
+    }
 
     enum WatchOnlyFilter
     {

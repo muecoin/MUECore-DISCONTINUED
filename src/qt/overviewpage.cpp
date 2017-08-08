@@ -162,13 +162,13 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     if(fLiteMode) return;
 
     // Disable any PS UI for masternode or when autobackup is disabled or failed for whatever reason
-    if(fMasterNode || nWalletBackups <= 0){
+    if(fMasterNode || nWalletBackups <= 0) {
         DisablePrivateSendCompletely();
         if (nWalletBackups <= 0) {
             ui->labelPrivateSendEnabled->setToolTip(tr("Automatic backups are disabled, no mixing available!"));
         }
     } else {
-        if(!fEnablePrivateSend){
+        if(!fEnablePrivateSend) {
             ui->togglePrivateSend->setText(tr("Start Mixing"));
         } else {
             ui->togglePrivateSend->setText(tr("Stop Mixing"));
@@ -228,7 +228,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     static int cachedTxLocks = 0;
 
-    if(cachedTxLocks != nCompleteTXLocks){
+    if(cachedTxLocks != nCompleteTXLocks) {
         cachedTxLocks = nCompleteTXLocks;
         ui->listTransactions->update();
     }
@@ -244,10 +244,10 @@ void OverviewPage::updateWatchOnlyLabels(bool showWatchOnly)
     ui->labelWatchPending->setVisible(showWatchOnly);   // show watch-only pending balance
     ui->labelWatchTotal->setVisible(showWatchOnly);     // show watch-only total balance
 
-    if (!showWatchOnly){
+    if (!showWatchOnly) {
         ui->labelWatchImmature->hide();
     }
-    else{
+    else {
         ui->labelBalance->setIndent(20);
         ui->labelUnconfirmed->setIndent(20);
         ui->labelImmature->setIndent(20);
@@ -380,8 +380,8 @@ void OverviewPage::updatePrivateSendProgress()
                                           .arg(strMaxToAnonymize));
         strMaxToAnonymize = strMaxToAnonymize.remove(strMaxToAnonymize.indexOf("."), BitcoinUnits::decimals(nDisplayUnit) + 1);
         strAmountAndRounds = "<span style='color:red;'>" +
-                QString(BitcoinUnits::factor(nDisplayUnit) == 1 ? "" : "~") + strMaxToAnonymize +
-                " / " + tr("%n Rounds", "", nPrivateSendRounds) + "</span>";
+                             QString(BitcoinUnits::factor(nDisplayUnit) == 1 ? "" : "~") + strMaxToAnonymize +
+                             " / " + tr("%n Rounds", "", nPrivateSendRounds) + "</span>";
     }
     ui->labelAmountRounds->setText(strAmountAndRounds);
 
@@ -425,8 +425,8 @@ void OverviewPage::updatePrivateSendProgress()
                           tr("Mixed") + ": %3%<br/>" +
                           tr("Anonymized") + ": %4%<br/>" +
                           tr("Denominated inputs have %5 of %n rounds on average", "", nPrivateSendRounds))
-            .arg(progress).arg(denomPart).arg(anonNormPart).arg(anonFullPart)
-            .arg(nAverageAnonymizedRounds);
+                         .arg(progress).arg(denomPart).arg(anonNormPart).arg(anonFullPart)
+                         .arg(nAverageAnonymizedRounds);
     ui->privateSendProgress->setToolTip(strToolPip);
 }
 
@@ -507,17 +507,17 @@ void OverviewPage::privateSendStatus()
                 LogPrintf("OverviewPage::privateSendStatus -- WARNING! Something went wrong on automatic backup: %s\n", strBackupWarning);
 
                 QMessageBox::warning(this, tr("PrivateSend"),
-                    tr("WARNING! Something went wrong on automatic backup") + ":<br><br>" + strBackupWarning.c_str(),
-                    QMessageBox::Ok, QMessageBox::Ok);
+                                     tr("WARNING! Something went wrong on automatic backup") + ":<br><br>" + strBackupWarning.c_str(),
+                                     QMessageBox::Ok, QMessageBox::Ok);
             }
             if (!strBackupError.empty()) {
                 // Things are really broken, warn user and stop mixing immediately
                 LogPrintf("OverviewPage::privateSendStatus -- ERROR! Failed to create automatic backup: %s\n", strBackupError);
 
                 QMessageBox::warning(this, tr("PrivateSend"),
-                    tr("ERROR! Failed to create automatic backup") + ":<br><br>" + strBackupError.c_str() + "<br>" +
-                    tr("Mixing is disabled, please close your wallet and fix the issue!"),
-                    QMessageBox::Ok, QMessageBox::Ok);
+                                     tr("ERROR! Failed to create automatic backup") + ":<br><br>" + strBackupError.c_str() + "<br>" +
+                                     tr("Mixing is disabled, please close your wallet and fix the issue!"),
+                                     QMessageBox::Ok, QMessageBox::Ok);
             }
         }
     }
@@ -559,7 +559,7 @@ void OverviewPage::privateSendStatus()
 
     ui->labelPrivateSendLastMessage->setText(s);
 
-    if(darkSendPool.nSessionDenom == 0){
+    if(darkSendPool.nSessionDenom == 0) {
         ui->labelSubmittedDenom->setText(tr("N/A"));
     } else {
         QString strDenom(darkSendPool.GetDenominationsToString(darkSendPool.nSessionDenom).c_str());
@@ -568,40 +568,40 @@ void OverviewPage::privateSendStatus()
 
 }
 
-void OverviewPage::privateSendAuto(){
+void OverviewPage::privateSendAuto() {
     darkSendPool.DoAutomaticDenominating();
 }
 
-void OverviewPage::privateSendReset(){
+void OverviewPage::privateSendReset() {
     darkSendPool.ResetPool();
 
     QMessageBox::warning(this, tr("PrivateSend"),
-        tr("PrivateSend was successfully reset."),
-        QMessageBox::Ok, QMessageBox::Ok);
+                         tr("PrivateSend was successfully reset."),
+                         QMessageBox::Ok, QMessageBox::Ok);
 }
 
-void OverviewPage::privateSendInfo(){
+void OverviewPage::privateSendInfo() {
     HelpMessageDialog dlg(this, HelpMessageDialog::pshelp);
     dlg.exec();
 }
 
-void OverviewPage::togglePrivateSend(){
+void OverviewPage::togglePrivateSend() {
     QSettings settings;
     // Popup some information on first mixing
     QString hasMixed = settings.value("hasMixed").toString();
-    if(hasMixed.isEmpty()){
+    if(hasMixed.isEmpty()) {
         QMessageBox::information(this, tr("PrivateSend"),
-                tr("If you don't want to see internal PrivateSend fees/transactions select \"Most Common\" as Type on the \"Transactions\" tab."),
-                QMessageBox::Ok, QMessageBox::Ok);
+                                 tr("If you don't want to see internal PrivateSend fees/transactions select \"Most Common\" as Type on the \"Transactions\" tab."),
+                                 QMessageBox::Ok, QMessageBox::Ok);
         settings.setValue("hasMixed", "hasMixed");
     }
-    if(!fEnablePrivateSend){
+    if(!fEnablePrivateSend) {
         CAmount nMinAmount = vecPrivateSendDenominations.back() + PRIVATESEND_COLLATERAL*4;
-        if(currentBalance < nMinAmount){
+        if(currentBalance < nMinAmount) {
             QString strMinAmount(BitcoinUnits::formatWithUnit(nDisplayUnit, nMinAmount));
             QMessageBox::warning(this, tr("PrivateSend"),
-                tr("PrivateSend requires at least %1 to use.").arg(strMinAmount),
-                QMessageBox::Ok, QMessageBox::Ok);
+                                 tr("PrivateSend requires at least %1 to use.").arg(strMinAmount),
+                                 QMessageBox::Ok, QMessageBox::Ok);
             return;
         }
 
@@ -614,8 +614,8 @@ void OverviewPage::togglePrivateSend(){
                 //unlock was cancelled
                 darkSendPool.nCachedNumBlocks = std::numeric_limits<int>::max();
                 QMessageBox::warning(this, tr("PrivateSend"),
-                    tr("Wallet is locked and user declined to unlock. Disabling PrivateSend."),
-                    QMessageBox::Ok, QMessageBox::Ok);
+                                     tr("Wallet is locked and user declined to unlock. Disabling PrivateSend."),
+                                     QMessageBox::Ok, QMessageBox::Ok);
                 LogPrint("privatesend", "OverviewPage::togglePrivateSend -- Wallet is locked and user declined to unlock. Disabling PrivateSend.\n");
                 return;
             }
@@ -626,7 +626,7 @@ void OverviewPage::togglePrivateSend(){
     fEnablePrivateSend = !fEnablePrivateSend;
     darkSendPool.nCachedNumBlocks = std::numeric_limits<int>::max();
 
-    if(!fEnablePrivateSend){
+    if(!fEnablePrivateSend) {
         ui->togglePrivateSend->setText(tr("Start Mixing"));
         darkSendPool.UnlockCoins();
     } else {
@@ -634,7 +634,7 @@ void OverviewPage::togglePrivateSend(){
 
         /* show darksend configuration if client has defaults set */
 
-        if(nPrivateSendAmount == 0){
+        if(nPrivateSendAmount == 0) {
             DarksendConfig dlg(this);
             dlg.setModel(walletModel);
             dlg.exec();

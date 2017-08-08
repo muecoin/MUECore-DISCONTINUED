@@ -11,8 +11,8 @@
 #include <QStringList>
 
 BitcoinUnits::BitcoinUnits(QObject *parent):
-        QAbstractListModel(parent),
-        unitlist(availableUnits())
+    QAbstractListModel(parent),
+    unitlist(availableUnits())
 {
 }
 
@@ -46,22 +46,32 @@ QString BitcoinUnits::name(int unit)
     {
         switch(unit)
         {
-            case MUE: return QString("MUE");
-            case mMUE: return QString("mMUE");
-            case uMUE: return QString::fromUtf8("μMUE");
-            case Munits: return QString("Munits");
-            default: return QString("???");
+        case MUE:
+            return QString("MUE");
+        case mMUE:
+            return QString("mMUE");
+        case uMUE:
+            return QString::fromUtf8("μMUE");
+        case Munits:
+            return QString("Munits");
+        default:
+            return QString("???");
         }
     }
     else
     {
         switch(unit)
         {
-            case MUE: return QString("tMUE");
-            case mMUE: return QString("mtMUE");
-            case uMUE: return QString::fromUtf8("μtMUE");
-            case Munits: return QString("tMunits");
-            default: return QString("???");
+        case MUE:
+            return QString("tMUE");
+        case mMUE:
+            return QString("mtMUE");
+        case uMUE:
+            return QString::fromUtf8("μtMUE");
+        case Munits:
+            return QString("tMunits");
+        default:
+            return QString("???");
         }
     }
 }
@@ -72,22 +82,32 @@ QString BitcoinUnits::description(int unit)
     {
         switch(unit)
         {
-            case MUE: return QString("MonetaryUnit");
-            case mMUE: return QString("Milli-MonetaryUnit (1 / 1" THIN_SP_UTF8 "000)");
-            case uMUE: return QString("Micro-MonetaryUnit (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case Munits: return QString("Ten Nano-MonetaryUnit (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            default: return QString("???");
+        case MUE:
+            return QString("MonetaryUnit");
+        case mMUE:
+            return QString("Milli-MonetaryUnit (1 / 1" THIN_SP_UTF8 "000)");
+        case uMUE:
+            return QString("Micro-MonetaryUnit (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+        case Munits:
+            return QString("Ten Nano-MonetaryUnit (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+        default:
+            return QString("???");
         }
     }
     else
     {
         switch(unit)
         {
-            case MUE: return QString("TestMonetaryUnits");
-            case mMUE: return QString("Milli-TestMonetaryUnit (1 / 1" THIN_SP_UTF8 "000)");
-            case uMUE: return QString("Micro-TestMonetaryUnit (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case Munits: return QString("Ten Nano-TestMonetaryUnit (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            default: return QString("???");
+        case MUE:
+            return QString("TestMonetaryUnits");
+        case mMUE:
+            return QString("Milli-TestMonetaryUnit (1 / 1" THIN_SP_UTF8 "000)");
+        case uMUE:
+            return QString("Micro-TestMonetaryUnit (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+        case Munits:
+            return QString("Ten Nano-TestMonetaryUnit (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+        default:
+            return QString("???");
         }
     }
 }
@@ -96,11 +116,16 @@ qint64 BitcoinUnits::factor(int unit)
 {
     switch(unit)
     {
-    case MUE:  return 100000000;
-    case mMUE: return 100000;
-    case uMUE: return 100;
-    case Munits: return 1;
-    default:   return 100000000;
+    case MUE:
+        return 100000000;
+    case mMUE:
+        return 100000;
+    case uMUE:
+        return 100;
+    case Munits:
+        return 1;
+    default:
+        return 100000000;
     }
 }
 
@@ -108,11 +133,16 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case MUE: return 8;
-    case mMUE: return 5;
-    case uMUE: return 2;
-    case Munits: return 0;
-    default: return 0;
+    case MUE:
+        return 8;
+    case mMUE:
+        return 5;
+    case uMUE:
+        return 2;
+    case Munits:
+        return 0;
+    default:
+        return 0;
     }
 }
 

@@ -24,7 +24,7 @@ static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
 //  vote for masternode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70699;
+static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70700;
 static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_2 = 70700;
 
 extern CCriticalSection cs_vecPayees;
@@ -49,7 +49,7 @@ public:
     CMasternodePayee() :
         scriptPubKey(),
         vecVoteHashes()
-        {}
+    {}
 
     CMasternodePayee(CScript payee, uint256 hashIn) :
         scriptPubKey(payee),
@@ -66,11 +66,19 @@ public:
         READWRITE(vecVoteHashes);
     }
 
-    CScript GetPayee() { return scriptPubKey; }
+    CScript GetPayee() {
+        return scriptPubKey;
+    }
 
-    void AddVoteHash(uint256 hashIn) { vecVoteHashes.push_back(hashIn); }
-    std::vector<uint256> GetVoteHashes() { return vecVoteHashes; }
-    int GetVoteCount() { return vecVoteHashes.size(); }
+    void AddVoteHash(uint256 hashIn) {
+        vecVoteHashes.push_back(hashIn);
+    }
+    std::vector<uint256> GetVoteHashes() {
+        return vecVoteHashes;
+    }
+    int GetVoteCount() {
+        return vecVoteHashes.size();
+    }
 };
 
 // Keep track of votes for payees from masternodes
@@ -83,11 +91,11 @@ public:
     CMasternodeBlockPayees() :
         nBlockHeight(0),
         vecPayees()
-        {}
+    {}
     CMasternodeBlockPayees(int nBlockHeightIn) :
         nBlockHeight(nBlockHeightIn),
         vecPayees()
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -121,14 +129,14 @@ public:
         nBlockHeight(0),
         payee(),
         vchSig()
-        {}
+    {}
 
     CMasternodePaymentVote(CTxIn vinMasternode, int nBlockHeight, CScript payee) :
         vinMasternode(vinMasternode),
         nBlockHeight(nBlockHeight),
         payee(payee),
         vchSig()
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -154,8 +162,12 @@ public:
     bool IsValid(CNode* pnode, int nValidationHeight, std::string& strError);
     void Relay();
 
-    bool IsVerified() { return !vchSig.empty(); }
-    void MarkAsNotVerified() { vchSig.clear(); }
+    bool IsVerified() {
+        return !vchSig.empty();
+    }
+    void MarkAsNotVerified() {
+        vchSig.clear();
+    }
 
     std::string ToString() const;
 };
@@ -213,8 +225,12 @@ public:
     void FillBlockPayee(CMutableTransaction& txNew, int nBlockHeight, CAmount blockReward, CTxOut& txoutMasternodeRet);
     std::string ToString() const;
 
-    int GetBlockCount() { return mapMasternodeBlocks.size(); }
-    int GetVoteCount() { return mapMasternodePaymentVotes.size(); }
+    int GetBlockCount() {
+        return mapMasternodeBlocks.size();
+    }
+    int GetVoteCount() {
+        return mapMasternodePaymentVotes.size();
+    }
 
     bool IsEnoughData();
     int GetStorageLimit();

@@ -53,10 +53,10 @@ static int AppInitRawTx(int argc, char* argv[])
     {
         // First part of help message is specific to this utility
         std::string strUsage = _("MonetaryUnit Core mue-tx utility version") + " " + FormatFullVersion() + "\n\n" +
-            _("Usage:") + "\n" +
-              "  mue-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded mue transaction") + "\n" +
-              "  mue-tx [options] -create [commands]   " + _("Create hex-encoded mue transaction") + "\n" +
-              "\n";
+                               _("Usage:") + "\n" +
+                               "  mue-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded mue transaction") + "\n" +
+                               "  mue-tx [options] -create [commands]   " + _("Create hex-encoded mue transaction") + "\n" +
+                               "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());
 
@@ -79,10 +79,10 @@ static int AppInitRawTx(int argc, char* argv[])
         strUsage += HelpMessageOpt("outdata=[VALUE:]DATA", _("Add data-based output to TX"));
         strUsage += HelpMessageOpt("outscript=VALUE:SCRIPT", _("Add raw script output to TX"));
         strUsage += HelpMessageOpt("sign=SIGHASH-FLAGS", _("Add zero or more signatures to transaction") + ". " +
-            _("This command requires JSON registers:") +
-            _("prevtxs=JSON object") + ", " +
-            _("privatekeys=JSON object") + ". " +
-            _("See signrawtransaction docs for format of sighash flags, JSON objects."));
+                                   _("This command requires JSON registers:") +
+                                   _("prevtxs=JSON object") + ", " +
+                                   _("privatekeys=JSON object") + ". " +
+                                   _("See signrawtransaction docs for format of sighash flags, JSON objects."));
         fprintf(stdout, "%s", strUsage.c_str());
 
         strUsage = HelpMessageGroup(_("Register Commands:"));
@@ -115,8 +115,8 @@ static void RegisterSet(const string& strInput)
     // separate NAME:VALUE in string
     size_t pos = strInput.find(':');
     if ((pos == string::npos) ||
-        (pos == 0) ||
-        (pos == (strInput.size() - 1)))
+            (pos == 0) ||
+            (pos == (strInput.size() - 1)))
         throw runtime_error("Register input requires NAME:VALUE");
 
     string key = strInput.substr(0, pos);
@@ -130,8 +130,8 @@ static void RegisterLoad(const string& strInput)
     // separate NAME:FILENAME in string
     size_t pos = strInput.find(':');
     if ((pos == string::npos) ||
-        (pos == 0) ||
-        (pos == (strInput.size() - 1)))
+            (pos == 0) ||
+            (pos == (strInput.size() - 1)))
         throw runtime_error("Register load requires NAME:FILENAME");
 
     string key = strInput.substr(0, pos);
@@ -189,8 +189,8 @@ static void MutateTxAddInput(CMutableTransaction& tx, const string& strInput)
     // separate TXID:VOUT in string
     size_t pos = strInput.find(':');
     if ((pos == string::npos) ||
-        (pos == 0) ||
-        (pos == (strInput.size() - 1)))
+            (pos == 0) ||
+            (pos == (strInput.size() - 1)))
         throw runtime_error("TX input missing separator");
 
     // extract and validate TXID
@@ -218,8 +218,8 @@ static void MutateTxAddOutAddr(CMutableTransaction& tx, const string& strInput)
     // separate VALUE:ADDRESS in string
     size_t pos = strInput.find(':');
     if ((pos == string::npos) ||
-        (pos == 0) ||
-        (pos == (strInput.size() - 1)))
+            (pos == 0) ||
+            (pos == (strInput.size() - 1)))
         throw runtime_error("TX output missing separator");
 
     // extract and validate VALUE
@@ -276,7 +276,7 @@ static void MutateTxAddOutScript(CMutableTransaction& tx, const string& strInput
     // separate VALUE:SCRIPT in string
     size_t pos = strInput.find(':');
     if ((pos == string::npos) ||
-        (pos == 0))
+            (pos == 0))
         throw runtime_error("TX output missing separator");
 
     // extract and validate VALUE
@@ -428,7 +428,7 @@ static void MutateTxSign(CMutableTransaction& tx, const string& flagStr)
                 if (coins->IsAvailable(nOut) && coins->vout[nOut].scriptPubKey != scriptPubKey) {
                     string err("Previous output scriptPubKey mismatch:\n");
                     err = err + ScriptToAsmStr(coins->vout[nOut].scriptPubKey) + "\nvs:\n"+
-                        ScriptToAsmStr(scriptPubKey);
+                          ScriptToAsmStr(scriptPubKey);
                     throw runtime_error(err);
                 }
                 if ((unsigned int)nOut >= coins->vout.size())
@@ -440,7 +440,7 @@ static void MutateTxSign(CMutableTransaction& tx, const string& flagStr)
             // if redeemScript given and private keys given,
             // add redeemScript to the tempKeystore so it can be signed:
             if (fGivenKeys && scriptPubKey.IsPayToScriptHash() &&
-                prevOut.exists("redeemScript")) {
+                    prevOut.exists("redeemScript")) {
                 UniValue v = prevOut["redeemScript"];
                 vector<unsigned char> rsData(ParseHexUV(v, "redeemScript"));
                 CScript redeemScript(rsData.begin(), rsData.end());
@@ -522,7 +522,9 @@ static void MutateTx(CMutableTransaction& tx, const string& command,
         MutateTxAddOutScript(tx, commandVal);
 
     else if (command == "sign") {
-        if (!ecc) { ecc.reset(new Secp256k1Init()); }
+        if (!ecc) {
+            ecc.reset(new Secp256k1Init());
+        }
         MutateTxSign(tx, commandVal);
     }
 
@@ -596,7 +598,7 @@ static int CommandLineRawTx(int argc, char* argv[])
     try {
         // Skip switches; Permit common stdin convention "-"
         while (argc > 1 && IsSwitchChar(argv[1][0]) &&
-               (argv[1][1] != 0)) {
+                (argv[1][1] != 0)) {
             argc--;
             argv++;
         }

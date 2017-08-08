@@ -62,7 +62,9 @@ const CBlockIndex *CChain::FindFork(const CBlockIndex *pindex) const {
 }
 
 /** Turn the lowest '1' bit in the binary representation of a number into a '0'. */
-int static inline InvertLowestOne(int n) { return n & (n - 1); }
+int static inline InvertLowestOne(int n) {
+    return n & (n - 1);
+}
 
 /** Compute what height to jump back to with the CBlockIndex::pskip pointer. */
 int static inline GetSkipHeight(int height) {
@@ -86,9 +88,9 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
         int heightSkip = GetSkipHeight(heightWalk);
         int heightSkipPrev = GetSkipHeight(heightWalk - 1);
         if (pindexWalk->pskip != NULL &&
-            (heightSkip == height ||
-             (heightSkip > height && !(heightSkipPrev < heightSkip - 2 &&
-                                       heightSkipPrev >= height)))) {
+                (heightSkip == height ||
+                 (heightSkip > height && !(heightSkipPrev < heightSkip - 2 &&
+                                           heightSkipPrev >= height)))) {
             // Only follow pskip if pprev->pskip isn't better than pskip->pprev.
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;

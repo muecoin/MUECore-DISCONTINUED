@@ -102,12 +102,12 @@ public:
 
     virtual bool CheckLockTime(const CScriptNum& nLockTime) const
     {
-         return false;
+        return false;
     }
 
     virtual bool CheckSequence(const CScriptNum& nSequence) const
     {
-         return false;
+        return false;
     }
 
     virtual ~BaseSignatureChecker() {}

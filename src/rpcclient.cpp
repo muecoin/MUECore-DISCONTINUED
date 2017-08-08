@@ -92,7 +92,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "signrawtransaction", 1 },
     { "signrawtransaction", 2 },
     { "sendrawtransaction", 1 },
-    { "sendrawtransaction", 2 },    
+    { "sendrawtransaction", 2 },
     { "fundrawtransaction", 1 },
     { "gettxout", 1 },
     { "gettxout", 2 },
@@ -162,7 +162,7 @@ UniValue ParseNonRFCJSONValue(const std::string& strVal)
 {
     UniValue jVal;
     if (!jVal.read(std::string("[")+strVal+std::string("]")) ||
-        !jVal.isArray() || jVal.size()!=1)
+            !jVal.isArray() || jVal.size()!=1)
         throw runtime_error(string("Error parsing JSON:")+strVal);
     return jVal[0];
 }

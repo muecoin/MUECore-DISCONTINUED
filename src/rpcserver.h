@@ -23,10 +23,10 @@ class CRPCCommand;
 
 namespace RPCServer
 {
-    void OnStarted(boost::function<void ()> slot);
-    void OnStopped(boost::function<void ()> slot);
-    void OnPreCommand(boost::function<void (const CRPCCommand&)> slot);
-    void OnPostCommand(boost::function<void (const CRPCCommand&)> slot);
+void OnStarted(boost::function<void ()> slot);
+void OnStopped(boost::function<void ()> slot);
+void OnPreCommand(boost::function<void (const CRPCCommand&)> slot);
+void OnPostCommand(boost::function<void (const CRPCCommand&)> slot);
 }
 
 class CBlockIndex;
@@ -39,7 +39,9 @@ public:
     std::string strMethod;
     UniValue params;
 
-    JSONRequest() { id = NullUniValue; }
+    JSONRequest() {
+        id = NullUniValue;
+    }
     void parse(const UniValue& valRequest);
 };
 
@@ -70,7 +72,7 @@ void RPCTypeCheck(const UniValue& params,
   Use like: RPCTypeCheckObj(object, boost::assign::map_list_of("name", str_type)("value", int_type));
 */
 void RPCTypeCheckObj(const UniValue& o,
-                  const std::map<std::string, UniValue::VType>& typesExpected, bool fAllowNull=false);
+                     const std::map<std::string, UniValue::VType>& typesExpected, bool fAllowNull=false);
 
 /** Opaque base class for timers returned by NewTimerFunc.
  * This provides no methods at the moment, but makes sure that delete

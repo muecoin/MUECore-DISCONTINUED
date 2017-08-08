@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-    class DarksendConfig;
+class DarksendConfig;
 }
 class WalletModel;
 

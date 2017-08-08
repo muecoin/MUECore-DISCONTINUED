@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(MempoolRemoveTest)
     testPool.remove(txParent, removed, true);
     BOOST_CHECK_EQUAL(removed.size(), 1);
     removed.clear();
-    
+
     // Parent, children, grandchildren:
     testPool.addUnchecked(txParent.GetHash(), entry.FromTx(txParent));
     for (int i = 0; i < 3; i++)

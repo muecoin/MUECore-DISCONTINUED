@@ -35,7 +35,7 @@ import copy
 import mue_hash
 
 BIP0031_VERSION = 60000
-MY_VERSION = 70206  # current MIN_PEER_PROTO_VERSION
+MY_VERSION = 70700  # current MIN_PEER_PROTO_VERSION
 MY_SUBVERSION = b"/python-mininode-tester:0.0.2/"
 
 MAX_INV_SZ = 50000
@@ -44,7 +44,7 @@ MAX_BLOCK_SIZE = 1000000
 COIN = 100000000L # 1 btc in satoshis
 
 # Keep our own socket map for asyncore, so that we can track disconnects
-# ourselves (to workaround an issue with closing an asyncore socket when 
+# ourselves (to workaround an issue with closing an asyncore socket when
 # using select)
 mininode_socket_map = dict()
 

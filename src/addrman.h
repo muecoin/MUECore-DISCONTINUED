@@ -166,8 +166,8 @@ public:
 //! the maximum number of nodes to return in a getaddr call
 #define ADDRMAN_GETADDR_MAX 2500
 
-/** 
- * Stochastical (IP) address manager 
+/**
+ * Stochastical (IP) address manager
  */
 class CAddrMan
 {
@@ -569,9 +569,9 @@ public:
             Check();
         }
     }
-    
+
     //! Ensure that bucket placement is always the same for testing purposes.
-    void MakeDeterministic(){
+    void MakeDeterministic() {
         nKey.SetNull(); //Do not use outside of tests.
     }
 

@@ -19,7 +19,7 @@ class SendCoinsEntry;
 class SendCoinsRecipient;
 
 namespace Ui {
-    class SendCoinsDialog;
+class SendCoinsDialog;
 }
 
 QT_BEGIN_NAMESPACE

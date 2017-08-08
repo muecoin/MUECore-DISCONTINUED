@@ -10,11 +10,11 @@
 #include <boost/assign/std/vector.hpp> // for 'operator+=()'
 #include <boost/assert.hpp>
 #include <boost/test/unit_test.hpp>
-                    
+
 using namespace std;
 using namespace boost::assign; // bring 'operator+=()' into scope
 using namespace boost::filesystem;
-         
+
 // Test if a string consists entirely of null characters
 bool is_null_key(const vector<unsigned char>& key) {
     bool isnull = true;
@@ -24,9 +24,9 @@ bool is_null_key(const vector<unsigned char>& key) {
 
     return isnull;
 }
- 
+
 BOOST_FIXTURE_TEST_SUITE(dbwrapper_tests, BasicTestingSetup)
-                       
+
 BOOST_AUTO_TEST_CASE(dbwrapper)
 {
     // Perform tests both obfuscated and non-obfuscated.
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(existing_data_no_obfuscate)
     // Now, set up another wrapper that wants to obfuscate the same directory
     CDBWrapper odbw(ph, (1 << 10), false, false, true);
 
-    // Check that the key/val we wrote with unobfuscated wrapper exists and 
+    // Check that the key/val we wrote with unobfuscated wrapper exists and
     // is readable.
     uint256 res2;
     BOOST_CHECK(odbw.Read(key, res2));
@@ -160,13 +160,13 @@ BOOST_AUTO_TEST_CASE(existing_data_no_obfuscate)
 
     uint256 in2 = GetRandHash();
     uint256 res3;
- 
+
     // Check that we can write successfully
     BOOST_CHECK(odbw.Write(key, in2));
     BOOST_CHECK(odbw.Read(key, res3));
     BOOST_CHECK_EQUAL(res3.ToString(), in2.ToString());
 }
-                        
+
 // Ensure that we start obfuscating during a reindex.
 BOOST_AUTO_TEST_CASE(existing_data_reindex)
 {
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(existing_data_reindex)
 
     uint256 in2 = GetRandHash();
     uint256 res3;
- 
+
     // Check that we can write successfully
     BOOST_CHECK(odbw.Write(key, in2));
     BOOST_CHECK(odbw.Read(key, res3));
@@ -249,7 +249,9 @@ struct StringContentsSerializer {
         str += s;
         return *this;
     }
-    StringContentsSerializer& operator+=(const StringContentsSerializer& s) { return *this += s.str; }
+    StringContentsSerializer& operator+=(const StringContentsSerializer& s) {
+        return *this += s.str;
+    }
 
     ADD_SERIALIZE_METHODS;
 

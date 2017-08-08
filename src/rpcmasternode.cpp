@@ -32,7 +32,7 @@ UniValue privatesend(const UniValue& params, bool fHelp)
             "  start       - Start mixing\n"
             "  stop        - Stop mixing\n"
             "  reset       - Reset mixing\n"
-            );
+        );
 
     if(params[0].get_str() == "start") {
         {
@@ -83,7 +83,7 @@ UniValue getpoolinfo(const UniValue& params, bool fHelp)
     if (pwalletMain) {
         obj.push_back(Pair("keys_left",     pwalletMain->nKeysLeftSinceAutoBackup));
         obj.push_back(Pair("warnings",      pwalletMain->nKeysLeftSinceAutoBackup < PRIVATESEND_KEYS_THRESHOLD_WARNING
-                                                ? "WARNING: keypool is almost depleted!" : ""));
+                           ? "WARNING: keypool is almost depleted!" : ""));
     }
 
     return obj;
@@ -101,30 +101,30 @@ UniValue masternode(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "DEPRECATED, please use start-all instead");
 
     if (fHelp  ||
-        (strCommand != "start" && strCommand != "start-alias" && strCommand != "start-all" && strCommand != "start-missing" &&
-         strCommand != "start-disabled" && strCommand != "list" && strCommand != "list-conf" && strCommand != "count" &&
-         strCommand != "debug" && strCommand != "current" && strCommand != "winner" && strCommand != "winners" && strCommand != "genkey" &&
-         strCommand != "connect" && strCommand != "outputs" && strCommand != "status"))
-            throw std::runtime_error(
-                "masternode \"command\"...\n"
-                "Set of commands to execute masternode related actions\n"
-                "\nArguments:\n"
-                "1. \"command\"        (string or set of strings, required) The command to execute\n"
-                "\nAvailable commands:\n"
-                "  count        - Print number of all known masternodes (optional: 'ps', 'enabled', 'all', 'qualify')\n"
-                "  current      - Print info on current masternode winner to be paid the next block (calculated locally)\n"
-                "  debug        - Print masternode status\n"
-                "  genkey       - Generate new masternodeprivkey\n"
-                "  outputs      - Print masternode compatible outputs\n"
-                "  start        - Start local Hot masternode configured in mue.conf\n"
-                "  start-alias  - Start single remote masternode by assigned alias configured in masternode.conf\n"
-                "  start-<mode> - Start remote masternodes configured in masternode.conf (<mode>: 'all', 'missing', 'disabled')\n"
-                "  status       - Print masternode status information\n"
-                "  list         - Print list of all known masternodes (see masternodelist for more info)\n"
-                "  list-conf    - Print masternode.conf in JSON format\n"
-                "  winner       - Print info on next masternode winner to vote for\n"
-                "  winners      - Print list of masternode winners\n"
-                );
+            (strCommand != "start" && strCommand != "start-alias" && strCommand != "start-all" && strCommand != "start-missing" &&
+             strCommand != "start-disabled" && strCommand != "list" && strCommand != "list-conf" && strCommand != "count" &&
+             strCommand != "debug" && strCommand != "current" && strCommand != "winner" && strCommand != "winners" && strCommand != "genkey" &&
+             strCommand != "connect" && strCommand != "outputs" && strCommand != "status"))
+        throw std::runtime_error(
+            "masternode \"command\"...\n"
+            "Set of commands to execute masternode related actions\n"
+            "\nArguments:\n"
+            "1. \"command\"        (string or set of strings, required) The command to execute\n"
+            "\nAvailable commands:\n"
+            "  count        - Print number of all known masternodes (optional: 'ps', 'enabled', 'all', 'qualify')\n"
+            "  current      - Print info on current masternode winner to be paid the next block (calculated locally)\n"
+            "  debug        - Print masternode status\n"
+            "  genkey       - Generate new masternodeprivkey\n"
+            "  outputs      - Print masternode compatible outputs\n"
+            "  start        - Start local Hot masternode configured in mue.conf\n"
+            "  start-alias  - Start single remote masternode by assigned alias configured in masternode.conf\n"
+            "  start-<mode> - Start remote masternodes configured in masternode.conf (<mode>: 'all', 'missing', 'disabled')\n"
+            "  status       - Print masternode status information\n"
+            "  list         - Print list of all known masternodes (see masternodelist for more info)\n"
+            "  list-conf    - Print masternode.conf in JSON format\n"
+            "  winner       - Print info on next masternode winner to vote for\n"
+            "  winners      - Print list of masternode winners\n"
+        );
 
     if (strCommand == "list")
     {
@@ -176,8 +176,8 @@ UniValue masternode(const UniValue& params, bool fHelp)
 
         if (strMode == "all")
             return strprintf("Total: %d (PS Compatible: %d / Enabled: %d / Qualify: %d)",
-                mnodeman.size(), mnodeman.CountEnabled(MIN_PRIVATESEND_PEER_PROTO_VERSION),
-                mnodeman.CountEnabled(), nCount);
+                             mnodeman.size(), mnodeman.CountEnabled(MIN_PRIVATESEND_PEER_PROTO_VERSION),
+                             mnodeman.CountEnabled(), nCount);
     }
 
     if (strCommand == "current" || strCommand == "winner")
@@ -201,9 +201,9 @@ UniValue masternode(const UniValue& params, bool fHelp)
         obj.push_back(Pair("vin",           winner->vin.prevout.ToStringShort()));
         obj.push_back(Pair("payee",         CBitcoinAddress(winner->pubKeyCollateralAddress.GetID()).ToString()));
         obj.push_back(Pair("lastseen",      (winner->lastPing == CMasternodePing()) ? winner->sigTime :
-                                                    winner->lastPing.sigTime));
+                           winner->lastPing.sigTime));
         obj.push_back(Pair("activeseconds", (winner->lastPing == CMasternodePing()) ? 0 :
-                                                    (winner->lastPing.sigTime - winner->sigTime)));
+                           (winner->lastPing.sigTime - winner->sigTime)));
         return obj;
     }
 
@@ -232,7 +232,7 @@ UniValue masternode(const UniValue& params, bool fHelp)
             EnsureWalletIsUnlocked();
         }
 
-        if(activeMasternode.nState != ACTIVE_MASTERNODE_STARTED){
+        if(activeMasternode.nState != ACTIVE_MASTERNODE_STARTED) {
             activeMasternode.nState = ACTIVE_MASTERNODE_INITIAL; // TODO: consider better way
             activeMasternode.ManageState();
         }
@@ -455,28 +455,28 @@ UniValue masternodelist(const UniValue& params, bool fHelp)
                 strMode != "protocol" && strMode != "payee" && strMode != "rank" && strMode != "status"))
     {
         throw std::runtime_error(
-                "masternodelist ( \"mode\" \"filter\" )\n"
-                "Get a list of masternodes in different modes\n"
-                "\nArguments:\n"
-                "1. \"mode\"      (string, optional/required to use filter, defaults = status) The mode to run list in\n"
-                "2. \"filter\"    (string, optional) Filter results. Partial match by outpoint by default in all modes,\n"
-                "                                    additional matches in some modes are also available\n"
-                "\nAvailable modes:\n"
-                "  activeseconds  - Print number of seconds masternode recognized by the network as enabled\n"
-                "                   (since latest issued \"masternode start/start-many/start-alias\")\n"
-                "  addr           - Print ip address associated with a masternode (can be additionally filtered, partial match)\n"
-                "  full           - Print info in format 'status protocol payee lastseen activeseconds lastpaidtime lastpaidblock IP'\n"
-                "                   (can be additionally filtered, partial match)\n"
-                "  lastpaidblock  - Print the last block height a node was paid on the network\n"
-                "  lastpaidtime   - Print the last time a node was paid on the network\n"
-                "  lastseen       - Print timestamp of when a masternode was last seen on the network\n"
-                "  payee          - Print MonetaryUnit address associated with a masternode (can be additionally filtered,\n"
-                "                   partial match)\n"
-                "  protocol       - Print protocol of a masternode (can be additionally filtered, exact match))\n"
-                "  rank           - Print rank of a masternode based on current block\n"
-                "  status         - Print masternode status: PRE_ENABLED / ENABLED / EXPIRED / WATCHDOG_EXPIRED / NEW_START_REQUIRED /\n"
-                "                   UPDATE_REQUIRED / POSE_BAN / OUTPOINT_SPENT (can be additionally filtered, partial match)\n"
-                );
+            "masternodelist ( \"mode\" \"filter\" )\n"
+            "Get a list of masternodes in different modes\n"
+            "\nArguments:\n"
+            "1. \"mode\"      (string, optional/required to use filter, defaults = status) The mode to run list in\n"
+            "2. \"filter\"    (string, optional) Filter results. Partial match by outpoint by default in all modes,\n"
+            "                                    additional matches in some modes are also available\n"
+            "\nAvailable modes:\n"
+            "  activeseconds  - Print number of seconds masternode recognized by the network as enabled\n"
+            "                   (since latest issued \"masternode start/start-many/start-alias\")\n"
+            "  addr           - Print ip address associated with a masternode (can be additionally filtered, partial match)\n"
+            "  full           - Print info in format 'status protocol payee lastseen activeseconds lastpaidtime lastpaidblock IP'\n"
+            "                   (can be additionally filtered, partial match)\n"
+            "  lastpaidblock  - Print the last block height a node was paid on the network\n"
+            "  lastpaidtime   - Print the last time a node was paid on the network\n"
+            "  lastseen       - Print timestamp of when a masternode was last seen on the network\n"
+            "  payee          - Print MonetaryUnit address associated with a masternode (can be additionally filtered,\n"
+            "                   partial match)\n"
+            "  protocol       - Print protocol of a masternode (can be additionally filtered, exact match))\n"
+            "  rank           - Print rank of a masternode based on current block\n"
+            "  status         - Print masternode status: PRE_ENABLED / ENABLED / EXPIRED / WATCHDOG_EXPIRED / NEW_START_REQUIRED /\n"
+            "                   UPDATE_REQUIRED / POSE_BAN / OUTPOINT_SPENT (can be additionally filtered, partial match)\n"
+        );
     }
 
     if (strMode == "full" || strMode == "lastpaidtime" || strMode == "lastpaidblock") {
@@ -501,22 +501,22 @@ UniValue masternodelist(const UniValue& params, bool fHelp)
             } else if (strMode == "addr") {
                 std::string strAddress = mn.addr.ToString();
                 if (strFilter !="" && strAddress.find(strFilter) == std::string::npos &&
-                    strOutpoint.find(strFilter) == std::string::npos) continue;
+                        strOutpoint.find(strFilter) == std::string::npos) continue;
                 obj.push_back(Pair(strOutpoint, strAddress));
             } else if (strMode == "full") {
                 std::ostringstream streamFull;
                 streamFull << std::setw(18) <<
-                               mn.GetStatus() << " " <<
-                               mn.nProtocolVersion << " " <<
-                               CBitcoinAddress(mn.pubKeyCollateralAddress.GetID()).ToString() << " " <<
-                               (int64_t)mn.lastPing.sigTime << " " << std::setw(8) <<
-                               (int64_t)(mn.lastPing.sigTime - mn.sigTime) << " " << std::setw(10) <<
-                               mn.GetLastPaidTime() << " "  << std::setw(6) <<
-                               mn.GetLastPaidBlock() << " " <<
-                               mn.addr.ToString();
+                           mn.GetStatus() << " " <<
+                           mn.nProtocolVersion << " " <<
+                           CBitcoinAddress(mn.pubKeyCollateralAddress.GetID()).ToString() << " " <<
+                           (int64_t)mn.lastPing.sigTime << " " << std::setw(8) <<
+                           (int64_t)(mn.lastPing.sigTime - mn.sigTime) << " " << std::setw(10) <<
+                           mn.GetLastPaidTime() << " "  << std::setw(6) <<
+                           mn.GetLastPaidBlock() << " " <<
+                           mn.addr.ToString();
                 std::string strFull = streamFull.str();
                 if (strFilter !="" && strFull.find(strFilter) == std::string::npos &&
-                    strOutpoint.find(strFilter) == std::string::npos) continue;
+                        strOutpoint.find(strFilter) == std::string::npos) continue;
                 obj.push_back(Pair(strOutpoint, strFull));
             } else if (strMode == "lastpaidblock") {
                 if (strFilter !="" && strOutpoint.find(strFilter) == std::string::npos) continue;
@@ -531,16 +531,16 @@ UniValue masternodelist(const UniValue& params, bool fHelp)
                 CBitcoinAddress address(mn.pubKeyCollateralAddress.GetID());
                 std::string strPayee = address.ToString();
                 if (strFilter !="" && strPayee.find(strFilter) == std::string::npos &&
-                    strOutpoint.find(strFilter) == std::string::npos) continue;
+                        strOutpoint.find(strFilter) == std::string::npos) continue;
                 obj.push_back(Pair(strOutpoint, strPayee));
             } else if (strMode == "protocol") {
                 if (strFilter !="" && strFilter != strprintf("%d", mn.nProtocolVersion) &&
-                    strOutpoint.find(strFilter) == std::string::npos) continue;
+                        strOutpoint.find(strFilter) == std::string::npos) continue;
                 obj.push_back(Pair(strOutpoint, (int64_t)mn.nProtocolVersion));
             } else if (strMode == "status") {
                 std::string strStatus = mn.GetStatus();
                 if (strFilter !="" && strStatus.find(strFilter) == std::string::npos &&
-                    strOutpoint.find(strFilter) == std::string::npos) continue;
+                        strOutpoint.find(strFilter) == std::string::npos) continue;
                 obj.push_back(Pair(strOutpoint, strStatus));
             }
         }
@@ -572,18 +572,18 @@ UniValue masternodebroadcast(const UniValue& params, bool fHelp)
         strCommand = params[0].get_str();
 
     if (fHelp  ||
-        (strCommand != "create-alias" && strCommand != "create-all" && strCommand != "decode" && strCommand != "relay"))
+            (strCommand != "create-alias" && strCommand != "create-all" && strCommand != "decode" && strCommand != "relay"))
         throw std::runtime_error(
-                "masternodebroadcast \"command\"...\n"
-                "Set of commands to create and relay masternode broadcast messages\n"
-                "\nArguments:\n"
-                "1. \"command\"        (string or set of strings, required) The command to execute\n"
-                "\nAvailable commands:\n"
-                "  create-alias  - Create single remote masternode broadcast message by assigned alias configured in masternode.conf\n"
-                "  create-all    - Create remote masternode broadcast messages for all masternodes configured in masternode.conf\n"
-                "  decode        - Decode masternode broadcast message\n"
-                "  relay         - Relay masternode broadcast message to the network\n"
-                );
+            "masternodebroadcast \"command\"...\n"
+            "Set of commands to create and relay masternode broadcast messages\n"
+            "\nArguments:\n"
+            "1. \"command\"        (string or set of strings, required) The command to execute\n"
+            "\nAvailable commands:\n"
+            "  create-alias  - Create single remote masternode broadcast message by assigned alias configured in masternode.conf\n"
+            "  create-all    - Create remote masternode broadcast messages for all masternodes configured in masternode.conf\n"
+            "  decode        - Decode masternode broadcast message\n"
+            "  relay         - Relay masternode broadcast message to the network\n"
+        );
 
     if (strCommand == "create-alias")
     {
@@ -741,9 +741,9 @@ UniValue masternodebroadcast(const UniValue& params, bool fHelp)
     {
         if (params.size() < 2 || params.size() > 3)
             throw JSONRPCError(RPC_INVALID_PARAMETER,   "masternodebroadcast relay \"hexstring\" ( fast )\n"
-                                                        "\nArguments:\n"
-                                                        "1. \"hex\"      (string, required) Broadcast messages hex string\n"
-                                                        "2. fast       (string, optional) If none, using safe method\n");
+                               "\nArguments:\n"
+                               "1. \"hex\"      (string, required) Broadcast messages hex string\n"
+                               "2. fast       (string, optional) If none, using safe method\n");
 
         std::vector<CMasternodeBroadcast> vecMnb;
 

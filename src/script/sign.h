@@ -22,7 +22,9 @@ protected:
 
 public:
     BaseSignatureCreator(const CKeyStore* keystoreIn) : keystore(keystoreIn) {}
-    const CKeyStore& KeyStore() const { return *keystore; };
+    const CKeyStore& KeyStore() const {
+        return *keystore;
+    };
     virtual ~BaseSignatureCreator() {}
     virtual const BaseSignatureChecker& Checker() const =0;
 
@@ -39,7 +41,9 @@ class TransactionSignatureCreator : public BaseSignatureCreator {
 
 public:
     TransactionSignatureCreator(const CKeyStore* keystoreIn, const CTransaction* txToIn, unsigned int nInIn, int nHashTypeIn=SIGHASH_ALL);
-    const BaseSignatureChecker& Checker() const { return checker; }
+    const BaseSignatureChecker& Checker() const {
+        return checker;
+    }
     bool CreateSig(std::vector<unsigned char>& vchSig, const CKeyID& keyid, const CScript& scriptCode) const;
 };
 

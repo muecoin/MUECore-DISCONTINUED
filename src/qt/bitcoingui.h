@@ -95,6 +95,7 @@ private:
     QAction *overviewAction;
     QAction *historyAction;
     QAction *masternodeAction;
+    QAction *muebankAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
     QAction *sendCoinsMenuAction;

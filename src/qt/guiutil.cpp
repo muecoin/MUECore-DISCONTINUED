@@ -151,7 +151,7 @@ bool parseBitcoinURI(const QUrl &uri, SendCoinsRecipient *out)
     QUrlQuery uriQuery(uri);
     QList<QPair<QString, QString> > items = uriQuery.queryItems();
 #endif
-    
+
     rv.fUseInstantSend = false;
     for (QList<QPair<QString, QString> >::iterator i = items.begin(); i != items.end(); i++)
     {
@@ -239,7 +239,7 @@ QString formatBitcoinURI(const SendCoinsRecipient &info)
         ret += QString("%1message=%2").arg(paramCount == 0 ? "?" : "&").arg(msg);
         paramCount++;
     }
-    
+
     if(info.fUseInstantSend)
     {
         ret += QString("%1IS=1").arg(paramCount == 0 ? "?" : "&");
@@ -304,8 +304,8 @@ QString getEntryData(QAbstractItemView *view, int column, int role)
 }
 
 QString getSaveFileName(QWidget *parent, const QString &caption, const QString &dir,
-    const QString &filter,
-    QString *selectedSuffixOut)
+                        const QString &filter,
+                        QString *selectedSuffixOut)
 {
     QString selectedFilter;
     QString myDir;
@@ -354,8 +354,8 @@ QString getSaveFileName(QWidget *parent, const QString &caption, const QString &
 }
 
 QString getOpenFileName(QWidget *parent, const QString &caption, const QString &dir,
-    const QString &filter,
-    QString *selectedSuffixOut)
+                        const QString &filter,
+                        QString *selectedSuffixOut)
 {
     QString selectedFilter;
     QString myDir;
@@ -410,10 +410,10 @@ bool checkPoint(const QPoint &p, const QWidget *w)
 bool isObscured(QWidget *w)
 {
     return !(checkPoint(QPoint(0, 0), w)
-        && checkPoint(QPoint(w->width() - 1, 0), w)
-        && checkPoint(QPoint(0, w->height() - 1), w)
-        && checkPoint(QPoint(w->width() - 1, w->height() - 1), w)
-        && checkPoint(QPoint(w->width() / 2, w->height() / 2), w));
+             && checkPoint(QPoint(w->width() - 1, 0), w)
+             && checkPoint(QPoint(0, w->height() - 1), w)
+             && checkPoint(QPoint(w->width() - 1, w->height() - 1), w)
+             && checkPoint(QPoint(w->width() / 2, w->height() / 2), w));
 }
 
 void openDebugLogfile()
@@ -477,11 +477,11 @@ void SubstituteFonts(const QString& language)
         {
             /* 10.10 or later system */
             if (language == "zh_CN" || language == "zh_TW" || language == "zh_HK") // traditional or simplified Chinese
-              QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Heiti SC");
+                QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Heiti SC");
             else if (language == "ja") // Japanesee
-              QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Songti SC");
+                QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Songti SC");
             else
-              QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Lucida Grande");
+                QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Lucida Grande");
         }
     }
 #endif
@@ -600,7 +600,7 @@ void TableViewLastColumnResizingFixer::on_sectionResized(int logicalIndex, int o
     int remainingWidth = getAvailableWidthForColumn(logicalIndex);
     if (newSize > remainingWidth)
     {
-       resizeColumn(logicalIndex, remainingWidth);
+        resizeColumn(logicalIndex, remainingWidth);
     }
 }
 
@@ -662,8 +662,8 @@ bool SetStartOnSystemStartup(bool fAutoStart)
         // Get a pointer to the IShellLink interface.
         IShellLink* psl = NULL;
         HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL,
-            CLSCTX_INPROC_SERVER, IID_IShellLink,
-            reinterpret_cast<void**>(&psl));
+                                        CLSCTX_INPROC_SERVER, IID_IShellLink,
+                                        reinterpret_cast<void**>(&psl));
 
         if (SUCCEEDED(hres))
         {
@@ -753,7 +753,7 @@ bool GetStartOnSystemStartup()
     {
         getline(optionFile, line);
         if (line.find("Hidden") != std::string::npos &&
-            line.find("true") != std::string::npos)
+                line.find("true") != std::string::npos)
             return false;
     }
     optionFile.close();
@@ -811,14 +811,14 @@ LSSharedFileListItemRef findStartupItemInList(LSSharedFileListRef list, CFURLRef
         CFURLRef currentItemURL = NULL;
 
 #if defined(MAC_OS_X_VERSION_MAX_ALLOWED) && MAC_OS_X_VERSION_MAX_ALLOWED >= 10100
-    if(&LSSharedFileListItemCopyResolvedURL)
-        currentItemURL = LSSharedFileListItemCopyResolvedURL(item, resolutionFlags, NULL);
+        if(&LSSharedFileListItemCopyResolvedURL)
+            currentItemURL = LSSharedFileListItemCopyResolvedURL(item, resolutionFlags, NULL);
 #if defined(MAC_OS_X_VERSION_MIN_REQUIRED) && MAC_OS_X_VERSION_MIN_REQUIRED < 10100
-    else
-        LSSharedFileListItemResolve(item, resolutionFlags, &currentItemURL, NULL);
+        else
+            LSSharedFileListItemResolve(item, resolutionFlags, &currentItemURL, NULL);
 #endif
 #else
-    LSSharedFileListItemResolve(item, resolutionFlags, &currentItemURL, NULL);
+        LSSharedFileListItemResolve(item, resolutionFlags, &currentItemURL, NULL);
 #endif
 
         if(currentItemURL && CFEqual(currentItemURL, findUrl)) {
@@ -859,8 +859,12 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 }
 #else
 
-bool GetStartOnSystemStartup() { return false; }
-bool SetStartOnSystemStartup(bool fAutoStart) { return false; }
+bool GetStartOnSystemStartup() {
+    return false;
+}
+bool SetStartOnSystemStartup(bool fAutoStart) {
+    return false;
+}
 
 #endif
 
@@ -905,10 +909,10 @@ QString getThemeName()
     QSettings settings;
     QString theme = settings.value("theme", "").toString();
 
-    if(!theme.isEmpty()){
+    if(!theme.isEmpty()) {
         return theme;
     }
-    return QString("light");  
+    return QString("light");
 }
 
 // Open CSS when configured
@@ -919,19 +923,19 @@ QString loadStyleSheet()
     QString cssName;
     QString theme = settings.value("theme", "").toString();
 
-    if(!theme.isEmpty()){
-        cssName = QString(":/css/") + theme; 
+    if(!theme.isEmpty()) {
+        cssName = QString(":/css/") + theme;
     }
     else {
-        cssName = QString(":/css/light");  
+        cssName = QString(":/css/light");
         settings.setValue("theme", "light");
     }
-    
-    QFile qFile(cssName);      
+
+    QFile qFile(cssName);
     if (qFile.open(QFile::ReadOnly)) {
         styleSheet = QLatin1String(qFile.readAll());
     }
-        
+
     return styleSheet;
 }
 
@@ -1023,7 +1027,7 @@ QString formatPingTime(double dPingTime)
 
 QString formatTimeOffset(int64_t nTimeOffset)
 {
-  return QString(QObject::tr("%1 s")).arg(QString::number((int)nTimeOffset, 10));
+    return QString(QObject::tr("%1 s")).arg(QString::number((int)nTimeOffset, 10));
 }
 
 } // namespace GUIUtil

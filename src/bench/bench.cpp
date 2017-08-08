@@ -28,7 +28,7 @@ BenchRunner::RunAll(double elapsedTimeForOne)
     std::cout << "Benchmark" << "," << "count" << "," << "min" << "," << "max" << "," << "average" << "\n";
 
     for (std::map<std::string,BenchFunction>::iterator it = benchmarks.begin();
-         it != benchmarks.end(); ++it) {
+            it != benchmarks.end(); ++it) {
 
         State state(it->first, elapsedTimeForOne);
         BenchFunction& func = it->second;

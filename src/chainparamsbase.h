@@ -20,8 +20,12 @@ public:
     static const std::string TESTNET;
     static const std::string REGTEST;
 
-    const std::string& DataDir() const { return strDataDir; }
-    int RPCPort() const { return nRPCPort; }
+    const std::string& DataDir() const {
+        return strDataDir;
+    }
+    int RPCPort() const {
+        return nRPCPort;
+    }
 
 protected:
     CBaseChainParams() {}

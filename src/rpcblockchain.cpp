@@ -226,7 +226,7 @@ UniValue mempoolToJSON(bool fVerbose = false)
 
         UniValue a(UniValue::VARR);
         BOOST_FOREACH(const uint256& hash, vtxid)
-            a.push_back(hash.ToString());
+        a.push_back(hash.ToString());
 
         return a;
     }
@@ -734,11 +734,21 @@ static UniValue BIP9SoftForkDesc(const std::string& name, const Consensus::Param
     UniValue rv(UniValue::VOBJ);
     rv.push_back(Pair("id", name));
     switch (VersionBitsTipState(consensusParams, id)) {
-    case THRESHOLD_DEFINED: rv.push_back(Pair("status", "defined")); break;
-    case THRESHOLD_STARTED: rv.push_back(Pair("status", "started")); break;
-    case THRESHOLD_LOCKED_IN: rv.push_back(Pair("status", "locked_in")); break;
-    case THRESHOLD_ACTIVE: rv.push_back(Pair("status", "active")); break;
-    case THRESHOLD_FAILED: rv.push_back(Pair("status", "failed")); break;
+    case THRESHOLD_DEFINED:
+        rv.push_back(Pair("status", "defined"));
+        break;
+    case THRESHOLD_STARTED:
+        rv.push_back(Pair("status", "started"));
+        break;
+    case THRESHOLD_LOCKED_IN:
+        rv.push_back(Pair("status", "locked_in"));
+        break;
+    case THRESHOLD_ACTIVE:
+        rv.push_back(Pair("status", "active"));
+        break;
+    case THRESHOLD_FAILED:
+        rv.push_back(Pair("status", "failed"));
+        break;
     }
     return rv;
 }
@@ -830,7 +840,7 @@ struct CompareBlocksByHeight
            equal. Use the pointers themselves to make a distinction. */
 
         if (a->nHeight != b->nHeight)
-          return (a->nHeight > b->nHeight);
+            return (a->nHeight > b->nHeight);
 
         return a < b;
     }
@@ -883,7 +893,7 @@ UniValue getchaintips(const UniValue& params, bool fHelp)
        of another block.  */
     std::set<const CBlockIndex*, CompareBlocksByHeight> setTips;
     BOOST_FOREACH(const PAIRTYPE(const uint256, CBlockIndex*)& item, mapBlockIndex)
-        setTips.insert(item.second);
+    setTips.insert(item.second);
     BOOST_FOREACH(const PAIRTYPE(const uint256, CBlockIndex*)& item, mapBlockIndex)
     {
         const CBlockIndex* pprev = item.second->pprev;

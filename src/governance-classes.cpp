@@ -33,7 +33,7 @@ std::vector<std::string> SplitBy(std::string strCommand, std::string strDelimit)
         }
     }
 
-   return vParts;
+    return vParts;
 }
 
 CAmount ParsePaymentAmount(const std::string& strAmount)
@@ -111,10 +111,10 @@ bool CGovernanceTriggerManager::AddNewTrigger(uint256 nHash)
     if(mapTrigger.count(nHash)) {
         DBG(
             cout << "CGovernanceTriggerManager::AddNewTrigger: Already have hash"
-                 << ", nHash = " << nHash.GetHex()
-                 << ", count = " << mapTrigger.count(nHash)
-                 << ", mapTrigger.size() = " << mapTrigger.size()
-                 << endl; );
+            << ", nHash = " << nHash.GetHex()
+            << ", count = " << mapTrigger.count(nHash)
+            << ", mapTrigger.size() = " << mapTrigger.size()
+            << endl; );
         return false;
     }
 
@@ -197,23 +197,23 @@ void CGovernanceTriggerManager::CleanAndRemove()
                 break;
             case SEEN_OBJECT_IS_VALID:
             case SEEN_OBJECT_EXECUTED:
-                {
-                    int nTriggerBlock = pSuperblock->GetBlockStart();
-                    // Rough approximation: a cycle of superblock ++
-                    int nExpirationBlock = nTriggerBlock + GOVERNANCE_TRIGGER_EXPIRATION_BLOCKS;
-                    LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- nTriggerBlock = %d, nExpirationBlock = %d\n", nTriggerBlock, nExpirationBlock);
-                    if(governance.GetCachedBlockHeight() > nExpirationBlock) {
-                        LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- Outdated trigger found\n");
-                        remove = true;
-                        CGovernanceObject* pgovobj = pSuperblock->GetGovernanceObject();
-                        if(pgovobj) {
-                            LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- Expiring outdated object: %s\n", pgovobj->GetHash().ToString());
-                            pgovobj->fExpired = true;
-                            pgovobj->nDeletionTime = GetAdjustedTime();
-                        }
+            {
+                int nTriggerBlock = pSuperblock->GetBlockStart();
+                // Rough approximation: a cycle of superblock ++
+                int nExpirationBlock = nTriggerBlock + GOVERNANCE_TRIGGER_EXPIRATION_BLOCKS;
+                LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- nTriggerBlock = %d, nExpirationBlock = %d\n", nTriggerBlock, nExpirationBlock);
+                if(governance.GetCachedBlockHeight() > nExpirationBlock) {
+                    LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- Outdated trigger found\n");
+                    remove = true;
+                    CGovernanceObject* pgovobj = pSuperblock->GetGovernanceObject();
+                    if(pgovobj) {
+                        LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- Expiring outdated object: %s\n", pgovobj->GetHash().ToString());
+                        pgovobj->fExpired = true;
+                        pgovobj->nDeletionTime = GetAdjustedTime();
                     }
                 }
-                break;
+            }
+            break;
             default:
                 break;
             }
@@ -223,13 +223,13 @@ void CGovernanceTriggerManager::CleanAndRemove()
             DBG(
                 string strdata = "NULL";
                 CGovernanceObject* pgovobj = pSuperblock->GetGovernanceObject();
-                if(pgovobj) {
-                    strdata = pgovobj->GetDataAsString();
-                }
-                cout << "CGovernanceTriggerManager::CleanAndRemove: Removing object: "
-                     << strdata
-                     << endl;
-               );
+            if(pgovobj) {
+            strdata = pgovobj->GetDataAsString();
+            }
+            cout << "CGovernanceTriggerManager::CleanAndRemove: Removing object: "
+                 << strdata
+                 << endl;
+            );
             LogPrint("gobject", "CGovernanceTriggerManager::CleanAndRemove -- Removing trigger object\n");
             mapTrigger.erase(it++);
         }
@@ -522,7 +522,7 @@ bool CSuperblock::IsValidBlockHeight(int nBlockHeight)
 {
     // SUPERBLOCKS CAN HAPPEN ONLY after hardfork and only ONCE PER CYCLE
     return nBlockHeight >= Params().GetConsensus().nSuperblockStartBlock &&
-            ((nBlockHeight % Params().GetConsensus().nSuperblockCycle) == 0);
+           ((nBlockHeight % Params().GetConsensus().nSuperblockCycle) == 0);
 }
 
 CAmount CSuperblock::GetPaymentsLimit(int nBlockHeight)
