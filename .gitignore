@@ -16,6 +16,7 @@ src/bench/bench_mue
 CMakeLists.txt
 cmake-build-debug/
 .idea/
+.idea/*
 
 # autoreconf
 Makefile.in
