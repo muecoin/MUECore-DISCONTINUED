@@ -171,20 +171,7 @@ unsigned int static MUEDiff(const CBlockIndex* pindexLast, const Consensus::Para
     arith_uint256 bnNew(bnOld / difficultyfactor);
     bnNew *= 10000;
     if (bnNew > UintToArith256(bnTVL)) bnNew = UintToArith256(bnTVL);
-    LogPrintf("Block in %f: seconds\n",(BVTy->GetBlockTime() - GetTime()));
-    LogPrintf("1 spacing: %u: \n",VLrate1);
-    LogPrintf("2 spacing: %u: \n",VLrate2);
-    LogPrintf("3 spacing: %u: \n",VLrate3);
-    LogPrintf("4 spacing: %u: \n",VLrate4);
-    LogPrintf("5 spacing: %u: \n",VLrate5);
-    LogPrintf("1 multiplier set to: %f: \n",VLF1);
-    LogPrintf("2 multiplier set to: %f: \n",VLF2);
-    LogPrintf("3 multiplier set to: %f: \n",VLF3);
-    LogPrintf("4 multiplier set to: %f: \n",VLF4);
-    LogPrintf("5 multiplier set to: %f: \n",VLF5);
-    LogPrintf("averaged a final multiplier of: %f: \n",TAverage);
-    LogPrintf("Prior: %08x  %s\n", BVTy->nBits, bnOld.ToString());
-    LogPrintf("New:   %08x  %s\n", bnNew.GetCompact(), bnNew.ToString());
+
     return bnNew.GetCompact();
 }
 
