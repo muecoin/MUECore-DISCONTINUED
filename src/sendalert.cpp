@@ -56,11 +56,11 @@ void ThreadSendAlert()
     //  2000 for longer invalid proof-of-work chain
     //  Higher numbers mean higher priority
     alert.nPriority     = 5000;
-    alert.strComment    = "";
-    alert.strStatusBar  = "URGENT: Upgrade required: see https://www.MonetaryUnit.org";
+    alert.strComment    = "Failing to update will limit your walletnode functionality";
+    alert.strStatusBar  = "URGENT: Upgrade required: connect https://www.MonetaryUnit.org";
 
     // Set specific client version/versions here. If setSubVer is empty, no filtering on subver is done:
-    // alert.setSubVer.insert(std::string("/MonetaryUnit Core:1.0.0.2/"));
+    alert.setSubVer.insert(std::string("/MonetaryUnit Core:1.0.0.2/"));
 
     // Sign
     if(!alert.Sign())

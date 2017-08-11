@@ -39,8 +39,6 @@ config.log
 config.status
 configure
 libtool
-src/config/mue-config.h
-src/config/mue-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
