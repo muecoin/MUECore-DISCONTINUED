@@ -22,6 +22,8 @@ enum DiffMode {
     DIFF_KGW     = 2, // Retarget using Kimoto Gravity Well
     DIFF_DGW     = 3, // Retarget using Dark Gravity Wave v3
     DIFF_MUE     = 4, // Retarget using MUE v1
+    DIFF_MUET     = 5, // Retarget using MUE vT
+
 };
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params&);
 unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params&);

@@ -175,6 +175,69 @@ unsigned int static MUEDiff(const CBlockIndex* pindexLast, const Consensus::Para
     return bnNew.GetCompact();
 }
 
+unsigned int static MUEDGW(const CBlockIndex* pindexLast, const Consensus::Params& params) {
+    const CBlockIndex *BlockLastSolved = pindexLast;
+    const CBlockIndex *BlockReading = pindexLast;
+    int64_t nActualTimespan = 0;
+    int64_t LastBlockTime = 0;
+    int64_t PastBlocksMin = 23;
+    int64_t PastBlocksMax = 24;
+    int64_t CountBlocks = 0;
+    arith_uint256 PastDifficultyAverage;
+    arith_uint256 PastDifficultyAveragePrev;
+
+    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
+        return UintToArith256(params.powLimit).GetCompact();
+    }
+
+    for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
+        if (PastBlocksMax > 0 && i > PastBlocksMax) {
+            break;
+        }
+        CountBlocks++;
+
+        if(CountBlocks <= PastBlocksMin) {
+            if (CountBlocks == 1) {
+                PastDifficultyAverage.SetCompact(BlockReading->nBits);
+            }
+            else {
+                PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (arith_uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1);
+            }
+            PastDifficultyAveragePrev = PastDifficultyAverage;
+        }
+
+        if(LastBlockTime > 0) {
+            int64_t Diff = (LastBlockTime - BlockReading->GetBlockTime());
+            nActualTimespan += Diff;
+
+        }
+        LastBlockTime = BlockReading->GetBlockTime();
+
+        if (BlockReading->pprev == NULL) {
+            assert(BlockReading);
+            break;
+        }
+        BlockReading = BlockReading->pprev;
+    }
+
+    arith_uint256 bnNew(PastDifficultyAverage);
+
+    int64_t _nTargetTimespan = CountBlocks * params.nPowTargetSpacing;
+
+    if (nActualTimespan < _nTargetTimespan/3)
+        nActualTimespan = _nTargetTimespan/3;
+    if (nActualTimespan > _nTargetTimespan*3)
+        nActualTimespan = _nTargetTimespan*3;
+
+    bnNew *= nActualTimespan;
+    bnNew /= _nTargetTimespan;
+
+    if (bnNew > UintToArith256(params.powLimit)) {
+        bnNew = UintToArith256(params.powLimit);
+    }
+
+    return bnNew.GetCompact();
+}
 
 unsigned int static DarkGravityWave(const CBlockIndex* pindexLast, const Consensus::Params& params) {
     /* current difficulty formula, dash - DarkGravity v3, written by Evan Duffield - evan@dash.org */
@@ -246,14 +309,16 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     if (Params().NetworkIDString() == CBaseChainParams::MAIN || Params().NetworkIDString() == CBaseChainParams::REGTEST) {
 
         if (pindexLast->nHeight + 1 >= 15200 && pindexLast->nHeight + 1 < 34140) retarget = DIFF_KGW;
-        else if (pindexLast->nHeight + 1 >= 34140) retarget = DIFF_DGW;
+        else if (pindexLast->nHeight + 1 >= 34140 && pindexLast->nHeight + 1 < 45000) retarget = DIFF_DGW;
+        else if (pindexLast->nHeight + 1 >= 45000) retarget = DIFF_MUET;
         else retarget = DIFF_BTC;
 
 
     } else {
         if (pindexLast->nHeight + 1 >= 2 && pindexLast->nHeight + 1 < 5) retarget = DIFF_KGW;
         else if (pindexLast->nHeight + 1 >= 5 && pindexLast->nHeight + 1 < 10) retarget = DIFF_DGW;
-        else if (pindexLast->nHeight + 1 >= 10) retarget = DIFF_MUE;
+        else if (pindexLast->nHeight + 1 >= 10 && pindexLast->nHeight + 1 < 30) retarget = DIFF_MUE;
+        else if (pindexLast->nHeight + 1 >= 30) retarget = DIFF_MUET;
         else retarget = DIFF_BTC;
     }
 
@@ -291,7 +356,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 
     else if (retarget == DIFF_KGW) return KimotoGravityWell(pindexLast, params);
     else if (retarget == DIFF_DGW) return DarkGravityWave(pindexLast, params);
-    else return MUEDiff(pindexLast, params);
+    else if (retarget == DIFF_MUE) return MUEDiff(pindexLast, params);
+    else return MUEDGW(pindexLast, params);
 
 }
 
@@ -301,7 +367,7 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
         return pindexLast->nBits;
 
     int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
-    LogPrintf("  nActualTimespan = %d  before bounds\n", nActualTimespan);
+    /* LogPrintf("  nActualTimespan = %d  before bounds\n", nActualTimespan); */
     if (nActualTimespan < params.nPowTargetTimespan/4)
         nActualTimespan = params.nPowTargetTimespan/4;
     if (nActualTimespan > params.nPowTargetTimespan*4)

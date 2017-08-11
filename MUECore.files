@@ -247,7 +247,6 @@ src/qt/networkstyle.cpp
 src/qt/networkstyle.h
 src/qt/notificator.cpp
 src/qt/notificator.h
-src/qt/old-dash.cppfile-notneeded.cpp
 src/qt/openuridialog.cpp
 src/qt/openuridialog.h
 src/qt/optionsdialog.cpp
