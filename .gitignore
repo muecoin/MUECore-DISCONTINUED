@@ -13,6 +13,8 @@ src/mue-tx
 src/test/test_mue
 src/qt/test/test_mue-qt
 src/bench/bench_mue
+src/*.autosave
+
 CMakeLists.txt
 cmake-build-debug/
 .idea/
