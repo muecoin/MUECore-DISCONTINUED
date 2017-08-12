@@ -293,7 +293,7 @@ void CMasternodeSync::ProcessTick()
 
         //try syncing again
         if(IsFailed()) {
-            if(nTimeLastFailure + (1*60) < GetTime()) { // 1 minute cooldown after failed sync
+            if(nTimeLastFailure + (2*60) < GetTime()) { // 2 minute cooldown after failed sync
                 Reset();
             }
             return;
