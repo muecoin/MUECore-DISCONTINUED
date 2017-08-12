@@ -1,4 +1,4 @@
-MonetaryUnit Core staging tree 1.0.1
+MonetaryUnit Core staging tree
 ===============================
 
 
