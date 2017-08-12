@@ -111,7 +111,7 @@ public:
         vAlertPubKey = ParseHex(
                            "042736aa94dcc46a596d1f42a5402261b6d9d8a72de40ace5a8856f9e5f7bab96f837f926a8ab8d1e2f8d6d7ef59732d99b55352c4fdf775bdb9690c42851609bd");
         nDefaultPort = 19683;
-        nMaxTipAge = 280;
+        nMaxTipAge = 11520;
         nPruneAfterHeight = 100000;
 
 
@@ -123,8 +123,8 @@ public:
                uint256S("0x69bb62a0f72c83b38ef6539987cf6c4da5b8e57ac7ecede490a7cefc171e7421"));
 
         vSeeds.push_back(CDNSSeedData("nodes.muex.io", "nodes.muex.io"));
-        //vSeeds.push_back(CDNSSeedData("nodes.monetaryunit.org", "nodes.monetaryunit.org"));
-        //vSeeds.push_back(CDNSSeedData("nodes.mymue.com", "nodes.mymue.com"));
+        vSeeds.push_back(CDNSSeedData("nodes.monetaryunit.org", "nodes.monetaryunit.org"));
+        vSeeds.push_back(CDNSSeedData("nodes.mymue.com", "nodes.mymue.com"));
         vSeeds.push_back(CDNSSeedData("nodes.cryptophi.com", "nodes.cryptophi.com"));
 
         // MonetaryUnit addresses start with '7'
