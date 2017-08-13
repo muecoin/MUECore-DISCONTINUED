@@ -93,8 +93,8 @@ public:
         consensus.nPowTargetSpacing = 40;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 2;
-        consensus.nMinerConfirmationWindow = 3;
+        consensus.nRuleChangeActivationThreshold = 2052;
+        consensus.nMinerConfirmationWindow = 2160;
 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601;
