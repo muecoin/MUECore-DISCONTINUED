@@ -21,6 +21,8 @@
 #include <stdint.h>
 #ifdef LEVELDB_ATOMIC_PRESENT
 #include <atomic>
+#elif defined(__APPLE__)
+#include <libkern/OSAtomic.h>
 #endif
 #ifdef OS_WIN
 #include <windows.h>
@@ -50,10 +52,18 @@ namespace port {
 #define LEVELDB_HAVE_MEMORY_BARRIER
 
 // Mac OS
-#elif defined(OS_MACOSX)
+#elif defined(__APPLE__)
 inline void MemoryBarrier() {
-    OSMemoryBarrier();
+#if defined(LEVELDB_ATOMIC_PRESENT)
+  std::atomic_thread_fence(std::memory_order_seq_cst);
+#else
+  OSMemoryBarrier();
+#endif
 }
+//#elif defined(OS_MACOSX)
+//inline void MemoryBarrier() {
+//    OSMemoryBarrier();
+//}
 #define LEVELDB_HAVE_MEMORY_BARRIER
 
 // Gcc on x86

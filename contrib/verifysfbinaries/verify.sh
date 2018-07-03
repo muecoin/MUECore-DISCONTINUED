@@ -14,13 +14,13 @@ function clean_up {
    done
 }
 
-WORKINGDIR="/tmp/bitcoin"
+WORKINGDIR="/tmp/MUECore"
 TMPFILE="hashes.tmp"
 
 SIGNATUREFILENAME="SHA256SUMS.asc"
 RCSUBDIR="test/"
-BASEDIR="https://bitcoin.org/bin/"
-VERSIONPREFIX="bitcoin-core-"
+BASEDIR="https://MonetaryUnit.org/bin/"
+VERSIONPREFIX="MonetaryUnit-core-"
 RCVERSIONSTRING="rc"
 
 #this URL is used if a version number is not specified as an argument to the script
@@ -82,7 +82,7 @@ if [ $RET -ne 0 ]; then
       echo "Bad signature."
    elif [ $RET -eq 2 ]; then
       #or if a gpg error has occurred
-      echo "gpg error. Do you have the Bitcoin Core binary release signing key installed?"
+      echo "gpg error. Do you have the MonetaryUnit Core binary release signing key installed?"
    fi
 
    echo "gpg output:"
@@ -110,7 +110,7 @@ if [ $? -eq 1 ]; then
    exit 1
 elif [ $? -gt 1 ]; then
    echo "Error executing 'diff'"
-   exit 2   
+   exit 2
 fi
 
 #everything matches! clean up the mess

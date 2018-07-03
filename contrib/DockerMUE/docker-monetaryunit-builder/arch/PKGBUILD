@@ -1,0 +1,57 @@
+# Maintainer: Tristan Terpelle <tristan+monetaryunit@terpelle.be>
+pkgbase=monetaryunit-wallet
+_gitname=MUECore
+pkgver=1.0.3.2
+pkgrel=1
+pkgdesc="Monetary Unit (MUE) wallet"
+arch=('x86_64')
+url="http://www.monetaryunit.org"
+license=('GPL')
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=
+changelog=
+source=(git+"https://github.com/muecoin/MUECore.git")
+noextract=()
+md5sums=("SKIP")
+validpgpkeys=()
+
+build() {
+  cd "$srcdir/$_gitname"
+  ./autogen.sh
+  ./configure --prefix=/usr
+  make
+}
+
+_package() {
+  pkgdesc="Monetary Unit (MUE) wallet"
+  depends=('boost-libs>=1.20' 'db4.8' 'gcc-libs' 'glibc' 'libevent' 'libpgm' 'libsodium' 'miniupnpc' 'openssl' 'zeromq')
+  # depends on db4.8 from AUR! Install it with 'yaourt -Sy db4.8' before running makepkg
+  makedepends=('git' 'qt5-tools')
+  checkdepends=('python')
+  cd "$srcdir/$_gitname"
+  make DESTDIR="$pkgdir/" install
+  rm ${pkgdir}/usr/bin/*qt
+}
+
+# see https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=linux-baytrail49
+_package-qt5() {
+  pkgdesc="Monetary Unit (MUE) wallet with QT5 GUI"
+  depends=('bzip2' 'dbus' 'double-conversion' 'freetype2' 'glib2' 'graphite' 'harfbuzz' 'icu' 'monetaryunit-wallet' 'libgcrypt' 'libglvnd' 'libgpg-error' 'libpng' 'libx11' 'libxau' 'libxcb' 'libxdmcp' 'libxext' 'lz4' 'pcre' 'pcre2' 'protobuf' 'qrencode' 'qt5-base' 'xz' 'zlib')
+  cd "$srcdir/$_gitname"
+  mkdir -p ${pkgdir}/usr/bin/ 
+  install -m 755 src/qt/mue-qt ${pkgdir}/usr/bin/
+  install -m 755 src/qt/test/test_mue-qt ${pkgdir}/usr/bin/
+}
+
+pkgname=("${pkgbase}" "${pkgbase}-qt5")
+for _p in ${pkgname[@]}; do
+  eval "package_${_p}() {
+    $(declare -f "_package${_p#${pkgbase}}")
+    _package${_p#${pkgbase}}
+  }"
+done
