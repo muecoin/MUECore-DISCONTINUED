@@ -5313,6 +5313,13 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         else
             pfrom->fRelayTxes = true;
 
+        // Do not connect to old version
+        if (pfrom->cleanSubVer == "/MonetaryUnit Core:1.0.0.2/") {
+            LOCK(cs_main);
+            Misbehaving(pfrom->GetId(), 100); // instantly ban version 1.0.0.2
+            return false;
+        }
+
         // Disconnect if we connected to ourself
         if (nNonce == nLocalHostNonce && nNonce > 1)
         {
