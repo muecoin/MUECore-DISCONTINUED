@@ -308,7 +308,7 @@
 #define PACKAGE_NAME "MonetaryUnit Core"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "MonetaryUnit Core 1.0.3"
+#define PACKAGE_STRING "MonetaryUnit Core 1.0.3.3"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "muecore"
