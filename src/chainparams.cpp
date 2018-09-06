@@ -195,6 +195,7 @@ public:
             (38000, uint256S("00000000000810da73c6c60ff86c4ca86f72e2b547a4e406d2df97eae2e319c0"))
             (38500, uint256S("000000000027924307bef96bd36a91e950fe03d2f5f2fdde11e16860bfe369ad"))
             (38932, uint256S("000000000022fc4c5f03c38adddaac2db67dfc78687973ea145f03af5619ca2a"))
+            (835601, uint256S(" 000000000000a3fdefe0cad5df3ec32cff4220ef5ccdf0d20a3748621897aab7"))
              ,
             1498541029,
             197,
